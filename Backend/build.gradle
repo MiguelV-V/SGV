@@ -1,0 +1,16 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'org.mindrot:jbcrypt:0.4'
+}
+
+task run(type: JavaExec) {
+    main = 'CRUDServer' // No es necesario especificar la ruta completa aquí
+    classpath = sourceSets.main.runtimeClasspath
+}
