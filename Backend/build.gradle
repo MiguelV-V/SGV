@@ -11,6 +11,6 @@ dependencies {
 }
 
 task run(type: JavaExec) {
-    main = 'CRUDServer' // No es necesario especificar la ruta completa aquí
+    main = 'com.example.CRUDServer'
     classpath = sourceSets.main.runtimeClasspath
 }
