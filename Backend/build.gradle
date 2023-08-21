@@ -8,6 +8,8 @@ repositories {
 
 dependencies {
     implementation 'org.mindrot:jbcrypt:0.4'
+    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation "com.sparkjava:spark-core:2.7.2"
 }
 
 task run(type: JavaExec) {
