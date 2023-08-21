@@ -244,8 +244,8 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para modificar usuarios
-         put("/usuario/:id", (req, res) -> {
+        // Ruta para modificar usuarios
+        put("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
             String nombres = usuario.getNombres();
@@ -286,7 +286,7 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para obtener usuarios por id
+        // Ruta para obtener usuarios por id
         get("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
