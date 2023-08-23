@@ -550,7 +550,7 @@ public class CRUDServer {
         }
     }
 
-    // Clase POJO para representar un catalogo
+    //Clase para representar un catalogo
     static class Catalogo 
     {
         private String annios_lab;
