@@ -1,0 +1,34 @@
+<div class="center">
+    <h1 >
+        CRUD de Roles SCYGV
+    </h1>
+</div>
+<form action="" [formGroup]="FormRol">
+    <div class="p-inputgroup mb-2">
+        <span class="p-inputgroup-addon">
+            <i class="pi pi-user"></i>
+        </span>
+        <input placeholder="Inserta un Rol" type = "text" formControlName="rol" />
+    </div>
+    <div>
+        <button type="button" class="btn btn-outline-primary mb-2" (click)="createRol()">Crear</button>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">ROL</th>
+        </tr>
+    </thead>
+    <tbody >
+        <tr *ngFor="let rol of LRoles"  >
+        <th scope="row">{{rol.id}}</th>
+          <td>{{rol.rol}}</td>
+          <button type="button" class= "x-circle-fill" class="btn btn-success" (click)="editarRol(rol)" >Editar</button>
+          <button type="button" class= "x-circle-fill" class="btn btn-success" [disabled]="isClicked" (click)="updateRol(rol.id)" >Actualizar</button>
+          <button type="button" class="pencil-square" class="btn btn-danger" (click)="deleteRol(rol.id)">Eliminar</button>
+        </tr>
+    </tbody>
+</table>
+
