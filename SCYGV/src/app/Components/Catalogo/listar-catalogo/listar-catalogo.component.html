@@ -1,0 +1,25 @@
+<div class="container-sm">
+    <h1 class="text-center">Catálogos</h1>
+
+    <button type="button" class="btn btn-primary" routerLink="/Agregar-Catalogo">Agregar</button>
+
+    <table class="table table-hover table-bordered table-striped">
+        <thead>
+          <tr>
+            <th scope="col">Años Laborados</th>
+            <th scope="col">Días Vacaciones</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let catalogo of ListarCatalogos">
+            <td>{{catalogo.annios_lab}}</td>
+            <td>{{catalogo.dias_vac}}</td>
+            <td>
+              <button type="button" class="btn btn-primary" (click)="editarRol(catalogo.annios_lab)">Editar</button>
+              <button type="button" class="btn btn-danger" (click)="eliminarCatalogo(catalogo.annios_lab)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+</div>
