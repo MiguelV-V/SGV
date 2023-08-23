@@ -16,7 +16,7 @@ public class CRUDServer {
     public static void main(String[] args) {
 
         // Configuración de la conexión a la base de datos MySQL
-        String url = "jdbc:mysql://localhost:3307/test";
+        String url = "jdbc:mysql://localhost:3306/test";
         String username = "root";
         String password = "";
 
@@ -320,6 +320,114 @@ public class CRUDServer {
             }
         });
 
+
+        // Ruta para obtener todos los catálogos
+        get("/catalogos", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM scygv_catalogo";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+
+                List<Catalogo> catalogos = new ArrayList<>();
+                while (resultSet.next()) {
+                    String añosLab = resultSet.getString("AÑOS_LAB");
+                    int diasVac = resultSet.getInt("DIAS_VAC");
+                    catalogos.add(new Catalogo(añosLab, diasVac));
+                }
+
+                return gson.toJson(catalogos);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener los catálogos"));
+            }
+        });
+
+        // Ruta para obtener un catálogo en específico
+        get("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, añosLab);
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    int diasVac = resultSet.getInt("DIAS_VAC");
+                    return gson.toJson(new Catalogo(añosLab, diasVac));
+                } else {
+                    return gson.toJson(new Respuesta("El catálogo con los años de labor proporcionados no fue encontrado."));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener el catálogo."));
+            }
+        });
+
+        // Ruta para crear un nuevo catálogo
+        post("/catalogos", (req, res) -> {
+            String requestBody = req.body();
+            Catalogo nuevoCatalogo = gson.fromJson(requestBody, Catalogo.class);
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "INSERT INTO scygv_catalogo (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, nuevoCatalogo.getAñosLab());
+                statement.setInt(2, nuevoCatalogo.getDiasVac());
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Catálogo creado correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al crear el catálogo"));
+            }
+        }, gson::toJson);
+
+        // Ruta DELETE para eliminar un catálogo por sus años de labor
+        delete("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "DELETE FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, añosLab);
+                int affectedRows = statement.executeUpdate();
+
+                if (affectedRows > 0) {
+                    return gson.toJson(new Respuesta("Catálogo eliminado correctamente"));
+                } else {
+                    return gson.toJson(new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al eliminar el catálogo"));
+            }
+        }, gson::toJson);
+
+        // Ruta PUT para actualizar un catálogo
+        put("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+            String requestBody = req.body();
+            Catalogo catalogoActualizado = gson.fromJson(requestBody, Catalogo.class);
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE scygv_catalogo SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, catalogoActualizado.getAñosLab());
+                statement.setInt(2, catalogoActualizado.getDiasVac());
+                statement.setString(3, añosLab);
+                int affectedRows = statement.executeUpdate();
+
+                if (affectedRows > 0) {
+                    return gson.toJson(new Respuesta("Catálogo actualizado correctamente"));
+                } else {
+                    return gson.toJson(new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al actualizar el catálogo"));
+            }
+        }, gson::toJson);
     }
 
     // Clase para representar un rol
@@ -439,6 +547,26 @@ public class CRUDServer {
 
         public String getTelefono() {
             return telefono;
+        }
+    }
+
+    // Clase POJO para representar un catalogo
+    static class Catalogo 
+    {
+        private String annios_lab;
+        private int dias_vac;
+
+        public Catalogo(String años_lab, int dias_vac) {
+            this.annios_lab = años_lab;
+            this.dias_vac = dias_vac;
+        }
+
+        public String getAñosLab() {
+            return annios_lab;
+        }
+
+        public int getDiasVac() {
+            return dias_vac;
         }
     }
 }

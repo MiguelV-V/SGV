@@ -10,9 +10,14 @@ dependencies {
     implementation 'org.mindrot:jbcrypt:0.4'
     implementation 'com.google.code.gson:gson:2.10.1'
     implementation "com.sparkjava:spark-core:2.7.2"
+    implementation 'mysql:mysql-connector-java:8.0.26'
 }
 
 task run(type: JavaExec) {
     main = 'com.example.CRUDServer'
     classpath = sourceSets.main.runtimeClasspath
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
