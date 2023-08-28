@@ -122,10 +122,10 @@ public class CRUDServer {
                 statement.setInt(2, id);
                 statement.executeUpdate();
 
-                return gson.toJson(new Respuesta("Se modifico correctamente"));
+                return gson.toJson(new Respuesta("Se actualizo correctamente"));
             } catch (SQLException e) {
                 e.printStackTrace();
-                return gson.toJson(new Respuesta("Error al modificar"));
+                return gson.toJson(new Respuesta("Error al actualizar el rol"));
             }
         }, gson::toJson);
 
@@ -236,7 +236,7 @@ public class CRUDServer {
                 if (affectedrows > 0) {
                     return gson.toJson(new Respuesta("Usuario eliminado correctamente"));
                 } else {
-                    return gson.toJson(new Respuesta("No se encontro ninun regitsro con el id digitado"));
+                    return gson.toJson(new Respuesta("No se encontro ninun registro con el id digitado"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -279,10 +279,10 @@ public class CRUDServer {
                 statement.setInt(13, id);
                 statement.executeUpdate();
 
-                return gson.toJson(new Respuesta("Se modifico correctamente"));
+                return gson.toJson(new Respuesta("Se actualizo correctamente"));
             } catch (SQLException e) {
                 e.printStackTrace();
-                return gson.toJson(new Respuesta("Error al modificar"));
+                return gson.toJson(new Respuesta("Error al actualizar el usuario"));
             }
         }, gson::toJson);
 
@@ -320,6 +320,246 @@ public class CRUDServer {
             }
         });
 
+        // Ruta para obtener todos los catálogos
+        get("/catalogos", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM scygv_catalogo";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+
+                List<Catalogo> catalogos = new ArrayList<>();
+                while (resultSet.next()) {
+                    String añosLab = resultSet.getString("AÑOS_LAB");
+                    int diasVac = resultSet.getInt("DIAS_VAC");
+                    catalogos.add(new Catalogo(añosLab, diasVac));
+                }
+
+                return gson.toJson(catalogos);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener los catálogos"));
+            }
+        });
+
+        // Ruta para obtener un catálogo en específico
+        get("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, añosLab);
+                ResultSet resultSet = statement.executeQuery();
+
+                if (resultSet.next()) {
+                    int diasVac = resultSet.getInt("DIAS_VAC");
+                    return gson.toJson(new Catalogo(añosLab, diasVac));
+                } else {
+                    return gson.toJson(
+                            new Respuesta("El catálogo con los años de labor proporcionados no fue encontrado."));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener el catálogo."));
+            }
+        });
+
+        // Ruta para crear un nuevo catálogo
+        post("/catalogos", (req, res) -> {
+            String requestBody = req.body();
+            Catalogo nuevoCatalogo = gson.fromJson(requestBody, Catalogo.class);
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "INSERT INTO scygv_catalogo (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, nuevoCatalogo.getAñosLab());
+                statement.setInt(2, nuevoCatalogo.getDiasVac());
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Catálogo creado correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al crear el catálogo"));
+            }
+        }, gson::toJson);
+
+        // Ruta DELETE para eliminar un catálogo por sus años de labor
+        delete("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "DELETE FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, añosLab);
+                int affectedRows = statement.executeUpdate();
+
+                if (affectedRows > 0) {
+                    return gson.toJson(new Respuesta("Catálogo eliminado correctamente"));
+                } else {
+                    return gson.toJson(
+                            new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al eliminar el catálogo"));
+            }
+        }, gson::toJson);
+
+        // Ruta PUT para actualizar un catálogo
+        put("/catalogos/:añosLab", (req, res) -> {
+            String añosLab = req.params(":añosLab");
+            String requestBody = req.body();
+            Catalogo catalogoActualizado = gson.fromJson(requestBody, Catalogo.class);
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE scygv_catalogo SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, catalogoActualizado.getAñosLab());
+                statement.setInt(2, catalogoActualizado.getDiasVac());
+                statement.setString(3, añosLab);
+                int affectedRows = statement.executeUpdate();
+
+                if (affectedRows > 0) {
+                    return gson.toJson(new Respuesta("Catálogo actualizado correctamente"));
+                } else {
+                    return gson.toJson(
+                            new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al actualizar el catálogo"));
+            }
+        }, gson::toJson);
+
+        // CRUD SOLICITUDES
+        // OBTENER SOLICITUDES
+        get("/solicitudes", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM solicitudes";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    Date fecha = resultSet.getDate("fecha");
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+
+        // Ruta para crear un nuevo usuario
+        post("/solicitudes", (req, res) -> {
+            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
+            int id_user = solicitud.getId_user();
+            int id_rh = solicitud.getId_rh();
+            Date fecha = solicitud.getFecha();
+            String motivo = solicitud.getMotivo();
+            int dias = solicitud.getDias();
+            String estado = solicitud.getEstado();
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "INSERT INTO solicitudes (id_user, id_rh, fecha, motivo, dias, estado) VALUES (?,?,?,?,?,?);";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, id_user);
+                statement.setInt(2, id_rh);
+                statement.setDate(3, fecha);
+                statement.setString(4, motivo);
+                statement.setInt(5, dias);
+                statement.setString(6, estado);
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Solicitud creada correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al crear la Solicitud"));
+            }
+        }, gson::toJson);
+
+        // Ruta para eliminar usuario
+        delete("/solicitudes/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "DELETE FROM solicitudes WHERE id = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, id);
+                int affectedrows = statement.executeUpdate();
+
+                if (affectedrows > 0) {
+                    return gson.toJson(new Respuesta("Solicitud eliminada correctamente"));
+                } else {
+                    return gson.toJson(new Respuesta("No se encontro ninun registro con el id digitado"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al eliminar la solicitud"));
+            }
+        }, gson::toJson);
+
+        // Ruta para modificar usuarios
+        put("/solicitudes/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
+            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
+            int id_user = solicitud.getId_user();
+            int id_rh = solicitud.getId_rh();
+            Date fecha = solicitud.getFecha();
+            String motivo = solicitud.getMotivo();
+            int dias = solicitud.getDias();
+            String estado = solicitud.getEstado();
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE solicitudes SET id_user = ?, id_rh = ?, fecha = ?, motivo = ?, dias = ?, estado = ? WHERE id = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, id_user);
+                statement.setInt(2, id_rh);
+                statement.setDate(3, fecha);
+                statement.setString(4, motivo);
+                statement.setInt(5, dias);
+                statement.setString(6, estado);
+                statement.setInt(7, id);
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Se actualizo correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al actualizar"));
+            }
+        }, gson::toJson);
+
+        // Ruta para obtener usuarios por id
+        get("/solicitudes/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM solicitudes WHERE id = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, id);
+                ResultSet resultSet = statement.executeQuery();
+
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int Id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    Date fecha = resultSet.getDate("fecha");
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener la solicitud"));
+            }
+        });
     }
 
     // Clase para representar un rol
@@ -439,6 +679,74 @@ public class CRUDServer {
 
         public String getTelefono() {
             return telefono;
+        }
+    }
+
+    // Clase para representar un catalogo
+    static class Catalogo {
+        private String annios_lab;
+        private int dias_vac;
+
+        public Catalogo(String años_lab, int dias_vac) {
+            this.annios_lab = años_lab;
+            this.dias_vac = dias_vac;
+        }
+
+        public String getAñosLab() {
+            return annios_lab;
+        }
+
+        public int getDiasVac() {
+            return dias_vac;
+        }
+    }
+
+    // Clase para representar solicitudes
+    static class Solicitud {
+        private int id;
+        private int id_user;
+        private int id_rh;
+        private Date fecha;
+        private String motivo;
+        private int dias;
+        private String estado;
+
+        public Solicitud(int id, int id_user, int id_rh, Date fecha, String motivo, int dias, String estado) {
+            this.id = id;
+            this.id_user = id_user;
+            this.id_rh = id_rh;
+            this.fecha = fecha;
+            this.motivo = motivo;
+            this.dias = dias;
+            this.estado = estado;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getId_user() {
+            return id_user;
+        }
+
+        public int getId_rh() {
+            return id_rh;
+        }
+
+        public Date getFecha() {
+            return fecha;
+        }
+
+        public String getMotivo() {
+            return motivo;
+        }
+
+        public int getDias() {
+            return dias;
+        }
+
+        public String getEstado() {
+            return estado;
         }
     }
 }
