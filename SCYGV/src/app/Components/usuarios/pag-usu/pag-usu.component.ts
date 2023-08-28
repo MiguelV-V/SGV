@@ -3,7 +3,6 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
 import { Usuario} from 'src/app/modelo/usuario';
 import { usuarioService } from 'src/app/services/usuario.service';
 
-
 @Component({
   selector: 'app-pag-usu',
   templateUrl: './pag-usu.component.html',
@@ -35,13 +34,13 @@ export class PagUsuComponent {
     })
   }
   
-  //Iniciar la muestra de roles
+  //Iniciar la muestra de Usuarios
   ngOnInit():void{
     this.getUsuario()
   }
 
   
-  //Mostrar Roles
+  //Mostrar Usuarios
   getUsuario():any{
     this.UService.getUsuario().subscribe(res =>{
       this.LUsuarios = <any>res
@@ -121,7 +120,7 @@ export class PagUsuComponent {
   }
   
   //Mostrar Usuario por Id
-getRolId(idUsu: number):any{
+getUserId(idUsu: number):any{
   this.UService.getIdUsuario(idUsu).subscribe(res =>{
     this.LUsuarios = <any>res
     console.log(res)

@@ -5,12 +5,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms'
 
 import { AppComponent } from './app.component';
 
-import { BodyComponent } from './Components/body/body.component';
+import { BodyComponent } from './Components/Rol/body.component';
 import { PagUsuComponent } from './Components/usuarios/pag-usu/pag-usu.component';
 import { Routes, RouterModule } from '@angular/router';
 import { AgregarCatalogoComponent } from './Components/Catalogo/agregar-catalogo/agregar-catalogo.component';
 import { EditarCatalogoComponent } from './Components/Catalogo/editar-catalogo/editar-catalogo.component';
 import { ListarCatalogoComponent } from './Components/Catalogo/listar-catalogo/listar-catalogo.component';
+import { SolicitudComponent } from './Components/Solicitud/solicitud/solicitud.component';
 
 
 const appRoute : Routes = [ 
@@ -18,7 +19,8 @@ const appRoute : Routes = [
   {path: 'Usuarios', component: PagUsuComponent},
   {path: 'Catalogos', component: ListarCatalogoComponent},
   {path: 'Agregar-Catalogo', component: AgregarCatalogoComponent},
-  {path: 'Editar-Catalogo/:annios_lab', component: EditarCatalogoComponent}
+  {path: 'Editar-Catalogo/:annios_lab', component: EditarCatalogoComponent},
+  {path: 'Solicitud', component: SolicitudComponent},
 ]
 
 
@@ -29,7 +31,8 @@ const appRoute : Routes = [
     PagUsuComponent,
     AgregarCatalogoComponent,
     EditarCatalogoComponent,
-    ListarCatalogoComponent
+    ListarCatalogoComponent,
+    SolicitudComponent
   ],
   imports: [
     BrowserModule,
