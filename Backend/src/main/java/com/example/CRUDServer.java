@@ -16,9 +16,9 @@ public class CRUDServer {
     public static void main(String[] args) {
 
         // Configuración de la conexión a la base de datos MySQL
-        String url = "jdbc:mysql://localhost:3307/test";
-        String username = "root";
-        String password = "";
+        String url = "jdbc:mysql://158.101.15.82:3306/scygv";
+        String username = "SCYGV";
+        String password = "contraseña xd";
 
         port(3000);
 
@@ -53,7 +53,7 @@ public class CRUDServer {
         // Ruta para obtener todos los roles
         get("/roles", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM roles";
+                String query = "SELECT * FROM SCYGV_ROLES";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -77,7 +77,7 @@ public class CRUDServer {
             String nombreRol = rol.getNombre();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO roles (ROL) VALUES (?)";
+                String query = "INSERT INTO SCYGV_ROLES (ROL) VALUES (?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombreRol);
                 statement.executeUpdate();
@@ -93,7 +93,7 @@ public class CRUDServer {
         delete("/roles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM roles where ID = ?";
+                String query = "DELETE FROM SCYGV_ROLES where ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -116,7 +116,7 @@ public class CRUDServer {
             String Nrol = rol.getNombre();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE roles SET ROL = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_ROLES SET ROL = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, Nrol);
                 statement.setInt(2, id);
@@ -133,7 +133,7 @@ public class CRUDServer {
         get("/roles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM roles WHERE ID = ?";
+                String query = "SELECT * FROM SCYGV_ROLES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -155,7 +155,7 @@ public class CRUDServer {
         // OBTENER USUARIOS
         get("/usuario", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM usuarios";
+                String query = "SELECT * FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -164,7 +164,7 @@ public class CRUDServer {
                     int id = resultSet.getInt("id");
                     String nombres = resultSet.getString("nombres");
                     String apellidos = resultSet.getString("apellidos");
-                    String contrasena = resultSet.getString("contrasena");
+                    String contrasena = resultSet.getString("contraseña");
                     String correo = resultSet.getString("correo");
                     int rol = resultSet.getInt("rol");
                     String rfc = resultSet.getString("rfc");
@@ -201,7 +201,7 @@ public class CRUDServer {
             String telefono = usuario.getTelefono();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO usuarios (nombres, apellidos, contrasena, correo, rol, rfc, curp, n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                String query = "INSERT INTO SCYGV_USUARIOS (NOMBRES, APELLIDOS, CONTRASEÑA, CORREO, ROL, RFC, CURP, N_C_PROF, U_G_ESTUDIO, F_INGRESO, ESPECIALIDAD, TELEFONO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombres);
                 statement.setString(2, apellidos);
@@ -228,7 +228,7 @@ public class CRUDServer {
         delete("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM usuarios WHERE id = ?";
+                String query = "DELETE FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -262,7 +262,7 @@ public class CRUDServer {
             String telefono = usuario.getTelefono();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE usuarios SET nombres = ?, apellidos = ?, contrasena = ?, correo = ?, rol = ?, rfc = ?, curp = ?, n_c_prof = ?, u_g_estudio = ?, f_ingreso = ?, especialidad = ?, telefono =  ? WHERE id = ?";
+                String query = "UPDATE SCYGV_USUARIOS SET NOMBRES = ?, APELLIDOS = ?, CONTRASEÑA = ?, CORREO = ?, ROL = ?, RFC = ?, CURP = ?, N_C_PROF = ?, U_G_ESTUDIO = ?, F_INGRESO = ?, ESPECIALIDAD = ?, TELEFONO =  ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombres);
                 statement.setString(2, apellidos);
@@ -290,7 +290,7 @@ public class CRUDServer {
         get("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM usuarios WHERE id = ?";
+                String query = "SELECT * FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -324,7 +324,7 @@ public class CRUDServer {
         // Ruta para obtener todos los catálogos
         get("/catalogos", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM scygv_catalogo";
+                String query = "SELECT * FROM SCYGV_CATALOGO";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -347,7 +347,7 @@ public class CRUDServer {
             String añosLab = req.params(":añosLab");
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                String query = "SELECT * FROM SCYGV_CATALOGO WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, añosLab);
                 ResultSet resultSet = statement.executeQuery();
@@ -370,7 +370,7 @@ public class CRUDServer {
             Catalogo nuevoCatalogo = gson.fromJson(requestBody, Catalogo.class);
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO scygv_catalogo (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
+                String query = "INSERT INTO SCYGV_CATALOGO (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nuevoCatalogo.getAñosLab());
                 statement.setInt(2, nuevoCatalogo.getDiasVac());
@@ -388,7 +388,7 @@ public class CRUDServer {
             String añosLab = req.params(":añosLab");
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                String query = "DELETE FROM SCYGV_CATALOGO WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, añosLab);
                 int affectedRows = statement.executeUpdate();
@@ -411,7 +411,7 @@ public class CRUDServer {
             Catalogo catalogoActualizado = gson.fromJson(requestBody, Catalogo.class);
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE scygv_catalogo SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
+                String query = "UPDATE SCYGV_CATALOGO SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, catalogoActualizado.getAñosLab());
                 statement.setInt(2, catalogoActualizado.getDiasVac());
@@ -433,7 +433,7 @@ public class CRUDServer {
         // OBTENER SOLICITUDES
         get("/solicitudes", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM solicitudes";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -466,7 +466,7 @@ public class CRUDServer {
             String estado = solicitud.getEstado();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO solicitudes (id_user, id_rh, fecha, motivo, dias, estado) VALUES (?,?,?,?,?,?);";
+                String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?);";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
@@ -487,7 +487,7 @@ public class CRUDServer {
         delete("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM solicitudes WHERE id = ?";
+                String query = "DELETE FROM SCYGV_SOLICITUDES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -514,7 +514,7 @@ public class CRUDServer {
             int dias = solicitud.getDias();
             String estado = solicitud.getEstado();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE solicitudes SET id_user = ?, id_rh = ?, fecha = ?, motivo = ?, dias = ?, estado = ? WHERE id = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, ID_RH = ?, FECHA = ?, MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
@@ -536,7 +536,7 @@ public class CRUDServer {
         get("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM solicitudes WHERE id = ?";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
