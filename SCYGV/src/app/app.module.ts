@@ -26,11 +26,15 @@ const appRoute : Routes = [
   {path: 'Catalogos', component: ListarCatalogoComponent},
   {path: 'Agregar-Catalogo', component: AgregarCatalogoComponent},
   {path: 'Editar-Catalogo/:annios_lab', component: EditarCatalogoComponent},
-  {path: 'Solicitud', component: SolicitudComponent},
+
   {path: 'Login', component: LoginComponent},
   {path: 'Home', component: HomeComponent},
-  {path: 'Administrador', component: AdminComponent},
+  { path: 'Administrador', component: AdminComponent, children: [
+    { path: 'Solicitud', component: SolicitudComponent }
+    // Otras rutas secundarias
+  ]},
   {path: 'Empleado', component: EmpleadoComponent},
+  { path: 'Solicitud', component: SolicitudComponent },
   {path: 'RH', component: RHComponent}
 ]
 
