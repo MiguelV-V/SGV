@@ -18,7 +18,7 @@ public class CRUDServer {
         // Configuración de la conexión a la base de datos MySQL
         String url = "jdbc:mysql://158.101.15.82:3306/scygv";
         String username = "SCYGV";
-        String password = "contraseña xd";
+        String password = "yAB4F2pDNY56WAsZ";
 
         port(3000);
 
@@ -244,8 +244,8 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para modificar usuarios
-         put("/usuario/:id", (req, res) -> {
+        // Ruta para modificar usuarios
+        put("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
             String nombres = usuario.getNombres();
@@ -286,7 +286,7 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para obtener usuarios por id
+        // Ruta para obtener usuarios por id
         get("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -319,7 +319,6 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener el Usuario"));
             }
         });
-
 
         // Ruta para obtener todos los catálogos
         get("/catalogos", (req, res) -> {
@@ -356,7 +355,8 @@ public class CRUDServer {
                     int diasVac = resultSet.getInt("DIAS_VAC");
                     return gson.toJson(new Catalogo(añosLab, diasVac));
                 } else {
-                    return gson.toJson(new Respuesta("El catálogo con los años de labor proporcionados no fue encontrado."));
+                    return gson.toJson(
+                            new Respuesta("El catálogo con los años de labor proporcionados no fue encontrado."));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -396,7 +396,8 @@ public class CRUDServer {
                 if (affectedRows > 0) {
                     return gson.toJson(new Respuesta("Catálogo eliminado correctamente"));
                 } else {
-                    return gson.toJson(new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                    return gson.toJson(
+                            new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -421,7 +422,8 @@ public class CRUDServer {
                 if (affectedRows > 0) {
                     return gson.toJson(new Respuesta("Catálogo actualizado correctamente"));
                 } else {
-                    return gson.toJson(new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
+                    return gson.toJson(
+                            new Respuesta("No se encontró ningún catálogo con los años de labor proporcionados"));
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -503,8 +505,8 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para modificar usuarios
-         put("/solicitudes/:id", (req, res) -> {
+        // Ruta para modificar usuarios
+        put("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
@@ -532,7 +534,7 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        //Ruta para obtener usuarios por id
+        // Ruta para obtener usuarios por id
         get("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -558,8 +560,37 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener la solicitud"));
             }
         });
-    }
 
+        post("/login", (req, res) -> {
+            Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
+            String correo = usuario.getCorreo();
+            String contrasena = usuario.getContrasena();
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_USUARIOS WHERE CORREO = ? AND CONTRASEÑA = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, correo);
+                statement.setString(2, contrasena);
+                ResultSet resultSet = statement.executeQuery();
+                String respuesta;
+                if(resultSet.next())
+                {
+                    int id = resultSet.getInt("ROL");
+                    if(id == 3)
+                    {
+                        respuesta =  gson.toJson(true);
+                    }
+                    else{respuesta =  gson.toJson(false);}
+                }
+                else {
+                  respuesta =  gson.toJson(false);
+                }
+                return respuesta;
+            } catch (SQLException e) {
+                return e;
+            }
+        });
+    }
 
     // Clase para representar un rol
     static class Rol {
@@ -681,9 +712,8 @@ public class CRUDServer {
         }
     }
 
-    //Clase para representar un catalogo
-    static class Catalogo 
-    {
+    // Clase para representar un catalogo
+    static class Catalogo {
         private String annios_lab;
         private int dias_vac;
 
@@ -701,9 +731,8 @@ public class CRUDServer {
         }
     }
 
-    //Clase para representar solicitudes
-    static class Solicitud 
-    {
+    // Clase para representar solicitudes
+    static class Solicitud {
         private int id;
         private int id_user;
         private int id_rh;
@@ -711,7 +740,6 @@ public class CRUDServer {
         private String motivo;
         private int dias;
         private String estado;
-
 
         public Solicitud(int id, int id_user, int id_rh, Date fecha, String motivo, int dias, String estado) {
             this.id = id;
