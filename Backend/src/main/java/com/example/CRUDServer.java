@@ -576,7 +576,7 @@ public class CRUDServer {
                 if(resultSet.next())
                 {
                     int id = resultSet.getInt("ROL");
-                    if(id == 3)
+                    if(id > 0 && id < 4)
                     {
                         respuesta =  gson.toJson(true);
                     }
