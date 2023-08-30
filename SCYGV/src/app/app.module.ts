@@ -14,9 +14,13 @@ import { ListarCatalogoComponent } from './Components/Catalogo/listar-catalogo/l
 import { SolicitudComponent } from './Components/Solicitud/solicitud/solicitud.component';
 import { LoginComponent } from './Components/Login/login/login.component';
 import { HomeComponent } from './Components/Home/home/home.component';
+import { AdminComponent } from './Components/Administrador/admin/admin.component';
+import { EmpleadoComponent } from './Components/Empleado/empleado/empleado.component';
+import { RHComponent } from './Components/RH/rh/rh.component';
 
 
 const appRoute : Routes = [ 
+  {path: '', redirectTo:'/Home', pathMatch:'full'},
   {path: 'Roles', component: BodyComponent },
   {path: 'Usuarios', component: PagUsuComponent},
   {path: 'Catalogos', component: ListarCatalogoComponent},
@@ -24,7 +28,10 @@ const appRoute : Routes = [
   {path: 'Editar-Catalogo/:annios_lab', component: EditarCatalogoComponent},
   {path: 'Solicitud', component: SolicitudComponent},
   {path: 'Login', component: LoginComponent},
-  {path: 'Home', component: HomeComponent}
+  {path: 'Home', component: HomeComponent},
+  {path: 'Administrador', component: AdminComponent},
+  {path: 'Empleado', component: EmpleadoComponent},
+  {path: 'RH', component: RHComponent}
 ]
 
 
@@ -38,7 +45,10 @@ const appRoute : Routes = [
     ListarCatalogoComponent,
     SolicitudComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    AdminComponent,
+    EmpleadoComponent,
+    RHComponent
   ],
   imports: [
     BrowserModule,

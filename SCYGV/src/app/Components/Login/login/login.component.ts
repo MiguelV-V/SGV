@@ -33,6 +33,7 @@ export class LoginComponent {
       this.UService.postLog(usulogin).subscribe(res =>{
         if(res == true){ 
           this.router.navigateByUrl('/Roles');
+          this.FormLogin.reset();
         }
         else
         {

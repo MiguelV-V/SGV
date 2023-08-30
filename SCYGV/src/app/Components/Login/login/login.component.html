@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary data-bs-theme= dark">
-    <div class="container-fluid">
+    <div class="container-fluid mb-2">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -21,16 +21,16 @@
       </div>
     </div>
   </nav>
-  <router-outlet></router-outlet>
+  
 <form [formGroup]="FormLogin" >
-    <div class="p-inputgroup mb-2">
+    <div class="d-flex justify-content-center mb-2">
         <span class="p-inputgroup-addon">
             <i class="pi pi-user"></i>
         </span>
         <input  placeholder="Inserte su Correo"  type = "text" formControlName="correo" />
         <input  placeholder="Inserte su Contraseña" type = "text" formControlName="contrasena" />
     </div>
-    <div>
+    <div class="d-flex justify-content-center">
         <button type="button" class="btn btn-outline-primary mb-2" (click)="login()">Iniciar Sesión</button>
     </div>
   </form>
