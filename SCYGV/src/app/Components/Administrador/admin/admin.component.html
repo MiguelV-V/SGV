@@ -33,7 +33,7 @@
                             <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline"> Empleados</span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                             <li class="w-100">
-                                <a href="/Usuarios" class="nav-link px-0 text-white"> <i class="bi bi-person-plus-fill fs-0.5"></i> <span class="d-none d-sm-inline"> Alta</span></a>
+                                <a routerLink="/Usuarios" class="nav-link px-0 text-white"> <i class="bi bi-person-plus-fill fs-0.5"></i> <span class="d-none d-sm-inline"> Alta</span></a>
                             </li>
                             <li class="w-100">
                                 <a href="#" class="nav-link px-0 text-white"> <i class="bi bi-person-fill-gear fs-0.5"></i> <span class="d-none d-sm-inline"> Gestionar</span></a>
@@ -42,11 +42,17 @@
                     </li>
                     <li>
                         <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
+                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                         </ul>
                     </li>
                     
+                    <li>
+                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                        </ul>
+                    </li>
                 </ul>
                 <hr>
                 <div class="dropdown pb-4">
@@ -65,7 +71,6 @@
             </div>
         </div>
         <div style="background-color: #E4E7C0" class="col py-3 text-center">
-            <h1>Bienvenido Usuario!</h1>
             <router-outlet></router-outlet>
         </div>
     </div>

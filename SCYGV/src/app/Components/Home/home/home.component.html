@@ -1,10 +1,10 @@
 <nav class="navbar navbar-dark bg-dark justify-content-end">
   <ul class="nav justify-content-end" >
     <li class="nav-item">
-      <a class="nav-link" aria-current="page" href="/Login">Iniciar Sesión</a>
+      <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#VentanaLog" >Iniciar Sesión</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" aria-current="page" href="/Login">Olvidaste tu contraseña?</a>
+      <a class="nav-link" aria-current="page" routerLink="/Home">Olvidaste tu contraseña?</a>
     </li>
   </ul>
 </nav>
@@ -14,3 +14,33 @@
   </div>
 </body>
   
+<!-- Ventana del Formulario -->
+<div class="modal fade" id="VentanaLog" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Inicia Sesión</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="FormLogin" >
+          <div class="d-flex justify-content-center mb-2">
+              <span class="p-inputgroup-addon">
+                  <i class="pi pi-user"></i>
+              </span>
+              <div >
+                <label class="mb-2">Correo</label>
+                <input class="form-control" type = "text" formControlName="correo"/>
+                <label class="mb-2">Contraseña</label>
+                <input class="form-control" type = "text" formControlName="contrasena"/>
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" (click)="login()">Iniciar Sesión</button>
+      </div>
+    </div>
+  </div>
+</div>

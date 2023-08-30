@@ -30,7 +30,9 @@ const appRoute : Routes = [
   {path: 'Login', component: LoginComponent},
   {path: 'Home', component: HomeComponent},
   { path: 'Administrador', component: AdminComponent, children: [
-    { path: 'Solicitud', component: SolicitudComponent }
+    { path: 'Solicitud', component: SolicitudComponent },
+    { path: 'Empleado', component: EmpleadoComponent },
+    { path: 'Usuario', component: PagUsuComponent},
     // Otras rutas secundarias
   ]},
   {path: 'Empleado', component: EmpleadoComponent},
