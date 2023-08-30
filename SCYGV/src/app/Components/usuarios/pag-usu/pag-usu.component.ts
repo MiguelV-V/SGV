@@ -9,10 +9,12 @@ import { usuarioService } from 'src/app/services/usuario.service';
   styleUrls: ['./pag-usu.component.css']
 })
 export class PagUsuComponent {
+ 
   //Se utiliza para mostrar el usuario
   LUsuarios !: Usuario[];
   //Form
   FormUsu: FormGroup
+  
   //Iniciar el boton desactivado
   isClicked: boolean = true;
 
@@ -32,6 +34,8 @@ export class PagUsuComponent {
       especialidad : new FormControl('',[Validators.required]),
       telefono : new FormControl('',[Validators.required])
     })
+
+    
   }
   
   //Iniciar la muestra de Usuarios
@@ -46,7 +50,7 @@ export class PagUsuComponent {
       this.LUsuarios = <any>res
       console.log(res)})
   }
-  
+
   //Crear Usuario
   createUsuario(){
     if(this.FormUsu.valid)

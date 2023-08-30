@@ -7,10 +7,16 @@ import { Usuario } from '../modelo/usuario';
 })
 export class usuarioService {
   rutaG = 'http://localhost:3000/usuario'
+  rutaLog = 'http://localhost:3000/login'
   constructor(private http: HttpClient) {}
+  //Logear
+  postLog(usuario:Usuario){
+    return this.http.post(this.rutaLog,usuario)
+  }
+
   //Obtener Usuarios
   getUsuario(){
-    return this.http.get(this.rutaG)
+    return this.http.get(this.rutaG);
   }
 
   //Crear Usuario

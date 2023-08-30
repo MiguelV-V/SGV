@@ -12,6 +12,8 @@ import { AgregarCatalogoComponent } from './Components/Catalogo/agregar-catalogo
 import { EditarCatalogoComponent } from './Components/Catalogo/editar-catalogo/editar-catalogo.component';
 import { ListarCatalogoComponent } from './Components/Catalogo/listar-catalogo/listar-catalogo.component';
 import { SolicitudComponent } from './Components/Solicitud/solicitud/solicitud.component';
+import { LoginComponent } from './Components/Login/login/login.component';
+import { HomeComponent } from './Components/Home/home/home.component';
 
 
 const appRoute : Routes = [ 
@@ -21,6 +23,8 @@ const appRoute : Routes = [
   {path: 'Agregar-Catalogo', component: AgregarCatalogoComponent},
   {path: 'Editar-Catalogo/:annios_lab', component: EditarCatalogoComponent},
   {path: 'Solicitud', component: SolicitudComponent},
+  {path: 'Login', component: LoginComponent},
+  {path: 'Home', component: HomeComponent}
 ]
 
 
@@ -32,7 +36,9 @@ const appRoute : Routes = [
     AgregarCatalogoComponent,
     EditarCatalogoComponent,
     ListarCatalogoComponent,
-    SolicitudComponent
+    SolicitudComponent,
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

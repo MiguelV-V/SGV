@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary data-bs-theme= dark">
+    <div class="container-fluid">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/Roles">Roles</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/Usuarios">Usuarios</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/Catalogos">Catalogos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/Solicitud">Solicitud</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <router-outlet></router-outlet>
+<form [formGroup]="FormLogin" >
+    <div class="p-inputgroup mb-2">
+        <span class="p-inputgroup-addon">
+            <i class="pi pi-user"></i>
+        </span>
+        <input  placeholder="Inserte su Correo"  type = "text" formControlName="correo" />
+        <input  placeholder="Inserte su Contraseña" type = "text" formControlName="contrasena" />
+    </div>
+    <div>
+        <button type="button" class="btn btn-outline-primary mb-2" (click)="login()">Iniciar Sesión</button>
+    </div>
+  </form>
+
