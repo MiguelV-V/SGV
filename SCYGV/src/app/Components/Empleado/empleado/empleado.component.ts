@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { Rol } from 'src/app/modelo/rol';
 import { Usuario} from 'src/app/modelo/usuario';
+import { RolService } from 'src/app/services/rol.service';
 import { usuarioService } from 'src/app/services/usuario.service';
-
+import swal from'sweetalert2';
 @Component({
   selector: 'app-empleado',
   templateUrl: './empleado.component.html',
   styleUrls: ['./empleado.component.css']
 })
 export class EmpleadoComponent {
+
+  
+  LRoles !: Rol[];
   //Se utiliza para mostrar el usuario
   LUsuarios !: Usuario[];
   //Form
@@ -19,7 +24,7 @@ export class EmpleadoComponent {
 
   mostrarC: boolean = true;
   mostrarA: boolean = false;
-  constructor(private UService:usuarioService, private fb:FormBuilder){
+  constructor(private UService:usuarioService, private fb:FormBuilder, private rService : RolService){
     //Formulario para trabajar con los Usuarios
     this.FormUsu = fb.group({
       id : new FormControl(),
@@ -39,15 +44,24 @@ export class EmpleadoComponent {
   
     
   }
-  
   //Iniciar la muestra de Usuarios
   ngOnInit():void{
     this.getUsuario()
+    this.getRol()
   }
+
+   //Mostrar Rol
+getRol():any{
+  this.rService.getRol().subscribe(res =>{
+    this.LRoles = <any>res
+    console.log(res)
+  })
+}
 
   
   //Mostrar Usuarios
   getUsuario():any{
+    this.mostrarC = true;
     this.UService.getUsuario().subscribe(res =>{
       this.LUsuarios = <any>res
       console.log(res)})
@@ -72,16 +86,37 @@ export class EmpleadoComponent {
       usuario.telefono = this.FormUsu.get('telefono')?.value
       this.UService.createUsuario(usuario).subscribe(res =>
         this.getUsuario(),
-        this.limpiar()
-      )}
+        this.limpiar())
+        swal.fire({
+        icon: 'success',
+        title: 'Se creo correctamente el Usuario',
+        showConfirmButton: false,
+        timer: 1500
+      })}
+     else{
+        swal.fire({
+          icon: 'error',
+          title: 'Oops...',
+          text: 'Faltan datos por rellenar...',})
+      }
   }
 
   //Eliminar Usuario
   deleteUsuario(idUsu : any){
-    this.UService.deleteUsuario(idUsu).subscribe(res =>{
+    swal.fire({
+        text: "¿Está seguro que desea eliminar?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+    })
+    .then(resultado => {
+      if (resultado.value) {
+      this.UService.deleteUsuario(idUsu).subscribe(res =>{
       console.log(res)
       this.getUsuario()
     },error => console.log(error))
+  }})
   }
 
   //Actualizar Usuario
@@ -105,7 +140,7 @@ export class EmpleadoComponent {
       idUsu = usuario.id;
       this.UService.updateUsuario(idUsu,usuario).subscribe(res =>
         this.getUsuario(),
-        this.limpiar()
+        this.limpiar(),
       )}
     }
     
@@ -136,5 +171,6 @@ getUserId(idUsu: number):any{
   })
 }
   //Funcion para limpar el formulario
-  limpiar():any{this.FormUsu.reset()}
+  limpiar():any{this.mostrarC = true;this.mostrarA = false;this.FormUsu.reset()}
+ 
 }
