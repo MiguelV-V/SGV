@@ -1,9 +1,9 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
         <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-info">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
                 <a href="/" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                    <span class="fs-5 d-none d-sm-inline">SCYGV</span>
+                    <span class="fs-1 d-none d-sm-inline"><b>SCYGV</b></span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li>
@@ -16,11 +16,11 @@
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
-                        <ul class="collapse show nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                        <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
                             <li class="w-100">
                                 <a routerLink="./Solicitud" class="nav-link px-0 text-white">
-                                  <i class="bi bi-clipboard-plus fs-0.5"></i>
-                                  <span class="d-none d-sm-inline"> Nueva</span>
+                                    <i class="bi bi-gear-wide"></i>
+                                  <span class="d-none d-sm-inline"> Gestionar</span>
                                 </a>
                               </li>
                             <li>
@@ -33,22 +33,19 @@
                             <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline"> Empleados</span></a>
                         <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
                             <li class="w-100">
-                                <a routerLink="/Usuarios" class="nav-link px-0 text-white"> <i class="bi bi-person-plus-fill fs-0.5"></i> <span class="d-none d-sm-inline"> Alta</span></a>
-                            </li>
-                            <li class="w-100">
-                                <a href="#" class="nav-link px-0 text-white"> <i class="bi bi-person-fill-gear fs-0.5"></i> <span class="d-none d-sm-inline"> Gestionar</span></a>
+                                <a routerLink="./Empleado" class="nav-link px-0 text-white"> <i class="bi bi-person-fill-gear fs-0.5"></i> <span class="d-none d-sm-inline"> Gestionar</span></a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
+                        <a routerLink="./Catalogos" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                         </ul>
                     </li>
                     
                     <li>
-                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                        <a data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
                             <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
                         </ul>
@@ -57,7 +54,7 @@
                 <hr>
                 <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="https://github.com/mdo.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <img src="./assets/usuario.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
                         <span class="d-none d-sm-inline mx-1">Nombre Usuario</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
