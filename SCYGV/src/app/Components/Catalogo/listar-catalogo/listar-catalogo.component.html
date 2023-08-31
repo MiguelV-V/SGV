@@ -1,14 +1,16 @@
 <div class="container-sm">
     <h1 class="text-center">Catálogos</h1>
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#VentanaAdd">Agregar</button>
+    <div class="mb-3 card-body d-flex justify-content-between">
+      <button type="button" class="btn btn-primary float-start" data-bs-toggle="modal" data-bs-target="#VentanaAdd">Agregar</button>
+    </div>
 
-    <table class="table table-hover table-bordered table-striped">
+    <table class="table">
         <thead>
           <tr>
             <th scope="col">Años Laborados</th>
-            <th scope="col">Días Vacaciones</th>
-            <th scope="col">Acciones</th>
+            <th scope="col" >Días Vacaciones</th>
+            <th scope="col" >Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -16,10 +18,11 @@
             <td>{{catalogo.annios_lab}}</td>
             <td>{{catalogo.dias_vac}}</td>
             <td>
-              <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#VentanaEdit">Editar</button>
-              <button type="button" class="btn btn-danger" (click)="eliminarCatalogo(catalogo.annios_lab)">Eliminar</button>
+              <button type="button" class="btn btn-info" (click)="editar(catalogo)" data-bs-toggle="modal" data-bs-target="#VentanaEdit" ><i class="bi bi-pencil-fill"></i></button>
+              <button type="button" class="btn btn-danger" (click)="eliminarCatalogo(catalogo.annios_lab)"><i class="bi bi-x-circle-fill"></i></button>
             </td>
           </tr>
+          
         </tbody>
       </table>
 </div>
@@ -65,23 +68,23 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form>
+        <form form [formGroup]="FormCat">
           <div class="d-flex justify-content-center mb-2">
               <span class="p-inputgroup-addon">
                   <i class="pi pi-user"></i>
               </span>
               <div >
                 <label class="form-label">Nuevo Catálogo:</label>
-                <input  placeholder="Catálogo" type="text" name="Catalogo" class="form-control">
+                <input  placeholder="Catálogo" type="text" name="Catalogo" class="form-control" formControlName="cat">
                 <label class="form-label">Días de Vacaciones:</label>
-                <input  placeholder="Días de Vacaciones" type="number" name="Vacaciones" class="form-control">
+                <input  placeholder="Días de Vacaciones" type="number" name="Vacaciones" class="form-control" formControlName="vac">
               </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" (click)="agregarCatalogos()" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" >Editar</button>
+        <button type="button" (click)="updateCatalogo()" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" >Editar</button>
       </div>
     </div>
   </div>

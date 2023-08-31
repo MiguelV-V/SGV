@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { CatalogoService } from 'src/app/services/Catalogo/catalogo.service';
 import { Router } from '@angular/router';
-import { NgForOfContext } from '@angular/common';
-import { FormGroup, NgForm } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Catalogo } from 'src/app/modelo/catalogo';
+import Swal from'sweetalert2';
 
 @Component({
   selector: 'app-listar-catalogo',
@@ -14,17 +14,29 @@ export class ListarCatalogoComponent {
   //Variable para listar los catalogos
   ListarCatalogos!: Catalogo[];
 
+  FormCat: FormGroup
+  
+  annios_lab:any = ''
+
   Catalogo:Catalogo = {
     annios_lab:'',
     dias_vac:''
   };
 
-  constructor(private serviceR:CatalogoService, private router: Router){}
+  constructor(private serviceR:CatalogoService, private router: Router, private fb:FormBuilder){
+    this.FormCat = fb.group({
+      annios_lab : new FormControl(''),
+      dias_vac : new FormControl(''),
+      cat: this.Catalogo.annios_lab,
+      vac: this.Catalogo.dias_vac
+    })
+  }
 
   ngOnInit(): void{
     this.listarCatalogos();
   }
 
+  //Función para llenar la tabla con los datos
   listarCatalogos():any{
     this.serviceR.listarCatalogos().subscribe(response=>{
       this.ListarCatalogos = <any> response;
@@ -32,17 +44,27 @@ export class ListarCatalogoComponent {
     })
   }
 
+  //Función para eliminar un catalogo
   eliminarCatalogo(id:any){
-    this.serviceR.eliminarCatalogo(id).subscribe(response => {
-      console.log('Catalogo eliminado');
-      this.listarCatalogos();
-    }, err=> console.log(err))
+    Swal
+    .fire({
+        text: "¿Está seguro que desea eliminar?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: "Sí, eliminar",
+        cancelButtonText: "Cancelar",
+    })
+    .then(resultado => {
+        if (resultado.value) {
+            this.serviceR.eliminarCatalogo(id).subscribe(response => {
+            console.log('Catalogo eliminado');
+            this.listarCatalogos();
+          }, err=> console.log(err))
+        }
+    });
   }
 
-  editarRol(annios_lab:any){
-    this.router.navigate(['/Editar-Catalogo/' + annios_lab]);
-  }
-
+  //Función para agregar un nuevo catálogo
   agregarCatalogos(){
     this.serviceR.crearCatalogo(this.Catalogo).subscribe(response => {
       console.log('Catalogo agregado');
@@ -50,18 +72,29 @@ export class ListarCatalogoComponent {
     }, err=> console.log(err))
   }
 
-  editarCatalogo(annios_lab:any){
-    this.router.navigate(['/Editar-Catalogo/' + annios_lab]);
+
+  //Función para llenar automáticamente los inputs
+  editar(catalogo:Catalogo){
+    this.FormCat.get('cat')?.setValue(catalogo.annios_lab)
+    this.FormCat.get('vac')?.setValue(catalogo.dias_vac)
+    this.annios_lab = catalogo.annios_lab
+
   }
 
-  actualizarCatalogo(){
-    this.serviceR.actualizarCatalogo(this.Catalogo.annios_lab, this.Catalogo).subscribe(
-      response => {
-        console.log(response);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  } 
+  //Función para editar los campos
+  updateCatalogo(){
+    let catalogo = new Catalogo()
+    if(this.FormCat.valid)
+    {
+      catalogo.annios_lab = this.FormCat.get('cat')?.value
+      catalogo.dias_vac = this.FormCat.get('vac')?.value
+      //idCat = catalogo.annios_lab;
+      this.serviceR.actualizarCatalogo(this.annios_lab,catalogo).subscribe(res =>
+        this.listarCatalogos(),
+        this.limpiar
+      )}
+    }
+
+    //Función para editar los datos del formulario
+    limpiar():any{this.FormCat.reset()}
 }
