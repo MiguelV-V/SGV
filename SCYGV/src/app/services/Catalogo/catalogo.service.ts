@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Catalogo } from 'src/app/modelo/catalogo';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,11 @@ export class CatalogoService {
      return this.Http.delete(this.API + '/' + annios_lab);
   }
 
-  crearCatalogo(Catalogo:InterfaceCatalogo){
+  crearCatalogo(Catalogo:Catalogo){
     return this.Http.post(this.API, Catalogo);
   }
 
-  actualizarCatalogo(annios_lab:any,  Catalogo:InterfaceCatalogo){
+  actualizarCatalogo(annios_lab:any,  Catalogo:Catalogo){
     return this.Http.put(this.API + '/' + annios_lab, Catalogo);
   }
 }

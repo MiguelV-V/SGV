@@ -1,7 +1,7 @@
 <div class="container-sm">
     <h1 class="text-center">Catálogos</h1>
 
-    <button type="button" class="btn btn-primary" routerLink="/Agregar-Catalogo">Agregar</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#VentanaAdd">Agregar</button>
 
     <table class="table table-hover table-bordered table-striped">
         <thead>
@@ -16,7 +16,7 @@
             <td>{{catalogo.annios_lab}}</td>
             <td>{{catalogo.dias_vac}}</td>
             <td>
-              <button type="button" class="btn btn-primary" (click)="editarRol(catalogo.annios_lab)">Editar</button>
+              <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#VentanaEdit">Editar</button>
               <button type="button" class="btn btn-danger" (click)="eliminarCatalogo(catalogo.annios_lab)">Eliminar</button>
             </td>
           </tr>
@@ -24,3 +24,65 @@
       </table>
 </div>
 
+<!-- Ventana para agregar catalogos -->
+<div class="modal fade" id="VentanaAdd" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar catálogo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="d-flex justify-content-center mb-2">
+              <span class="p-inputgroup-addon">
+                  <i class="pi pi-user"></i>
+              </span>
+              <div >
+                <label class="form-label">Nuevo Catálogo:</label>
+                <input [(ngModel)]="Catalogo.annios_lab" placeholder="Catálogo" type="text" name="Catalogo" class="form-control">
+                <label class="form-label">Días de Vacaciones:</label>
+                <input [(ngModel)]="Catalogo.dias_vac" placeholder="Días de Vacaciones" type="number" name="Vacaciones" class="form-control">
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" (click)="agregarCatalogos()" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" >Agregar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Ventana para editar catalogos -->
+<div class="modal fade" id="VentanaEdit" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="staticBackdropLabel">Editar catálogo</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="d-flex justify-content-center mb-2">
+              <span class="p-inputgroup-addon">
+                  <i class="pi pi-user"></i>
+              </span>
+              <div >
+                <label class="form-label">Nuevo Catálogo:</label>
+                <input  placeholder="Catálogo" type="text" name="Catalogo" class="form-control">
+                <label class="form-label">Días de Vacaciones:</label>
+                <input  placeholder="Días de Vacaciones" type="number" name="Vacaciones" class="form-control">
+              </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" (click)="agregarCatalogos()" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" >Editar</button>
+      </div>
+    </div>
+  </div>
+</div>

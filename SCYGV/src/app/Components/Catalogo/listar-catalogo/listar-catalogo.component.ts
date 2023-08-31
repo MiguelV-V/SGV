@@ -1,6 +1,9 @@
-import { Component } from '@angular/core';
-import { CatalogoService, InterfaceCatalogo } from 'src/app/services/Catalogo/catalogo.service';
+import { Component, ViewChild } from '@angular/core';
+import { CatalogoService } from 'src/app/services/Catalogo/catalogo.service';
 import { Router } from '@angular/router';
+import { NgForOfContext } from '@angular/common';
+import { FormGroup, NgForm } from '@angular/forms';
+import { Catalogo } from 'src/app/modelo/catalogo';
 
 @Component({
   selector: 'app-listar-catalogo',
@@ -9,7 +12,12 @@ import { Router } from '@angular/router';
 })
 export class ListarCatalogoComponent {
   //Variable para listar los catalogos
-  ListarCatalogos!: InterfaceCatalogo[];
+  ListarCatalogos!: Catalogo[];
+
+  Catalogo:Catalogo = {
+    annios_lab:'',
+    dias_vac:''
+  };
 
   constructor(private serviceR:CatalogoService, private router: Router){}
 
@@ -34,4 +42,26 @@ export class ListarCatalogoComponent {
   editarRol(annios_lab:any){
     this.router.navigate(['/Editar-Catalogo/' + annios_lab]);
   }
+
+  agregarCatalogos(){
+    this.serviceR.crearCatalogo(this.Catalogo).subscribe(response => {
+      console.log('Catalogo agregado');
+      this.listarCatalogos();
+    }, err=> console.log(err))
+  }
+
+  editarCatalogo(annios_lab:any){
+    this.router.navigate(['/Editar-Catalogo/' + annios_lab]);
+  }
+
+  actualizarCatalogo(){
+    this.serviceR.actualizarCatalogo(this.Catalogo.annios_lab, this.Catalogo).subscribe(
+      response => {
+        console.log(response);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  } 
 }
