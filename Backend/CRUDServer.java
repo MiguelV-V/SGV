@@ -1,24 +1,26 @@
 package com.example;
-
 import static spark.Spark.*;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.gson.Gson;
 
 public class CRUDServer {
+    public static SimpleDateFormat formato = new SimpleDateFormat("dd/mm/aaaa");
     public static void main(String[] args) {
 
+
         // Configuración de la conexión a la base de datos MySQL
-        String url = "jdbc:mysql://localhost:3307/test";
-        String username = "root";
-        String password = "";
+        String url = "jdbc:mysql://158.101.15.82:3306/scygv";
+        String username = "SCYGV";
+        String password = "yAB4F2pDNY56WAsZ";
 
         port(3000);
 
@@ -53,7 +55,7 @@ public class CRUDServer {
         // Ruta para obtener todos los roles
         get("/roles", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM roles";
+                String query = "SELECT * FROM SCYGV_ROLES";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -77,7 +79,7 @@ public class CRUDServer {
             String nombreRol = rol.getNombre();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO roles (ROL) VALUES (?)";
+                String query = "INSERT INTO SCYGV_ROLES (ROL) VALUES (?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombreRol);
                 statement.executeUpdate();
@@ -93,7 +95,7 @@ public class CRUDServer {
         delete("/roles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM roles where ID = ?";
+                String query = "DELETE FROM SCYGV_ROLES where ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -116,7 +118,7 @@ public class CRUDServer {
             String Nrol = rol.getNombre();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE roles SET ROL = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_ROLES SET ROL = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, Nrol);
                 statement.setInt(2, id);
@@ -133,7 +135,7 @@ public class CRUDServer {
         get("/roles/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM roles WHERE ID = ?";
+                String query = "SELECT * FROM SCYGV_ROLES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -155,16 +157,17 @@ public class CRUDServer {
         // OBTENER USUARIOS
         get("/usuario", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM usuarios";
+                String query = "SELECT * FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     String nombres = resultSet.getString("nombres");
                     String apellidos = resultSet.getString("apellidos");
-                    String contrasena = resultSet.getString("contrasena");
+                    String contrasena = resultSet.getString("contraseña");
                     String correo = resultSet.getString("correo");
                     int rol = resultSet.getInt("rol");
                     String rfc = resultSet.getString("rfc");
@@ -172,10 +175,11 @@ public class CRUDServer {
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
                     Date f_ingreso = resultSet.getDate("f_ingreso");
+                    f_ingreso =  devolverFecha(f_ingreso);
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio, formato.format(f_ingreso), especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -196,12 +200,12 @@ public class CRUDServer {
             String curp = usuario.getCurp();
             String n_c_prof = usuario.getNCProf();
             String u_g_estudio = usuario.getUGEstudio();
-            Date f_ingreso = usuario.getFIngreso();
+            String f_ingreso = usuario.getFIngreso();
             String especialidad = usuario.getEspecialidad();
             String telefono = usuario.getTelefono();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO usuarios (nombres, apellidos, contrasena, correo, rol, rfc, curp, n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                String query = "INSERT INTO SCYGV_USUARIOS (NOMBRES, APELLIDOS, CONTRASEÑA, CORREO, ROL, RFC, CURP, N_C_PROF, U_G_ESTUDIO, F_INGRESO, ESPECIALIDAD, TELEFONO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombres);
                 statement.setString(2, apellidos);
@@ -212,7 +216,7 @@ public class CRUDServer {
                 statement.setString(7, curp);
                 statement.setString(8, n_c_prof);
                 statement.setString(9, u_g_estudio);
-                statement.setDate(10, f_ingreso);
+                statement.setString(10,f_ingreso);
                 statement.setString(11, especialidad);
                 statement.setString(12, telefono);
                 statement.executeUpdate();
@@ -228,7 +232,7 @@ public class CRUDServer {
         delete("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM usuarios WHERE id = ?";
+                String query = "DELETE FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -257,12 +261,12 @@ public class CRUDServer {
             String curp = usuario.getCurp();
             String n_c_prof = usuario.getNCProf();
             String u_g_estudio = usuario.getUGEstudio();
-            Date f_ingreso = usuario.getFIngreso();
+            String f_ingreso = usuario.getFIngreso();
             String especialidad = usuario.getEspecialidad();
             String telefono = usuario.getTelefono();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE usuarios SET nombres = ?, apellidos = ?, contrasena = ?, correo = ?, rol = ?, rfc = ?, curp = ?, n_c_prof = ?, u_g_estudio = ?, f_ingreso = ?, especialidad = ?, telefono =  ? WHERE id = ?";
+                String query = "UPDATE SCYGV_USUARIOS SET NOMBRES = ?, APELLIDOS = ?, CONTRASEÑA = ?, CORREO = ?, ROL = ?, RFC = ?, CURP = ?, N_C_PROF = ?, U_G_ESTUDIO = ?, F_INGRESO = ?, ESPECIALIDAD = ?, TELEFONO =  ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nombres);
                 statement.setString(2, apellidos);
@@ -273,7 +277,7 @@ public class CRUDServer {
                 statement.setString(7, curp);
                 statement.setString(8, n_c_prof);
                 statement.setString(9, u_g_estudio);
-                statement.setDate(10, f_ingreso);
+                statement.setString(10, f_ingreso);
                 statement.setString(11, especialidad);
                 statement.setString(12, telefono);
                 statement.setInt(13, id);
@@ -290,17 +294,16 @@ public class CRUDServer {
         get("/usuario/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM usuarios WHERE id = ?";
+                String query = "SELECT * FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
                     int Id = resultSet.getInt("id");
                     String nombres = resultSet.getString("nombres");
                     String apellidos = resultSet.getString("apellidos");
-                    String contrasena = resultSet.getString("contrasena");
+                    String contrasena = resultSet.getString("contraseña");
                     String correo = resultSet.getString("correo");
                     int rol = resultSet.getInt("rol");
                     String rfc = resultSet.getString("rfc");
@@ -308,10 +311,11 @@ public class CRUDServer {
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
                     Date f_ingreso = resultSet.getDate("f_ingreso");
+                    f_ingreso =  devolverFecha(f_ingreso);
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(Id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio,formato.format(f_ingreso), especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -323,7 +327,7 @@ public class CRUDServer {
         // Ruta para obtener todos los catálogos
         get("/catalogos", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM scygv_catalogo";
+                String query = "SELECT * FROM SCYGV_CATALOGO";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
 
@@ -346,7 +350,7 @@ public class CRUDServer {
             String añosLab = req.params(":añosLab");
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                String query = "SELECT * FROM SCYGV_CATALOGO WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, añosLab);
                 ResultSet resultSet = statement.executeQuery();
@@ -370,7 +374,7 @@ public class CRUDServer {
             Catalogo nuevoCatalogo = gson.fromJson(requestBody, Catalogo.class);
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO scygv_catalogo (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
+                String query = "INSERT INTO SCYGV_CATALOGO (AÑOS_LAB, DIAS_VAC) VALUES (?, ?)";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, nuevoCatalogo.getAñosLab());
                 statement.setInt(2, nuevoCatalogo.getDiasVac());
@@ -388,7 +392,7 @@ public class CRUDServer {
             String añosLab = req.params(":añosLab");
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM scygv_catalogo WHERE AÑOS_LAB = ?";
+                String query = "DELETE FROM SCYGV_CATALOGO WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, añosLab);
                 int affectedRows = statement.executeUpdate();
@@ -412,7 +416,7 @@ public class CRUDServer {
             Catalogo catalogoActualizado = gson.fromJson(requestBody, Catalogo.class);
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE scygv_catalogo SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
+                String query = "UPDATE SCYGV_CATALOGO SET AÑOS_LAB = ?, DIAS_VAC = ? WHERE AÑOS_LAB = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, catalogoActualizado.getAñosLab());
                 statement.setInt(2, catalogoActualizado.getDiasVac());
@@ -435,20 +439,20 @@ public class CRUDServer {
         // OBTENER SOLICITUDES
         get("/solicitudes", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM solicitudes";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
                     Date fecha = resultSet.getDate("fecha");
+                    fecha = devolverFecha(fecha);
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, motivo, dias, estado));
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -462,17 +466,17 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            Date fecha = solicitud.getFecha();
+            String fecha = solicitud.getFecha();
             String motivo = solicitud.getMotivo();
             int dias = solicitud.getDias();
             String estado = solicitud.getEstado();
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO solicitudes (id_user, id_rh, fecha, motivo, dias, estado) VALUES (?,?,?,?,?,?);";
+                String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?);";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, fecha);
+                statement.setString(3,fecha);
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -489,7 +493,7 @@ public class CRUDServer {
         delete("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "DELETE FROM solicitudes WHERE id = ?";
+                String query = "DELETE FROM SCYGV_SOLICITUDES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 int affectedrows = statement.executeUpdate();
@@ -511,16 +515,16 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            Date fecha = solicitud.getFecha();
+            String fecha = solicitud.getFecha();
             String motivo = solicitud.getMotivo();
             int dias = solicitud.getDias();
             String estado = solicitud.getEstado();
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE solicitudes SET id_user = ?, id_rh = ?, fecha = ?, motivo = ?, dias = ?, estado = ? WHERE id = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, ID_RH = ?, FECHA = ?, MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, fecha);
+                statement.setDate(3, java.sql.Date.valueOf(fecha.toString()) );
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -538,21 +542,21 @@ public class CRUDServer {
         get("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM solicitudes WHERE id = ?";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
                     int Id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
                     Date fecha = resultSet.getDate("fecha");
+                    fecha = devolverFecha(fecha);
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha, motivo, dias, estado));
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -560,7 +564,46 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener la solicitud"));
             }
         });
+
+        post("/login", (req, res) -> {
+            Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
+            String correo = usuario.getCorreo();
+            String contrasena = usuario.getContrasena();
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_USUARIOS WHERE CORREO = ? AND CONTRASEÑA = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, correo);
+                statement.setString(2, contrasena);
+                ResultSet resultSet = statement.executeQuery();
+                String respuesta;
+                if(resultSet.next())
+                {
+                    int id = resultSet.getInt("ROL");
+                    if(id > 0 && id < 4)
+                    {
+                        respuesta =  gson.toJson(id);
+                    }
+                    else{respuesta =  gson.toJson(false);}
+                }
+                else {
+                  respuesta =  gson.toJson(false);
+                }
+                return respuesta;
+            } catch (SQLException e) {
+                return e;
+            }
+        });
     }
+
+    //Devolver la fecha
+      public static Date devolverFecha(Date fechaEntrada) throws ParseException{ 
+
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaString = fechaEntrada.toString(); // Convierte Date a String
+            Date miFecha = formato.parse(fechaString); // convierte String a Date
+            return miFecha;
+          }
 
     // Clase para representar un rol
     static class Rol {
@@ -607,12 +650,12 @@ public class CRUDServer {
         private String curp;
         private String n_c_prof;
         private String u_g_estudio;
-        private Date f_ingreso;
+        private String f_ingreso;
         private String especialidad;
         private String telefono;
 
         public Usuarios(int id, String nombres, String apellidos, String contrasena, String correo,
-                int rol, String rfc, String curp, String n_c_prof, String u_g_estudio, Date f_ingreso,
+                int rol, String rfc, String curp, String n_c_prof, String u_g_estudio, String f_ingreso,
                 String especialidad, String telefono) {
             this.id = id;
             this.nombres = nombres;
@@ -669,7 +712,7 @@ public class CRUDServer {
             return u_g_estudio;
         }
 
-        public Date getFIngreso() {
+        public String getFIngreso() {
             return f_ingreso;
         }
 
@@ -706,12 +749,12 @@ public class CRUDServer {
         private int id;
         private int id_user;
         private int id_rh;
-        private Date fecha;
+        private String fecha;
         private String motivo;
         private int dias;
         private String estado;
 
-        public Solicitud(int id, int id_user, int id_rh, Date fecha, String motivo, int dias, String estado) {
+        public Solicitud(int id, int id_user, int id_rh, String fecha, String motivo, int dias, String estado) {
             this.id = id;
             this.id_user = id_user;
             this.id_rh = id_rh;
@@ -733,7 +776,7 @@ public class CRUDServer {
             return id_rh;
         }
 
-        public Date getFecha() {
+        public String getFecha() {
             return fecha;
         }
 

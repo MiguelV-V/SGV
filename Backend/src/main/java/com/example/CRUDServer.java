@@ -1,19 +1,21 @@
 package com.example;
-
 import static spark.Spark.*;
 import java.sql.Connection;
-import java.sql.Date;
+import java.util.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.google.gson.Gson;
 
 public class CRUDServer {
+    public static SimpleDateFormat formato = new SimpleDateFormat("dd/mm/aaaa");
     public static void main(String[] args) {
+
 
         // Configuración de la conexión a la base de datos MySQL
         String url = "jdbc:mysql://158.101.15.82:3306/scygv";
@@ -158,6 +160,7 @@ public class CRUDServer {
                 String query = "SELECT * FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
+                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
@@ -172,10 +175,11 @@ public class CRUDServer {
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
                     Date f_ingreso = resultSet.getDate("f_ingreso");
+                    f_ingreso =  devolverFecha(f_ingreso);
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio, formato.format(f_ingreso), especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -196,7 +200,7 @@ public class CRUDServer {
             String curp = usuario.getCurp();
             String n_c_prof = usuario.getNCProf();
             String u_g_estudio = usuario.getUGEstudio();
-            Date f_ingreso = usuario.getFIngreso();
+            String f_ingreso = usuario.getFIngreso();
             String especialidad = usuario.getEspecialidad();
             String telefono = usuario.getTelefono();
 
@@ -212,7 +216,7 @@ public class CRUDServer {
                 statement.setString(7, curp);
                 statement.setString(8, n_c_prof);
                 statement.setString(9, u_g_estudio);
-                statement.setDate(10, f_ingreso);
+                statement.setString(10,f_ingreso);
                 statement.setString(11, especialidad);
                 statement.setString(12, telefono);
                 statement.executeUpdate();
@@ -257,7 +261,7 @@ public class CRUDServer {
             String curp = usuario.getCurp();
             String n_c_prof = usuario.getNCProf();
             String u_g_estudio = usuario.getUGEstudio();
-            Date f_ingreso = usuario.getFIngreso();
+            String f_ingreso = usuario.getFIngreso();
             String especialidad = usuario.getEspecialidad();
             String telefono = usuario.getTelefono();
 
@@ -273,7 +277,7 @@ public class CRUDServer {
                 statement.setString(7, curp);
                 statement.setString(8, n_c_prof);
                 statement.setString(9, u_g_estudio);
-                statement.setDate(10, f_ingreso);
+                statement.setString(10, f_ingreso);
                 statement.setString(11, especialidad);
                 statement.setString(12, telefono);
                 statement.setInt(13, id);
@@ -294,13 +298,12 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
                     int Id = resultSet.getInt("id");
                     String nombres = resultSet.getString("nombres");
                     String apellidos = resultSet.getString("apellidos");
-                    String contrasena = resultSet.getString("contrasena");
+                    String contrasena = resultSet.getString("contraseña");
                     String correo = resultSet.getString("correo");
                     int rol = resultSet.getInt("rol");
                     String rfc = resultSet.getString("rfc");
@@ -308,10 +311,11 @@ public class CRUDServer {
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
                     Date f_ingreso = resultSet.getDate("f_ingreso");
+                    f_ingreso =  devolverFecha(f_ingreso);
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(Id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio,formato.format(f_ingreso), especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -438,17 +442,17 @@ public class CRUDServer {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
                     int id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
                     Date fecha = resultSet.getDate("fecha");
+                    fecha = devolverFecha(fecha);
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, motivo, dias, estado));
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -462,7 +466,7 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            Date fecha = solicitud.getFecha();
+            String fecha = solicitud.getFecha();
             String motivo = solicitud.getMotivo();
             int dias = solicitud.getDias();
             String estado = solicitud.getEstado();
@@ -472,7 +476,7 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, fecha);
+                statement.setString(3,fecha);
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -511,7 +515,7 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            Date fecha = solicitud.getFecha();
+            String fecha = solicitud.getFecha();
             String motivo = solicitud.getMotivo();
             int dias = solicitud.getDias();
             String estado = solicitud.getEstado();
@@ -520,7 +524,7 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, fecha);
+                statement.setDate(3, java.sql.Date.valueOf(fecha.toString()) );
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -542,17 +546,17 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
-
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
                     int Id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
                     Date fecha = resultSet.getDate("fecha");
+                    fecha = devolverFecha(fecha);
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha, motivo, dias, estado));
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -591,6 +595,15 @@ public class CRUDServer {
             }
         });
     }
+
+    //Devolver la fecha
+      public static Date devolverFecha(Date fechaEntrada) throws ParseException{ 
+
+            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaString = fechaEntrada.toString(); // Convierte Date a String
+            Date miFecha = formato.parse(fechaString); // convierte String a Date
+            return miFecha;
+          }
 
     // Clase para representar un rol
     static class Rol {
@@ -637,12 +650,12 @@ public class CRUDServer {
         private String curp;
         private String n_c_prof;
         private String u_g_estudio;
-        private Date f_ingreso;
+        private String f_ingreso;
         private String especialidad;
         private String telefono;
 
         public Usuarios(int id, String nombres, String apellidos, String contrasena, String correo,
-                int rol, String rfc, String curp, String n_c_prof, String u_g_estudio, Date f_ingreso,
+                int rol, String rfc, String curp, String n_c_prof, String u_g_estudio, String f_ingreso,
                 String especialidad, String telefono) {
             this.id = id;
             this.nombres = nombres;
@@ -699,7 +712,7 @@ public class CRUDServer {
             return u_g_estudio;
         }
 
-        public Date getFIngreso() {
+        public String getFIngreso() {
             return f_ingreso;
         }
 
@@ -736,12 +749,12 @@ public class CRUDServer {
         private int id;
         private int id_user;
         private int id_rh;
-        private Date fecha;
+        private String fecha;
         private String motivo;
         private int dias;
         private String estado;
 
-        public Solicitud(int id, int id_user, int id_rh, Date fecha, String motivo, int dias, String estado) {
+        public Solicitud(int id, int id_user, int id_rh, String fecha, String motivo, int dias, String estado) {
             this.id = id;
             this.id_user = id_user;
             this.id_rh = id_rh;
@@ -763,7 +776,7 @@ public class CRUDServer {
             return id_rh;
         }
 
-        public Date getFecha() {
+        public String getFecha() {
             return fecha;
         }
 
