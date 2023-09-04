@@ -21,7 +21,7 @@
               <th scope="col">F_Ingreso</th>
               <th scope="col">Especialidad</th>
               <th scope="col">Telefono</th>
-              <th scope="col" >Acciones</th>
+              <th scope="col">Acciones</th>
             </tr>
         </thead>
         <tbody >
@@ -67,7 +67,7 @@
                         <input type = "text" formControlName="apellidos" />
                         <label class="mb-3 m-2"><b>Contraseña:</b> </label>
                         <input type = "text" formControlName="contrasena" />
-                        <label class="mb-3 m-2">,<b>Correo:</b></label>
+                        <label class="mb-3 m-2"><b>Correo:</b></label>
                         <input type = "text" formControlName="correo" />
                         <label class="mb-3 text-dark"><b>Indica su Rol con Id:</b><label class="mb-2 m-2 text-secondary" *ngFor="let rol of LRoles"><b>{{rol.id}}:</b> {{rol.rol}}</label></label>
                         <input type = "text" formControlName="rol"/>
@@ -82,7 +82,8 @@
                         <label class="mb-3 m-2"><b>Ultimo Grado de Estudio:</b></label>
                         <input type = "text" formControlName="u_g_estudio" />
                         <label class="mb-3 m-2"><b>Fecha de Ingreso:</b></label>
-                        <input type = "date" formControlName="f_ingreso"/>
+                        <input *ngIf="mostrarC" type = "date" formControlName="f_ingreso"/>
+                        <input *ngIf="mostrarA" type="text"  formControlName="f_ingreso">
                       </div>
                       <label class="mb-3 m-2"><b>Especialidad:</b></label>
                       <input type = "text" formControlName="especialidad"/>
@@ -93,7 +94,7 @@
                       <button  type="button" class="btn btn-outline-primary mb-2" (click)="createUsuario()">Agregar</button>
                   </div>
                   <div *ngIf="mostrarA">
-                      <button type="button" class="pencil-square" class="btn btn-danger" data-bs-dismiss="modal" (click)="updateUsuario({id})">Actualizar</button>
+                      <button type="button" class="pencil-square" class="btn btn-success" (click)="updateUsuario({id})">Actualizar</button>
                   </div>
                 </form>
           </div>

@@ -1,51 +1,95 @@
-<div class="center">
-    <h1 >
-        CRUD Solicitudes SCYGV
-    </h1>
+<div>
+    <div class="text-center mb-3">
+        <h1>Soliciud de Vacaciones</h1>
+      </div>
+      <div class="mb-3 card-body d-flex justify-content-between">
+        <button class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#VentanaAdd" (click)="limpiar()">Nueva Solicitud</button>
+      </div>
+      <table class="table mb-4" >
+          <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Id_User</th>
+                <th scope="col">Id_RH</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Fecha_Inicio</th>
+                <th scope="col">Fecha_Final</th>
+                <th scope="col">Motivo</th>
+                <th scope="col">Dias</th>
+                <th scope="col">Estado</th>
+              </tr>
+          </thead>
+          <tbody >
+            <tr *ngFor="let solicitud of LSolicitud"  >
+                <th scope="row">{{solicitud.id}}</th>
+                  <td>{{solicitud.id_user}}</td>
+                  <td>{{solicitud.id_rh}}</td>
+                  <td>{{solicitud.fecha}}</td>
+                  <td>{{solicitud.fecha_i}}</td>
+                  <td>{{solicitud.fecha_f}}</td>
+                  <td>{{solicitud.motivo}}</td>
+                  <td>{{solicitud.dias}}</td>
+                  <td>{{solicitud.estado}}</td>
+                  <td>
+                     <button type="button"  class="btn btn-success" (click)="editar(solicitud)">Editar</button>
+                     <button type="button" class="pencil-square" class="btn btn-danger" (click)="deleteSolicitud(solicitud.id)">Eliminar</button>
+                  </td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="modal fade" id="VentanaAdd" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5 text-center" id="staticBackdropLabel">Agregar Empleado</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body justify-content-end">
+                <form [formGroup]="FormSoli" >
+                    <div class="p-inputgroup mb-2">
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                        </span>
+                        <input type = "hidden" formControlName="id" />
+                        <div class="form-group" >
+                            <label class="mb-3 m-2"><b>Id de Usuario:</b></label>
+                            <input type = "text" formControlName="id_user" />
+                            <label class="mb-3 m-2"><b>Id del RH:</b></label>
+                            <input type = "text" formControlName="id_rh" />
+                            <label class="mb-3 m-2"><b>Fecha solicitud:</b></label>
+                            <input type = "text" formControlName="fecha" />
+                            <div>
+                                <label class="mb-3 m-2"><b>Fecha de Inicio:</b></label>
+                                <input type = "text" formControlName="fecha_i" />
+                                <label class="mb-3 m-2"><b>Fecha Final:</b></label>
+                                <input type = "text" formControlName="fecha_f" />
+                                <div><label class="mb-3 m-2"><b>Motivo:</b></label></div>
+                                <div class="form-group">
+                                    <textarea cols="40" rows="5" formControlName="motivo" ></textarea>
+                                </div>
+                                <label class="mb-3 m-2"><b>Dias:</b></label>
+                                <input type = "text" formControlName="dias"/>
+                                <label class="mb-3 m-2"><b>Estado:</b></label>
+                                <input type = "text" formControlName="estado"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="mostrarC">
+                        <button type="button" class="btn btn-outline-primary mb-2" (click)="createSolicitud()">Enviar</button>
+                    </div>
+                    <div *ngIf="mostrarA">
+                        <button type="button" class="pencil-square" class="btn btn-success" (click)="updateSolicitud({id})">Actualizar</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
   </div>
   
-  <form [formGroup]="FormSoli" >
-    <div class="p-inputgroup mb-2">
-        <span class="p-inputgroup-addon">
-            <i class="pi pi-user"></i>
-        </span>
-        <input placeholder="Inserta tu id de usuario"  type = "text" formControlName="id_user" />
-        <input placeholder="Inserta el id de RH" type = "text" formControlName="id_rh" />
-        <input placeholder="Inserta la fecha" type = "text" formControlName="fecha" />
-        <input placeholder="Inserta el motivo" type = "text" formControlName="motivo" />
-        <input placeholder="Inserta los dias" type = "text" formControlName="dias"/>
-        <input placeholder="Inserta el estado de la solicitud" type = "text" formControlName="estado"/>
-    </div>
-    <div>
-        <button type="button" class="btn btn-outline-primary mb-2" (click)="createSolicitud()">Crear</button>
-    </div>
-  </form>
-  <table class="table">
-      <thead>
-          <tr>
-            <th scope="col">Id</th>
-            <th scope="col">Id_User</th>
-            <th scope="col">Id_RH</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Motivo</th>
-            <th scope="col">Dias</th>
-            <th scope="col">Estado</th>
-          </tr>
-      </thead>
-      <tbody >
-          <tr *ngFor="let solicitud of LSolicitud"  >
-          <th scope="row">{{solicitud.id}}</th>
-            <td>{{solicitud.id_user}}</td>
-            <td>{{solicitud.id_rh}}</td>
-            <td>{{solicitud.fecha}}</td>
-            <td>{{solicitud.motivo}}</td>
-            <td>{{solicitud.dias}}</td>
-            <td>{{solicitud.estado}}</td>
-            <button type="button"  class="btn btn-success" (click)="editar(solicitud)">Editar</button>
-            <button type="button" class="pencil-square" class="btn btn-danger" (click)="deleteSolicitud(solicitud.id)">Eliminar</button>
-            <button type="button" class="pencil-square" class="btn btn-danger" [disabled]="isClicked" (click)="updateSolicitud(solicitud.id)">Actualizar</button>
-          </tr>
-      </tbody>
-  </table>
+  
   
   

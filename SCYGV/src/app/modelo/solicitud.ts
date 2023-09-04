@@ -3,6 +3,8 @@ export class Solicitud{
     id_user ?: number
     id_rh ?: number
     fecha ?: Date
+    fecha_i ?: Date
+    fecha_f ?: Date
     motivo ?: String
     dias ?: number
     estado ?: string
