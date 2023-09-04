@@ -1,4 +1,5 @@
 package com.example;
+
 import static spark.Spark.*;
 import java.sql.Connection;
 import java.util.Date;
@@ -13,9 +14,8 @@ import java.util.List;
 import com.google.gson.Gson;
 
 public class CRUDServer {
-    public static SimpleDateFormat formato = new SimpleDateFormat("dd/mm/aaaa");
-    public static void main(String[] args) {
 
+    public static void main(String[] args) {
 
         // Configuración de la conexión a la base de datos MySQL
         String url = "jdbc:mysql://158.101.15.82:3306/scygv";
@@ -160,7 +160,6 @@ public class CRUDServer {
                 String query = "SELECT * FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
-                SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
 
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
@@ -174,12 +173,11 @@ public class CRUDServer {
                     String curp = resultSet.getString("curp");
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
-                    Date f_ingreso = resultSet.getDate("f_ingreso");
-                    f_ingreso =  devolverFecha(f_ingreso);
+                    String f_ingreso = devolverFecha(resultSet.getDate("f_ingreso"));
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, formato.format(f_ingreso), especialidad, telefono));
+                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -216,7 +214,7 @@ public class CRUDServer {
                 statement.setString(7, curp);
                 statement.setString(8, n_c_prof);
                 statement.setString(9, u_g_estudio);
-                statement.setString(10,f_ingreso);
+                statement.setString(10, f_ingreso);
                 statement.setString(11, especialidad);
                 statement.setString(12, telefono);
                 statement.executeUpdate();
@@ -310,12 +308,11 @@ public class CRUDServer {
                     String curp = resultSet.getString("curp");
                     String n_c_prof = resultSet.getString("n_c_prof");
                     String u_g_estudio = resultSet.getString("u_g_estudio");
-                    Date f_ingreso = resultSet.getDate("f_ingreso");
-                    f_ingreso =  devolverFecha(f_ingreso);
+                    String f_ingreso = devolverFecha(resultSet.getDate("f_ingreso"));
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
                     usuarios.add(new Usuarios(Id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio,formato.format(f_ingreso), especialidad, telefono));
+                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -447,12 +444,13 @@ public class CRUDServer {
                     int id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
-                    Date fecha = resultSet.getDate("fecha");
-                    fecha = devolverFecha(fecha);
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, fecha_i, fecha_f, motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -476,7 +474,7 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setString(3,fecha);
+                statement.setString(3, fecha);
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -524,7 +522,7 @@ public class CRUDServer {
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, java.sql.Date.valueOf(fecha.toString()) );
+                statement.setDate(3, java.sql.Date.valueOf(fecha.toString()));
                 statement.setString(4, motivo);
                 statement.setInt(5, dias);
                 statement.setString(6, estado);
@@ -551,12 +549,13 @@ public class CRUDServer {
                     int Id = resultSet.getInt("id");
                     int id_user = resultSet.getInt("id_user");
                     int id_rh = resultSet.getInt("id_rh");
-                    Date fecha = resultSet.getDate("fecha");
-                    fecha = devolverFecha(fecha);
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, id_rh, formato.format(fecha), motivo, dias, estado));
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha, fecha_i, fecha_f, motivo, dias, estado));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -577,17 +576,15 @@ public class CRUDServer {
                 statement.setString(2, contrasena);
                 ResultSet resultSet = statement.executeQuery();
                 String respuesta;
-                if(resultSet.next())
-                {
+                if (resultSet.next()) {
                     int id = resultSet.getInt("ROL");
-                    if(id > 0 && id < 4)
-                    {
-                        respuesta =  gson.toJson(id);
+                    if (id > 0 && id < 4) {
+                        respuesta = gson.toJson(id);
+                    } else {
+                        respuesta = gson.toJson(false);
                     }
-                    else{respuesta =  gson.toJson(false);}
-                }
-                else {
-                  respuesta =  gson.toJson(false);
+                } else {
+                    respuesta = gson.toJson(false);
                 }
                 return respuesta;
             } catch (SQLException e) {
@@ -596,14 +593,13 @@ public class CRUDServer {
         });
     }
 
-    //Devolver la fecha
-      public static Date devolverFecha(Date fechaEntrada) throws ParseException{ 
+    // Devolver la fecha
+    public static String devolverFecha(Date fechaEntrada) throws ParseException {
 
-            SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaString = fechaEntrada.toString(); // Convierte Date a String
-            Date miFecha = formato.parse(fechaString); // convierte String a Date
-            return miFecha;
-          }
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");// Convierte Date a String
+        String miFecha = formato.format(fechaEntrada); // convierte String a Date
+        return miFecha;
+    }
 
     // Clase para representar un rol
     static class Rol {
@@ -750,15 +746,20 @@ public class CRUDServer {
         private int id_user;
         private int id_rh;
         private String fecha;
+        private String fecha_i;
+        private String fecha_f;
         private String motivo;
         private int dias;
         private String estado;
 
-        public Solicitud(int id, int id_user, int id_rh, String fecha, String motivo, int dias, String estado) {
+        public Solicitud(int id, int id_user, int id_rh, String fecha, String fecha_i, String fecha_f, String motivo,
+                int dias, String estado) {
             this.id = id;
             this.id_user = id_user;
             this.id_rh = id_rh;
             this.fecha = fecha;
+            this.fecha_i = fecha_i;
+            this.fecha_f = fecha_f;
             this.motivo = motivo;
             this.dias = dias;
             this.estado = estado;
@@ -778,6 +779,14 @@ public class CRUDServer {
 
         public String getFecha() {
             return fecha;
+        }
+
+        public String getFecha_I() {
+            return fecha_i;
+        }
+
+        public String getFecha_F() {
+            return fecha_f;
         }
 
         public String getMotivo() {
