@@ -8,12 +8,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.Gson;
 
+
 public class CRUDServer {
- 
+
+    public static int Id;
     public static void main(String[] args) {
 
 
@@ -290,11 +294,10 @@ public class CRUDServer {
 
         // Ruta para obtener usuarios por id
         get("/usuario/:id", (req, res) -> {
-            int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, id);
+                statement.setInt(1, Id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
@@ -464,20 +467,27 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            String fecha = solicitud.getFecha();
+            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            String fecha_i = solicitud.getFecha_I();
+            String fecha_f = solicitud.getFecha_F();
             String motivo = solicitud.getMotivo();
-            int dias = solicitud.getDias();
-            String estado = solicitud.getEstado();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            Date date1 = format.parse(fecha_i);
+            Date date2 = format.parse(fecha_f);
+            int dias = (int) ((date2.getTime() - date1.getTime())/86400000) + 1;
+            String estado = "En revision";
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?);";
+                String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, FECHA_I, FECHA_F, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?,?,?);";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
                 statement.setString(3,fecha);
-                statement.setString(4, motivo);
-                statement.setInt(5, dias);
-                statement.setString(6, estado);
+                statement.setString(4,fecha_i);
+                statement.setString(5,fecha_f);
+                statement.setString(6, motivo);
+                statement.setInt(7, dias);
+                statement.setString(8, estado);
                 statement.executeUpdate();
 
                 return gson.toJson(new Respuesta("Solicitud creada correctamente"));
@@ -513,20 +523,47 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            String fecha = solicitud.getFecha();
+            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            String fecha_i = solicitud.getFecha_I();
+            String fecha_f = solicitud.getFecha_F();
             String motivo = solicitud.getMotivo();
-            int dias = solicitud.getDias();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            Date date1 = format.parse(fecha_i);
+            Date date2 = format.parse(fecha_f);
+            int dias = (int) ((date2.getTime() - date1.getTime())/86400000);
             String estado = solicitud.getEstado();
+            
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, ID_RH = ?, FECHA = ?, MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, ID_RH = ?, FECHA = ?, FECHA_I = ?, FECHA_F = ?,MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setInt(2, id_rh);
-                statement.setDate(3, java.sql.Date.valueOf(fecha.toString()) );
-                statement.setString(4, motivo);
-                statement.setInt(5, dias);
-                statement.setString(6, estado);
-                statement.setInt(7, id);
+                statement.setString(3,fecha);
+                statement.setString(4,fecha_i);
+                statement.setString(5,fecha_f);
+                statement.setString(6, motivo);
+                statement.setInt(7, dias);
+                statement.setString(8, estado);
+                statement.setInt(9, id);
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Se actualizo correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al actualizar"));
+            }
+        }, gson::toJson);
+         // Ruta para modificar usuarios
+        put("/estado/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
+            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
+            String estado = solicitud.getEstado();
+            
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE SCYGV_SOLICITUDES SET ESTADO = ? WHERE ID = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, estado);
+                statement.setInt(2, id);
                 statement.executeUpdate();
 
                 return gson.toJson(new Respuesta("Se actualizo correctamente"));
@@ -579,6 +616,7 @@ public class CRUDServer {
                 if(resultSet.next())
                 {
                     int id = resultSet.getInt("ROL");
+                    Id = resultSet.getInt("ID");
                     if(id > 0 && id < 4)
                     {
                         respuesta =  gson.toJson(id);
