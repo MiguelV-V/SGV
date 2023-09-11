@@ -1,5 +1,3 @@
-.center {
-    display: flex;
-    justify-content: center;
-    background-color: yellow;
-  }
+.modal-dialog { 
+  max-width: 80%; 
+}

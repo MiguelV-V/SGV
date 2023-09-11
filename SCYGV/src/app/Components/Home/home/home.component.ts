@@ -29,7 +29,6 @@ export class HomeComponent {
   login(){
     if(this.FormLogin.valid)
     {
-      
       let usulogin = new Usuario()
       usulogin.correo = this.FormLogin.get('correo')?.value
       usulogin.contrasena = this.FormLogin.get('contrasena')?.value

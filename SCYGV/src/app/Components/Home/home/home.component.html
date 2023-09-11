@@ -1,10 +1,10 @@
 <nav class="navbar navbar-dark bg-dark justify-content-end">
   <ul class="nav justify-content-end" >
     <li class="nav-item">
-      <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#VentanaLog" >Iniciar Sesión</a>
+      <button class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#VentanaLog" >Iniciar Sesión</button>
     </li>
     <li class="nav-item">
-      <a class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#VentanaRec"  >Olvidaste tu contraseña?</a>
+      <button class="nav-link" aria-current="page" data-bs-toggle="modal" data-bs-target="#VentanaRec"  >Olvidaste tu contraseña?</button>
     </li>
   </ul>
 </nav>
@@ -30,16 +30,16 @@
               </span>
               <div >
                 <label class="mb-2">Correo</label>
-                <input required="required" class="form-control" type = "text" formControlName="correo"/>
+                <input class="form-control" type = "text" formControlName="correo"/>
                 <label class="mb-2">Contraseña</label>
-                <input required="required" class="form-control" type = "text" formControlName="contrasena"/>
+                <input class="form-control" type = "text" formControlName="contrasena"/>
               </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-outline-primary mb-2" data-bs-dismiss="modal" (click)="login()">Iniciar Sesión</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="login()">Iniciar Sesión</button>
       </div>
     </div>
   </div>

@@ -22,14 +22,13 @@ export class SolicitudComponent {
  constructor(private sService:SolicitudService, private fb:FormBuilder){
   //Formulario para trabajar con los solicituds
   this.FormSoli = fb.group({
+    id : new FormControl(),
     id_user : new FormControl('',[Validators.required]),
-    id_rh : new FormControl('',[Validators.required]), 
-    fecha : new FormControl('',[Validators.required]),
+    id_rh : new FormControl(), 
     fecha_i : new FormControl('',[Validators.required]),
     fecha_f : new FormControl('',[Validators.required]),
     motivo : new FormControl('',[Validators.required]),
-    dias : new FormControl('',[Validators.required]),
-    estado : new FormControl('',[Validators.required])
+    estado : new FormControl()
   })
 }
 
@@ -54,12 +53,9 @@ createSolicitud(){
     let solicitud = new Solicitud()
     solicitud.id_user = this.FormSoli.get('id_user')?.value
     solicitud.id_rh = this.FormSoli.get('id_rh')?.value
-    solicitud.fecha = this.FormSoli.get('fecha')?.value
     solicitud.fecha_i = this.FormSoli.get('fecha_i')?.value
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
-    solicitud.dias = this.FormSoli.get('dias')?.value
-    solicitud.estado = this.FormSoli.get('estado')?.value
     this.sService.createSolicitud(solicitud).subscribe(res =>
       this.getSolicitud(),
       this.limpiar()
@@ -79,13 +75,12 @@ updateSolicitud(idSoli : any){
   if(this.FormSoli.valid)
   {
     let solicitud = new Solicitud()
+    solicitud.id = this.FormSoli.get('id')?.value
     solicitud.id_user = this.FormSoli.get('id_user')?.value
     solicitud.id_rh = this.FormSoli.get('id_rh')?.value
-    solicitud.fecha = this.FormSoli.get('fecha')?.value
     solicitud.fecha_i = this.FormSoli.get('fecha_i')?.value
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
-    solicitud.dias = this.FormSoli.get('dias')?.value
     solicitud.estado = this.FormSoli.get('estado')?.value
     idSoli = solicitud.id;
     this.sService.updateSolicitud(idSoli,solicitud).subscribe(res =>
@@ -98,13 +93,12 @@ updateSolicitud(idSoli : any){
   editar(solicitud:Solicitud){
     this.mostrarC = false;
     this.mostrarA = true;
+    this.FormSoli.get("id")?.setValue(solicitud.id);
     this.FormSoli.get('id_user')?.setValue(solicitud.id_user)
     this.FormSoli.get('id_rh')?.setValue(solicitud.id_rh)
-    this.FormSoli.get('fecha')?.setValue(solicitud.fecha)
     this.FormSoli.get('fecha_i')?.setValue(solicitud.fecha_i)
     this.FormSoli.get('fecha_f')?.setValue(solicitud.fecha_f)
     this.FormSoli.get('motivo')?.setValue(solicitud.motivo)
-    this.FormSoli.get('dias')?.setValue(solicitud.dias)
     this.FormSoli.get('estado')?.setValue(solicitud.estado)
 }
 

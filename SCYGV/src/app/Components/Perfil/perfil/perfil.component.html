@@ -1,0 +1,36 @@
+<body class="text-center"  *ngFor="let usuario of LUsuario">
+    <H1 class="mb-4">Perfil de Usuario</H1>
+    <div class="text-center">
+        <H3>Identificación</H3>
+        <label class="mb-3 m-2"><b>Id:</b></label>
+        <label class="mb-3 m-2"><b>{{usuario.id}}</b></label>
+        <label class="mb-3 m-2"><b>Nombres:</b></label>
+        <label class="mb-3 m-2"><b>{{usuario.nombres}}</b></label>
+        <label class="mb-3 m-2"><b>Apellidos:</b></label>
+        <label class="mb-3 m-2"><b>{{usuario.apellidos}}</b></label>
+    </div>
+    <div>
+        <H3>Cuenta</H3>
+        <label class="mb-3 m-2"><b>Correo: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.correo}}</b></label>
+        <label class="mb-3 m-2"><b>Contraseña: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.contrasena}}</b></label>
+        <label class="mb-3 m-2"><b>Rol: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.rol}}</b></label>
+    </div>
+    <H3>Información sobre usted: </H3>
+    <li> <label class="mb-3 m-2"><b>RFC: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.rfc}}</b></label> </li>
+    <li><label class="mb-3 m-2"><b>CURP: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.curp}}</b></label></li>
+    <li><label class="mb-3 m-2"><b>Numero de Cedula Profesional: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.n_c_prof}}</b></label></li>
+    <li><label class="mb-3 m-2"><b>Ultimo Grado de Estudio: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.u_g_estudio}}</b></label></li>
+    <li><label class="mb-3 m-2"><b>Fecha en la ingreso: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.f_ingreso}}</b></label></li>
+    <li><label class="mb-3 m-2"><b>Especialidad: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.especialidad}}</b></label></li>
+    <li><label class="mb-3 m-2"><b>Telefono: </b></label>
+        <label class="mb-3 m-2"><b>{{usuario.telefono}}</b></label></li>
+</body>

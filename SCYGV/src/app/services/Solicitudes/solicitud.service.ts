@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Bandeja } from 'src/app/modelo/bandeja';
 import { Solicitud } from 'src/app/modelo/solicitud';
 
 
@@ -8,6 +9,7 @@ import { Solicitud } from 'src/app/modelo/solicitud';
 })
 export class SolicitudService {
   rutaG = 'http://localhost:3000/solicitudes'
+  rutaE = 'http://localhost:3000/estado'
   constructor(private http: HttpClient) {}
 
   //Obtener Solicitudes
@@ -30,6 +32,10 @@ export class SolicitudService {
   //Actualizar Solicitud
   updateSolicitud(idSoli : number, solicitud:Solicitud){
     return this.http.put(this.rutaG + "/" + idSoli, solicitud)
+  }
+
+  updateBand(idSoli:number,soli:Bandeja){
+    return this.http.put(this.rutaE + "/" + idSoli, soli)
   }
  
   //Obtener Solicitud por ID

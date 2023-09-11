@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms'
-
 import { AppComponent } from './app.component';
 
 import { BodyComponent } from './Components/Rol/body.component';
@@ -14,6 +13,8 @@ import { HomeComponent } from './Components/Home/home/home.component';
 import { AdminComponent } from './Components/Administrador/admin/admin.component';
 import { EmpleadoComponent } from './Components/Empleado/empleado/empleado.component';
 import { RHComponent } from './Components/RH/rh/rh.component';
+import { PerfilComponent } from './Components/Perfil/perfil/perfil.component';
+import { BandejaAdComponent } from './Components/BandejaAdmin/bandeja-ad/bandeja-ad.component';
 
 
 const appRoute : Routes = [ 
@@ -27,6 +28,8 @@ const appRoute : Routes = [
     { path: 'Empleado', component: EmpleadoComponent },
     { path: 'Usuario', component: PagUsuComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent},
+    { path: 'Perfil', component: PerfilComponent},
+    { path: 'Bandeja', component: BandejaAdComponent}
     // Otras rutas secundarias
   ]},
   {path: 'Empleado', component: EmpleadoComponent},
@@ -45,7 +48,9 @@ const appRoute : Routes = [
     HomeComponent,
     AdminComponent,
     EmpleadoComponent,
-    RHComponent
+    RHComponent,
+    PerfilComponent,
+    BandejaAdComponent
   ],
   imports: [
     BrowserModule,

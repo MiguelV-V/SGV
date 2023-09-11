@@ -1,22 +1,22 @@
 <div class="container-fluid">
     <div class="row flex-nowrap">
-        <div class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-info">
+        <div id="sidebar" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-info collapse collapse-horizontal show border-end">
             <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
-                <a href="./Administrador" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                    <span class="fs-1 d-none d-sm-inline"><b>SCYGV</b></span>
+                <a class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                    <span class="fs-1 d-none d-sm-inline "><b>SCYGV</b></span>
                 </a>
                 <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
                     <li>
-                        <a routerLink="./Administrador" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                        <a routerLink="/Administrador" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-house-fill fs-4"></i><span class="ms-1 d-none d-sm-inline">Home</span> 
                         </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
                         </ul>
                     </li>
                     <li>
                         <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                        <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#sidebar">
                             <li class="w-100">
                                 <a routerLink="./Solicitud" class="nav-link px-0 text-white">
                                     <i class="bi bi-gear-wide"></i>
@@ -29,25 +29,25 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline"> Empleados</span></a>
-                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                        <a href="#submenu2" data-bs-toggle="collapse"  class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline"> Usuarios</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#sidebar">
                             <li class="w-100">
-                                <a routerLink="./Empleado" class="nav-link px-0 text-white"> <i class="bi bi-person-fill-gear fs-0.5"></i> <span class="d-none d-sm-inline"> Gestionar</span></a>
+                                <a routerLink="./Usuario" class="nav-link px-0 text-white"> <i class="bi bi-person-fill-gear fs-0.5"></i> <span class="d-none d-sm-inline"> Gestionar</span></a>
                             </li>
                         </ul>
                     </li>
                     <li>
-                        <a routerLink="./Catalogos" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                        <a routerLink="./Catalogos" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
                         </ul>
                     </li>
                     
                     <li>
-                        <a data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                        <a routerLink="./Bandeja" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
-                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
                         </ul>
                     </li>
                 </ul>
@@ -58,7 +58,7 @@
                         <span class="d-none d-sm-inline mx-1">Nombre Usuario</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="#">Perfil</a></li>
+                        <li><a class="dropdown-item" routerLink="./Perfil">Perfil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -67,8 +67,11 @@
                 </div>
             </div>
         </div>
-        <div style="background-color: #E4E7C0" class="col py-3 text-center">
-            <router-outlet></router-outlet>
-        </div>
+        <main class="col ps-md-2 pt-2">
+          <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border border-white text-decoration-none"><i class="bi bi-list bi-lg py-2 p-8"></i>Menu</a>
+            <div class="page-header pt-3">
+                <router-outlet></router-outlet>
+            </div>
+        </main>
     </div>
 </div>

@@ -40,4 +40,5 @@ export class usuarioService {
   getIdUsuario(idUsuario: number){
     return this.http.get(this.rutaG + "/" + idUsuario);
   }
+
 }

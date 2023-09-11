@@ -1,3 +1,4 @@
-body{
-    background-color: gray;
+.modal-content{
+    background-color: rgba(119, 223, 236, 0.986) !important;
 }
+
