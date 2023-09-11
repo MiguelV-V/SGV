@@ -15,6 +15,8 @@ import { EmpleadoComponent } from './Components/Empleado/empleado/empleado.compo
 import { RHComponent } from './Components/RH/rh/rh.component';
 import { PerfilComponent } from './Components/Perfil/perfil/perfil.component';
 import { BandejaAdComponent } from './Components/BandejaAdmin/bandeja-ad/bandeja-ad.component';
+import { CatalogoEmpleadoComponent } from './Components/Empleado/catalogo-empleado/catalogo-empleado.component';
+import { BandejaEmpleadoComponent } from './Components/Empleado/bandeja-empleado/bandeja-empleado.component';
 
 
 const appRoute : Routes = [ 
@@ -32,7 +34,11 @@ const appRoute : Routes = [
     { path: 'Bandeja', component: BandejaAdComponent}
     // Otras rutas secundarias
   ]},
-  {path: 'Empleado', component: EmpleadoComponent},
+  {path: 'Empleado', component: EmpleadoComponent, children: [
+    { path: 'Solicitud', component: SolicitudComponent },
+    { path: 'Catalogo-Empleado', component: CatalogoEmpleadoComponent },
+    { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent }
+  ]},
   { path: 'Solicitud', component: SolicitudComponent },
   {path: 'RH', component: RHComponent}
 ]
@@ -50,7 +56,9 @@ const appRoute : Routes = [
     EmpleadoComponent,
     RHComponent,
     PerfilComponent,
-    BandejaAdComponent
+    BandejaAdComponent,
+    CatalogoEmpleadoComponent,
+    BandejaEmpleadoComponent
   ],
   imports: [
     BrowserModule,

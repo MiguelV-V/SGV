@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="row flex-nowrap">
+        <div id="sidebar" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-info collapse collapse-horizontal show border-end">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
+                <a class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
+                    <span class="fs-1 d-none d-sm-inline "><b>SCYGV</b></span>
+                </a>
+                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <li>
+                        <a routerLink="/Empleado" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-house-fill fs-4"></i><span class="ms-1 d-none d-sm-inline">Home</span> 
+                        </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#sidebar">
+                            <li class="w-100">
+                                <a routerLink="./Solicitud" class="nav-link px-0 text-white">
+                                    <i class="bi bi-gear-wide"></i>
+                                  <span class="d-none d-sm-inline"> Gestionar</span>
+                                </a>
+                              </li>
+                            <li>
+                                <a href="#" class="nav-link px-0 text-white"> <i class="bi bi-clipboard-plus fs-0.5"></i> <span class="d-none d-sm-inline"> Mis Solicitudes</span></a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a routerLink="./Catalogo-Empleado" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
+                        </ul>
+                    </li>
+                    
+                    <li>
+                        <a routerLink="./Bandeja-Empleado" data-bs-toggle="collapse" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#sidebar">
+                        </ul>
+                    </li>
+                </ul>
+                <hr>
+                <div class="dropdown pb-4">
+                    <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="./assets/usuario.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
+                        <span class="d-none d-sm-inline mx-1">Nombre Usuario</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                        <li><a class="dropdown-item" routerLink="./Perfil">Perfil</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="#">Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <main class="col ps-md-2 pt-2">
+          <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border border-white text-decoration-none"><i class="bi bi-list bi-lg py-2 p-8"></i>Menu</a>
+            <div class="page-header pt-3">
+                <router-outlet></router-outlet>
+            </div>
+        </main>
+    </div>
+</div>
