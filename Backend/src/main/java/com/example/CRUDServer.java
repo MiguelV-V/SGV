@@ -523,7 +523,7 @@ public class CRUDServer {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
             int id_rh = solicitud.getId_rh();
-            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            String fecha = solicitud.getFecha();
             String fecha_i = solicitud.getFecha_I();
             String fecha_f = solicitud.getFecha_F();
             String motivo = solicitud.getMotivo();
@@ -574,12 +574,11 @@ public class CRUDServer {
         }, gson::toJson);
 
         // Ruta para obtener usuarios por id
-        get("/solicitudes/:id", (req, res) -> {
-            int id = Integer.parseInt(req.params("id"));
+        get("/soliRec/:id", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID = ?";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Rechazada'";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, id);
+                statement.setInt(1, Id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
@@ -601,6 +600,62 @@ public class CRUDServer {
             }
         });
 
+        //Mostrar solicitud User Aceptada
+        get("/soliA/:id", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Aceptada'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, Id);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int Id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha,fecha_i,fecha_f, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener la solicitud"));
+            }
+        });
+
+        //Mostrar solicitud User En revision
+
+         get("/soliR/:id", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'En revision'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, Id);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int Id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(Id, id_user, id_rh, fecha,fecha_i,fecha_f, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener la solicitud"));
+            }
+        });
+
+        //Login User
         post("/login", (req, res) -> {
             Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
             String correo = usuario.getCorreo();
