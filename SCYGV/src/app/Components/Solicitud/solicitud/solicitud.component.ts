@@ -15,7 +15,7 @@ export class SolicitudComponent {
  FormSoli: FormGroup
 
  id:number = 0
-
+ idR:number = 0
  mostrarC: boolean = true;
  mostrarA: boolean = false;
 
@@ -34,17 +34,16 @@ export class SolicitudComponent {
 
 //Iniciar la muestra de solicitudes
 ngOnInit():void{
-  this.getSolicitud()
+  this.getSolicitudes()
 }
 
-
-//Mostrar Solicitudes
-getSolicitud():any{
-  this.mostrarC = true;
-  this.sService.getSolicitud().subscribe(res =>{
+getSolicitudes():any{
+  this.sService.getIdSoliR(this.id).subscribe(res =>{
     this.LSolicitud = <any>res
-    console.log(res)})
-}
+    console.log(res)
+  })
+  }
+
 
 //Crear Solicitud
 createSolicitud(){
@@ -57,7 +56,7 @@ createSolicitud(){
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
     this.sService.createSolicitud(solicitud).subscribe(res =>
-      this.getSolicitud(),
+      this.getSolicitudes(),
       this.limpiar()
     )}
 }
@@ -66,7 +65,7 @@ createSolicitud(){
 deleteSolicitud(idSoli : any){
   this.sService.deleteSolicitud(idSoli).subscribe(res =>{
     console.log(res)
-    this.getSolicitud()
+    this.getSolicitudes()
   },error => console.log(error))
 }
 
@@ -84,7 +83,7 @@ updateSolicitud(idSoli : any){
     solicitud.estado = this.FormSoli.get('estado')?.value
     idSoli = solicitud.id;
     this.sService.updateSolicitud(idSoli,solicitud).subscribe(res =>
-      this.getSolicitud(),
+      this.getSolicitudes(),
       this.limpiar()
     )}
   }
@@ -102,13 +101,7 @@ updateSolicitud(idSoli : any){
     this.FormSoli.get('estado')?.setValue(solicitud.estado)
 }
 
-//Mostrar solicitud por Id
-getRolId(idSoli: number):any{
-this.sService.getIdSolicitud(idSoli).subscribe(res =>{
-  this.LSolicitud = <any>res
-  console.log(res)
-})
-}
+
 //Funcion para limpar el formulario
 limpiar():any{this.mostrarC = true;this.mostrarA = false;this.FormSoli.reset()}
 

@@ -37,7 +37,8 @@ const appRoute : Routes = [
   {path: 'Empleado', component: EmpleadoComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
     { path: 'Catalogo-Empleado', component: CatalogoEmpleadoComponent },
-    { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent }
+    { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent },
+    { path: 'Perfil', component: PerfilComponent}
   ]},
   { path: 'Solicitud', component: SolicitudComponent },
   {path: 'RH', component: RHComponent}

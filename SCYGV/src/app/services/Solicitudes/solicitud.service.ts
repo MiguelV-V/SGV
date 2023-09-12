@@ -10,6 +10,9 @@ import { Solicitud } from 'src/app/modelo/solicitud';
 export class SolicitudService {
   rutaG = 'http://localhost:3000/solicitudes'
   rutaE = 'http://localhost:3000/estado'
+  rutaR = 'http://localhost:3000/soliR'
+  rutaRec = 'http://localhost:3000/soliRec'
+  rutaA = 'http://localhost:3000/soliA'
   constructor(private http: HttpClient) {}
 
   //Obtener Solicitudes
@@ -38,8 +41,17 @@ export class SolicitudService {
     return this.http.put(this.rutaE + "/" + idSoli, soli)
   }
  
-  //Obtener Solicitud por ID
-  getIdSolicitud(idSoli: number){
-    return this.http.get(this.rutaG + "/" + idSoli);
+  
+
+  getIdSoliR(idSoli: number){
+    return this.http.get(this.rutaR + "/" + idSoli);
+  }
+
+  getIdSoliRec(idSoli: number){
+    return this.http.get(this.rutaRec + "/" + idSoli);
+  }
+
+  getIdSoliA(idSoli: number){
+    return this.http.get(this.rutaA + "/" + idSoli);
   }
 }
