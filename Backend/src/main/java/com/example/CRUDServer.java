@@ -437,9 +437,57 @@ public class CRUDServer {
 
         // CRUD SOLICITUDES
         // OBTENER SOLICITUDES
-        get("/solicitudes", (req, res) -> {
+        get("/soli_enrev", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ESTADO = 'En revision'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+         get("/soli_acep", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ESTADO = 'Aceptada'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+         get("/soli_recha", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ESTADO = 'Rechazada'";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
                 List<Solicitud> solicitudes = new ArrayList<>();
@@ -462,11 +510,13 @@ public class CRUDServer {
             }
         });
 
+
+
         // Ruta para crear un nuevo usuario
         post("/solicitudes", (req, res) -> {
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             int id_user = solicitud.getId_user();
-            int id_rh = solicitud.getId_rh();
+            int id_rh = 0;
             String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             String fecha_i = solicitud.getFecha_I();
             String fecha_f = solicitud.getFecha_F();
@@ -557,13 +607,15 @@ public class CRUDServer {
         put("/estado/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
+            int id_rh = Id;
             String estado = solicitud.getEstado();
             
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE SCYGV_SOLICITUDES SET ESTADO = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET ID_RH = ? ,ESTADO = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setString(1, estado);
-                statement.setInt(2, id);
+                statement.setInt(1, id_rh);
+                statement.setString(2, estado);
+                statement.setInt(3, id);
                 statement.executeUpdate();
 
                 return gson.toJson(new Respuesta("Se actualizo correctamente"));
@@ -573,7 +625,7 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        // Ruta para obtener usuarios por id
+        // Ruta para obtener solicitudes rechazadas
         get("/soliRec/:id", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Rechazada'";
@@ -600,7 +652,7 @@ public class CRUDServer {
             }
         });
 
-        //Mostrar solicitud User Aceptada
+        //Ruta para obtener solicitudes Aceptadas
         get("/soliA/:id", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Aceptada'";
@@ -627,7 +679,7 @@ public class CRUDServer {
             }
         });
 
-        //Mostrar solicitud User En revision
+        //Ruta para obtener solicitudes En revision
 
          get("/soliR/:id", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
