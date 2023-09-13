@@ -16,8 +16,14 @@ export class SolicitudService {
   constructor(private http: HttpClient) {}
 
   //Obtener Solicitudes
-  getSolicitud(){
-    return this.http.get(this.rutaG)
+  getSolienrev(){
+    return this.http.get('http://localhost:3000/soli_enrev')
+  }
+  getSoliacept(){
+    return this.http.get('http://localhost:3000/soli_acep')
+  }
+  getSolirech(){
+    return this.http.get('http://localhost:3000/soli_recha')
   }
 
   //Crear Solicitud
@@ -42,7 +48,6 @@ export class SolicitudService {
   }
  
   
-
   getIdSoliR(idSoli: number){
     return this.http.get(this.rutaR + "/" + idSoli);
   }
@@ -54,4 +59,6 @@ export class SolicitudService {
   getIdSoliA(idSoli: number){
     return this.http.get(this.rutaA + "/" + idSoli);
   }
+
+  
 }

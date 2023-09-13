@@ -11,10 +11,9 @@ import { SolicitudService } from 'src/app/services/Solicitudes/solicitud.service
 })
 export class BandejaAdComponent {
 //Se utiliza para mostrar el solicitud
-LSolicitud !: Solicitud[];
-solic : Solicitud = {
-}
-
+LSolienrev !: Solicitud[];
+LSoliacep !: Solicitud[];
+LSolirech !: Solicitud[];
 FormSoli:FormGroup
 
 id:any = 0
@@ -28,15 +27,31 @@ constructor(private sService:SolicitudService, private fb:FormBuilder){
 
 //Iniciar la muestra de solicitudes
 ngOnInit():void{
-  this.getSolicitud()
+  this.getSolienrev()
+  this.getSoliacept()
+  this.getSolirech()
 }
 
-
-//Mostrar Solicitudes
-getSolicitud():any{
-  this.sService.getSolicitud().subscribe(res =>{
-    this.LSolicitud = <any>res
-    console.log(res)})
+//Obtener Solicitudes en revision
+getSolienrev():any{
+  this.sService.getSolienrev().subscribe(res =>{
+    this.LSolienrev = <any>res
+    console.log(res)
+  })
+}
+//Obtener Solicitudes Aceptadas
+getSoliacept():any{
+  this.sService.getSoliacept().subscribe(res =>{
+    this.LSoliacep = <any>res
+    console.log(res)
+  })
+}
+//Obtener Solicitudes Rechazadas
+getSolirech():any{
+  this.sService.getSolirech().subscribe(res =>{
+    this.LSolirech = <any>res
+    console.log(res)
+  })
 }
 //Actualizar solicitud
 updateSolicitud(idsoli:any, soli:Bandeja){
@@ -54,7 +69,7 @@ updateSolicitud(idsoli:any, soli:Bandeja){
     }
     idsoli = solicitud.id;
     this.sService.updateBand(idsoli,solicitud).subscribe(res =>
-      this.getSolicitud(),
+      this.getSolienrev(),
       this.limpiar()
     )}
   }

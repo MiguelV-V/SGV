@@ -24,7 +24,6 @@ export class SolicitudComponent {
   this.FormSoli = fb.group({
     id : new FormControl(),
     id_user : new FormControl('',[Validators.required]),
-    id_rh : new FormControl(), 
     fecha_i : new FormControl('',[Validators.required]),
     fecha_f : new FormControl('',[Validators.required]),
     motivo : new FormControl('',[Validators.required]),
@@ -51,7 +50,6 @@ createSolicitud(){
   {
     let solicitud = new Solicitud()
     solicitud.id_user = this.FormSoli.get('id_user')?.value
-    solicitud.id_rh = this.FormSoli.get('id_rh')?.value
     solicitud.fecha_i = this.FormSoli.get('fecha_i')?.value
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
@@ -76,7 +74,6 @@ updateSolicitud(idSoli : any){
     let solicitud = new Solicitud()
     solicitud.id = this.FormSoli.get('id')?.value
     solicitud.id_user = this.FormSoli.get('id_user')?.value
-    solicitud.id_rh = this.FormSoli.get('id_rh')?.value
     solicitud.fecha_i = this.FormSoli.get('fecha_i')?.value
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
@@ -94,7 +91,6 @@ updateSolicitud(idSoli : any){
     this.mostrarA = true;
     this.FormSoli.get("id")?.setValue(solicitud.id);
     this.FormSoli.get('id_user')?.setValue(solicitud.id_user)
-    this.FormSoli.get('id_rh')?.setValue(solicitud.id_rh)
     this.FormSoli.get('fecha_i')?.setValue(solicitud.fecha_i)
     this.FormSoli.get('fecha_f')?.setValue(solicitud.fecha_f)
     this.FormSoli.get('motivo')?.setValue(solicitud.motivo)

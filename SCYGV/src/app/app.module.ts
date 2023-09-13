@@ -21,13 +21,9 @@ import { BandejaEmpleadoComponent } from './Components/Empleado/bandeja-empleado
 
 const appRoute : Routes = [ 
   {path: '', redirectTo:'/Home', pathMatch:'full'},
-  {path: 'Roles', component: BodyComponent },
-  {path: 'Usuarios', component: PagUsuComponent},
-  {path: 'Catalogos', component: ListarCatalogoComponent},
   {path: 'Home', component: HomeComponent},
   { path: 'Administrador', component: AdminComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
-    { path: 'Empleado', component: EmpleadoComponent },
     { path: 'Usuario', component: PagUsuComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent},
     { path: 'Perfil', component: PerfilComponent},
@@ -40,8 +36,12 @@ const appRoute : Routes = [
     { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent },
     { path: 'Perfil', component: PerfilComponent}
   ]},
-  { path: 'Solicitud', component: SolicitudComponent },
-  {path: 'RH', component: RHComponent}
+  {path: 'RH', component: RHComponent, children:[
+    { path: 'Solicitud', component: SolicitudComponent },
+    { path: 'Catalogos', component: ListarCatalogoComponent },
+    { path: 'Bandeja', component: BandejaAdComponent },
+    { path: 'Perfil', component: PerfilComponent}
+  ]}
 ]
 
 

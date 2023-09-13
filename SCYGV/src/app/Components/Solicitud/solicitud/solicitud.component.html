@@ -10,7 +10,6 @@
               <tr>
                 <th scope="col">Id</th>
                 <th scope="col">Id_User</th>
-                <th scope="col">Id_RH</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Fecha_Inicio</th>
                 <th scope="col">Fecha_Final</th>
@@ -24,7 +23,6 @@
             <tr *ngFor="let solicitud of LSolicitud"  >
                 <th scope="row">{{solicitud.id}}</th>
                   <td>{{solicitud.id_user}}</td>
-                  <td>{{solicitud.id_rh}}</td>
                   <td>{{solicitud.fecha}}</td>
                   <td>{{solicitud.fecha_i}}</td>
                   <td>{{solicitud.fecha_f}}</td>
@@ -54,9 +52,9 @@
                         <input type = "hidden" formControlName="id" />
                         <div class="form-group" >
                             <label class="mb-3 m-2"><b>Ingresa tu Id de Usuario</b></label>
-                            <input type = "text" formControlName="id_user" />
-                            <label class="mb-3 m-2"><b>Id del RH:</b></label>
-                            <input type = "text" formControlName="id_rh" />
+                            <div>
+                              <input type = "text" formControlName="id_user" />
+                            </div>
                             <div>
                               <label class="mb-3 m-2" ><b>¿En qué fechas deseas tomar tus vacaciones?</b></label>
                               <div>
