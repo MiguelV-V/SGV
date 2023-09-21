@@ -105,3 +105,4 @@ limpiar():any{this.mostrarC = true;this.mostrarA = false;this.FormSoli.reset()}
 
 
 
+

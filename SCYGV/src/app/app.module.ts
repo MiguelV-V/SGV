@@ -17,6 +17,12 @@ import { PerfilComponent } from './Components/Perfil/perfil/perfil.component';
 import { BandejaAdComponent } from './Components/BandejaAdmin/bandeja-ad/bandeja-ad.component';
 import { CatalogoEmpleadoComponent } from './Components/Empleado/catalogo-empleado/catalogo-empleado.component';
 import { BandejaEmpleadoComponent } from './Components/Empleado/bandeja-empleado/bandeja-empleado.component';
+import { HomeRHComponent } from './Components/RH/rh/HomeRH/home-rh/home-rh.component';
+import { HomeAdminComponent } from './Components/Administrador/admin/HomeAdmin/home-admin/home-admin.component';
+import { HomeEmpComponent } from './Components/Empleado/HomeEmp/home-emp/home-emp.component';
+import { SoliAcepComponent } from './Components/BandejaAdmin/Aceptadas/soli-acep/soli-acep.component';
+import { SoliRechaComponent } from './Components/BandejaAdmin/Rechazadas/soli-recha/soli-recha.component';
+import { SoliRevisarComponent } from './Components/BandejaAdmin/Revisar/soli-revisar/soli-revisar.component';
 
 
 const appRoute : Routes = [ 
@@ -27,20 +33,29 @@ const appRoute : Routes = [
     { path: 'Usuario', component: PagUsuComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent},
     { path: 'Perfil', component: PerfilComponent},
-    { path: 'Bandeja', component: BandejaAdComponent}
+    { path: 'Bandeja', component: BandejaAdComponent, children: [
+      { path: 'Revisar', component: SoliRevisarComponent},
+      { path: 'Aceptadas', component: SoliAcepComponent},
+      { path: 'Rechazadas', component: SoliRechaComponent}
+
+    ]},
+    { path: 'HomeAdmin', component: HomeAdminComponent}
     // Otras rutas secundarias
   ]},
   {path: 'Empleado', component: EmpleadoComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
     { path: 'Catalogo-Empleado', component: CatalogoEmpleadoComponent },
     { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent },
-    { path: 'Perfil', component: PerfilComponent}
+    { path: 'Perfil', component: PerfilComponent},
+    { path: 'HomeEmpleado', component: HomeEmpComponent}
+    
   ]},
   {path: 'RH', component: RHComponent, children:[
     { path: 'Solicitud', component: SolicitudComponent },
     { path: 'Catalogos', component: ListarCatalogoComponent },
     { path: 'Bandeja', component: BandejaAdComponent },
-    { path: 'Perfil', component: PerfilComponent}
+    { path: 'Perfil', component: PerfilComponent},
+    { path: 'HomeRH', component: HomeRHComponent}
   ]}
 ]
 
@@ -59,7 +74,13 @@ const appRoute : Routes = [
     PerfilComponent,
     BandejaAdComponent,
     CatalogoEmpleadoComponent,
-    BandejaEmpleadoComponent
+    BandejaEmpleadoComponent,
+    HomeRHComponent,
+    HomeAdminComponent,
+    HomeEmpComponent,
+    SoliAcepComponent,
+    SoliRechaComponent,
+    SoliRevisarComponent
   ],
   imports: [
     BrowserModule,

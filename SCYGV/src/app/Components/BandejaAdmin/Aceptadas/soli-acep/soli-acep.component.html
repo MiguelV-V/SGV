@@ -1,0 +1,24 @@
+
+<h2 class="text-center m-2">Solicitudes Aceptadas</h2>
+<table class="table mb-4" >
+    <thead>
+        <tr>
+          <th scope="col">Id_User</th>
+          <th scope="col">Fecha_Inicio</th>
+          <th scope="col">Fecha_Final</th>
+          <th scope="col">Motivo</th>
+          <th scope="col">Dias</th>
+          <th scope="col">Estado</th>
+        </tr>
+    </thead>
+    <tbody >
+      <tr *ngFor="let solicitud of LSoliacep"  >
+            <td>{{solicitud.id_user}}</td>
+            <td>{{solicitud.fecha_i}}</td>
+            <td>{{solicitud.fecha_f}}</td>
+            <td>{{solicitud.motivo}}</td>
+            <td>{{solicitud.dias}}</td>
+            <td>{{solicitud.estado}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Rol } from 'src/app/modelo/rol';
-import { RolService } from 'src/app/services/rol.service';
+import { RolService } from 'src/app/services/Rol/rol.service';
 
 @Component({
   selector: 'app-body',

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Rol } from 'src/app/modelo/rol';
 import { Usuario} from 'src/app/modelo/usuario';
-import { RolService } from 'src/app/services/rol.service';
-import { usuarioService } from 'src/app/services/usuario.service';
+import { RolService } from 'src/app/services/Rol/rol.service';
+import { usuarioService } from 'src/app/services/Usuario/usuario.service';
 import swal from'sweetalert2';
 @Component({
   selector: 'app-pag-usu',
