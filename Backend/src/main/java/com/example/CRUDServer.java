@@ -510,6 +510,31 @@ public class CRUDServer {
             }
         });
 
+         get("/solicitudes", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    int id_rh = resultSet.getInt("id_rh");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    solicitudes.add(new Solicitud(id, id_user, id_rh, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+
 
 
         // Ruta para crear un nuevo usuario
@@ -567,7 +592,6 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        // Ruta para modificar usuarios
         put("/solicitudes/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
