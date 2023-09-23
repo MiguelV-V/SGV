@@ -23,6 +23,8 @@ import { HomeEmpComponent } from './Components/Empleado/HomeEmp/home-emp/home-em
 import { SoliAcepComponent } from './Components/BandejaAdmin/Aceptadas/soli-acep/soli-acep.component';
 import { SoliRechaComponent } from './Components/BandejaAdmin/Rechazadas/soli-recha/soli-recha.component';
 import { SoliRevisarComponent } from './Components/BandejaAdmin/Revisar/soli-revisar/soli-revisar.component';
+import { AntiguedadUsuarioComponent } from './Components/usuarios/antiguedad-usuario/antiguedad-usuario.component';
+import { UsuariosComponent } from './Components/usuarios/Usuario/usuarios/usuarios.component';
 
 
 const appRoute : Routes = [ 
@@ -30,7 +32,10 @@ const appRoute : Routes = [
   {path: 'Home', component: HomeComponent},
   { path: 'Administrador', component: AdminComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
-    { path: 'Usuario', component: PagUsuComponent},
+    { path: 'PagUsuario', component: PagUsuComponent, children:[
+      { path: 'Usuario', component: UsuariosComponent},
+      { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
+    ]},
     { path: 'Catalogos', component: ListarCatalogoComponent},
     { path: 'Perfil', component: PerfilComponent},
     { path: 'Bandeja', component: BandejaAdComponent, children: [
@@ -80,7 +85,9 @@ const appRoute : Routes = [
     HomeEmpComponent,
     SoliAcepComponent,
     SoliRechaComponent,
-    SoliRevisarComponent
+    SoliRevisarComponent,
+    AntiguedadUsuarioComponent,
+    UsuariosComponent
   ],
   imports: [
     BrowserModule,

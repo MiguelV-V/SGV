@@ -1,0 +1,107 @@
+<div>
+    <div class="text-center mb-3">
+        <h1 >Usuarios</h1>
+      </div>
+      <div class="mb-3 card-body d-flex justify-content-between">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#VentanaAdd" (click)="limpiar()">Nuevo</button>
+      </div>
+      <table class="table mb-4" >
+          <thead>
+              <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nombres</th>
+                <th scope="col">Apellidos</th>
+                <th scope="col">Contraseña</th>
+                <th scope="col">Correo</th>
+                <th scope="col">Rol</th>
+                <th scope="col">RFC</th>
+                <th scope="col">Curp</th>
+                <th scope="col">N_C_Prof</th>
+                <th scope="col">U_G_Estudio</th>
+                <th scope="col">F_Ingreso</th>
+                <th scope="col">Especialidad</th>
+                <th scope="col">Telefono</th>
+                <th scope="col">Acciones</th>
+              </tr>
+          </thead>
+          <tbody >
+              <tr *ngFor="let usuario of LUsuarios" >
+              <th scope="row">{{usuario.id}}</th>
+                <td>{{usuario.nombres}}</td>
+                <td>{{usuario.apellidos}}</td>
+                <td>{{usuario.contrasena}}</td>
+                <td>{{usuario.correo}}</td>
+                <td>{{usuario.rol}}</td>
+                <td>{{usuario.rfc}}</td>
+                <td>{{usuario.curp}}</td>
+                <td>{{usuario.n_c_prof}}</td>
+                <td>{{usuario.u_g_estudio}}</td>
+                <td>{{usuario.f_ingreso}}</td>
+                <td>{{usuario.especialidad}}</td>
+                <td >{{usuario.telefono}} </td>
+                <td>
+                <button type="button"  class="btn btn-info" data-bs-toggle="modal" data-bs-target="#VentanaAdd" (click)="editar(usuario)"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-danger" (click)="deleteUsuario(usuario.id)"><i class="bi bi-x-circle-fill"></i></button>
+                </td>
+              </tr>
+          </tbody>
+      </table>
+      <div class="modal fade text-center" id="VentanaAdd" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header justify-content-end ">
+              <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar Empleado</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="FormUsu" >
+                    <div class="p-inputgroup mb-2">
+                        <span class="p-inputgroup-addon">
+                            <i class="pi pi-user"></i>
+                        </span>
+                        <input type = "hidden" formControlName="id" />
+                        <div class="form-group " >
+                          <label class="mb-3 m-2"><b>Nombres:</b></label>
+                          <input type = "text" formControlName="nombre" />
+                          <label class="mb-3 m-2"><b>Apellidos:</b></label>
+                          <input type = "text" formControlName="apellidos" />
+                          <label class="mb-3 m-2"><b>Contraseña:</b> </label>
+                          <input type = "text" formControlName="contrasena" />
+                          <label class="mb-3 m-2"><b>Correo:</b></label>
+                          <input type = "text" formControlName="correo" />
+                          <label class="mb-3 text-dark"><b>Indica su Rol con Id:</b><label class="mb-2 m-2 text-secondary" *ngFor="let rol of LRoles"><b>{{rol.id}}:</b> {{rol.rol}}</label></label>
+                          <input type = "text" formControlName="rol"/>
+                          <label class="mb-3 m-2"><b>RFC:</b></label>
+                          <input type = "text" formControlName="rfc"/>
+                          <label class="mb-3 m-2"><b>Curp:</b></label>
+                          <input type = "text" formControlName="curp" />
+                        </div>
+                        <div class="form-group">
+                          <label class="mb-3 m-2"><b>Cedula Profesional:</b></label>
+                          <input type = "text" formControlName="n_c_prof" />
+                          <label class="mb-3 m-2"><b>Ultimo Grado de Estudio:</b></label>
+                          <input type = "text" formControlName="u_g_estudio" />
+                          <label class="mb-3 m-2"><b>Fecha de Ingreso:</b></label>
+                          <input *ngIf="mostrarC" type = "date" formControlName="f_ingreso"/>
+                          <input *ngIf="mostrarA" type="text"  formControlName="f_ingreso">
+                        </div>
+                        <label class="mb-3 m-2"><b>Especialidad:</b></label>
+                        <input type = "text" formControlName="especialidad"/>
+                        <label class="mb-3 m-2"><b>Telefono:</b></label>
+                        <input type = "text" formControlName="telefono"/>
+                    </div>
+                    <div *ngIf="mostrarC">
+                        <button  type="button" class="btn btn-primary mb-2" (click)="createUsuario()">Agregar</button>
+                    </div>
+                    <div *ngIf="mostrarA">
+                        <button type="button" class="pencil-square" class="btn btn-success" (click)="updateUsuario({id})">Actualizar</button>
+                    </div>
+                  </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>

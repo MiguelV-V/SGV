@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Solicitud } from 'src/app/modelo/solicitud';
 import { SolicitudService } from 'src/app/services/Solicitudes/solicitud.service';
+import swal from'sweetalert2';
 
 @Component({
   selector: 'app-solicitud',
@@ -14,6 +15,7 @@ export class SolicitudComponent {
  //Form
  FormSoli: FormGroup
 
+ DiasD:String = ""
  id:number = 0
  idR:number = 0
  mostrarC: boolean = true;
@@ -34,16 +36,21 @@ export class SolicitudComponent {
 //Iniciar la muestra de solicitudes
 ngOnInit():void{
   this.getSolicitudes()
+  this.getDiasDispo()
 }
 
 getSolicitudes():any{
   this.sService.getIdSoliR(this.id).subscribe(res =>{
     this.LSolicitud = <any>res
+    console.log(res)})
+}
+
+getDiasDispo():any{
+  this.sService.getDiasDispo().subscribe(res =>{
+    this.DiasD = <any>res
     console.log(res)
   })
-  }
-
-
+}
 //Crear Solicitud
 createSolicitud(){
   if(this.FormSoli.valid)
@@ -53,17 +60,40 @@ createSolicitud(){
     solicitud.fecha_i = this.FormSoli.get('fecha_i')?.value
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
-    this.sService.createSolicitud(solicitud).subscribe(res =>
-      this.getSolicitudes(),
+    this.sService.createSolicitud(solicitud).subscribe(res =>{
+    if(res.body == "Falso Año"){
+        swal.fire({
+          icon: 'info',
+          title: 'Aun no cumples 1 año para poder solicitar vacaciones',
+          showConfirmButton: true
+        })
+        this.ngOnInit()
+        this.limpiar()
+    }
+    else if(res.body == "Falso Dias"){
+      swal.fire({
+        icon: 'info',
+        title: 'No dispones de suficientes dias de vacaciones, favor de verificar fechas y dias disponibles',
+        showConfirmButton: true
+      })
+      this.ngOnInit()
       this.limpiar()
-    )}
+    }
+    else if(res.body == "Correcto"){
+      swal.fire({
+        icon: 'success',
+        title: 'Se envio correctamente la solicitud, te quedan',
+        showConfirmButton: true
+      })
+      this.ngOnInit()
+    }})}
 }
 
 //Eliminar solicitud
 deleteSolicitud(idSoli : any){
   this.sService.deleteSolicitud(idSoli).subscribe(res =>{
     console.log(res)
-    this.getSolicitudes()
+    this.ngOnInit()
   },error => console.log(error))
 }
 

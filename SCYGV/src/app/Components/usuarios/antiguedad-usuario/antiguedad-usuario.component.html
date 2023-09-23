@@ -1,0 +1,26 @@
+<table class="table mb-4" >
+    <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Apellidos</th>
+          <th scope="col">Fecha de Ingreso</th>
+          <th scope="col">Años de antigüedad</th>
+          <th scope="col">Dias Correspondientes </th>
+          <th scope="col">Dias Utilizados</th>
+          <th scope="col">Dias Disponibles</th>
+        </tr>
+    </thead>
+    <tbody >
+        <tr *ngFor="let anti of Lantiguedad" >
+        <th scope="row">{{anti.id}}</th>
+          <td>{{anti.nombres}}</td>
+          <td>{{anti.apellidos}}</td>
+          <td>{{anti.f_ingreso}}</td>
+          <td>{{anti.anos_antiguedad}}</td>
+          <td>{{anti.dias_vac_corres}}</td>
+          <td>{{anti.dias_utilizados}}</td>
+          <td>{{anti.dias_disponibles}}</td>
+        </tr>
+    </tbody>
+</table>

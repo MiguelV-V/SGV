@@ -26,6 +26,11 @@ export class SolicitudService {
     return this.http.get('http://localhost:3000/soli_recha')
   }
 
+   //Obtener Solicitudes
+   getDiasDispo(){
+    return this.http.get('http://localhost:3000/dias_disponibles')
+  }
+
   //Crear Solicitud
   createSolicitud(solicitud:Solicitud){
     return this.http.post(this.rutaG, solicitud,{

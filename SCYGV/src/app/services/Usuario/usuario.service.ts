@@ -9,6 +9,7 @@ import { Usuario } from 'src/app/modelo/usuario';
 export class usuarioService {
   rutaG = 'http://localhost:3000/usuario'
   rutaLog = 'http://localhost:3000/login'
+  rutaAnti = 'http://localhost:3000/antiguedad'
   constructor(private http: HttpClient) {}
   //Logear
   postLog(usuario:Usuario){
@@ -19,6 +20,12 @@ export class usuarioService {
   getUsuario(){
     return this.http.get(this.rutaG);
   }
+
+   //Obtener antiguedad usuarios
+   getAntiUsuario(){
+    return this.http.get(this.rutaAnti);
+  }
+
 
   //Crear Usuario
   createUsuario(usuario:Usuario){
