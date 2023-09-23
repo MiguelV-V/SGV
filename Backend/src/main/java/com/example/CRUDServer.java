@@ -732,12 +732,37 @@ public class CRUDServer {
             }
         });
 
+         // Ruta para dias de vacaciones disponibles
+        get("/dias_disponibles", (req, res) -> {
+            int dias_disponibles = 0;
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS WHERE ID = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setInt(1, Id);
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()) {
+                    int dias_utilizados = 0;
+                    int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
+                    int dias_vac_corres = devolverdias(anos_antiguedad);
+                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                    PreparedStatement statement2 = conn.prepareStatement(query2);
+                    statement2.setInt(1,Id);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while(resultSet2.next()){
+                        dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS");
+                    }
+                    dias_disponibles = dias_vac_corres - dias_utilizados;
+                }
+                return gson.toJson(dias_disponibles).toString();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener los datos de antiguedad del usuario"));
+            }
+        });
 
-
-// Ruta para obtener usuarios por id
+        // Ruta para obtener datos de antiguedad usuario
         get("/antiguedad", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                
                 String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
@@ -757,7 +782,8 @@ public class CRUDServer {
                     while(resultSet2.next()){
                         dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS");
                     }
-                    Antiguedad.add(new AntiguedadUsuario(id,nombres,apellidos,f_ingreso,anos_antiguedad, dias_vac_corres,dias_utilizados));
+                    int dias_disponibles = dias_vac_corres - dias_utilizados;
+                    Antiguedad.add(new AntiguedadUsuario(id,nombres,apellidos,f_ingreso,anos_antiguedad, dias_vac_corres,dias_utilizados, dias_disponibles));
                 }
                 return gson.toJson(Antiguedad);
             } catch (SQLException e) {
@@ -766,7 +792,7 @@ public class CRUDServer {
             }
         });
 
-        // Ruta para crear un nuevo usuario
+        // Ruta para crear solicitud
         post("/solicitudes", (req, res) -> {
             //Datos digitados por el usuario
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class); 
@@ -793,7 +819,7 @@ public class CRUDServer {
                     int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
                     int dias_vac_corres = devolverdias(anos_antiguedad);
                     if(anos_antiguedad == 0){
-                        respuesta = "No tienes mas de 1 año trabajando";
+                       return respuesta = "Falso Año";
                     }
                     else{
                         //Query para obtener los dias utilizados de las solicitudes
@@ -804,7 +830,7 @@ public class CRUDServer {
                         while(resultSet2.next()){
                         dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS") + dias;
                         if(dias_utilizados > dias_vac_corres){
-                            return respuesta = "Los dias utilizados sobrepasan a los dias que te corresponden, favor de verificar los dias que te corresponden";
+                            return respuesta = "Falso Dias";
                         }
                         else{
                             //Query para enviar la solicitud al RH, despues de haber sido validada
@@ -819,7 +845,7 @@ public class CRUDServer {
                             statement1.setInt(7, dias);
                             statement1.setString(8, estado);
                             statement1.executeUpdate();
-                            respuesta = "Se envio correctamente la solicitud";
+                            return respuesta = "Correcto";
                         }
                     }
                 }
@@ -1075,8 +1101,9 @@ public class CRUDServer {
         private int anos_antiguedad;
         private int dias_vac_corres;
         private int dias_utilizados;
+        private int dias_disponibles;
 
-        public AntiguedadUsuario(int id, String nombres,String apellidos,String f_ingreso,int anos_antiguedad, int dias_vac_corres, int dias_utilizados) {
+        public AntiguedadUsuario(int id, String nombres,String apellidos,String f_ingreso,int anos_antiguedad, int dias_vac_corres, int dias_utilizados, int dias_disponibles) {
             this.id = id;
             this.nombres = nombres;
             this.apellidos = apellidos;
@@ -1084,6 +1111,7 @@ public class CRUDServer {
             this.anos_antiguedad = anos_antiguedad;
             this.dias_vac_corres = dias_vac_corres;
             this.dias_utilizados = dias_utilizados;
+            this.dias_disponibles = dias_disponibles;
         }
 
         public int getId(){
@@ -1111,6 +1139,10 @@ public class CRUDServer {
 
         public int getDiasUtilizados(){
             return dias_utilizados;
+        }
+
+         public int getDiasDisponibles(){
+            return dias_disponibles;
         }
     }
 
