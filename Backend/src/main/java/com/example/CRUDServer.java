@@ -18,6 +18,7 @@ import com.google.gson.Gson;
 public class CRUDServer {
 
     public static int Id;
+    public static String FechaIngreso;
     public static void main(String[] args) {
 
 
@@ -203,6 +204,7 @@ public class CRUDServer {
             String n_c_prof = usuario.getNCProf();
             String u_g_estudio = usuario.getUGEstudio();
             String f_ingreso = usuario.getFIngreso();
+            FechaIngreso = f_ingreso;
             String especialidad = usuario.getEspecialidad();
             String telefono = usuario.getTelefono();
 
@@ -537,40 +539,7 @@ public class CRUDServer {
 
 
 
-        // Ruta para crear un nuevo usuario
-        post("/solicitudes", (req, res) -> {
-            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
-            int id_user = solicitud.getId_user();
-            int id_rh = 0;
-            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
-            String fecha_i = solicitud.getFecha_I();
-            String fecha_f = solicitud.getFecha_F();
-            String motivo = solicitud.getMotivo();
-            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-            Date date1 = format.parse(fecha_i);
-            Date date2 = format.parse(fecha_f);
-            int dias = (int) ((date2.getTime() - date1.getTime())/86400000) + 1;
-            String estado = "En revision";
-
-            try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, FECHA_I, FECHA_F, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?,?,?);";
-                PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, id_user);
-                statement.setInt(2, id_rh);
-                statement.setString(3,fecha);
-                statement.setString(4,fecha_i);
-                statement.setString(5,fecha_f);
-                statement.setString(6, motivo);
-                statement.setInt(7, dias);
-                statement.setString(8, estado);
-                statement.executeUpdate();
-
-                return gson.toJson(new Respuesta("Solicitud creada correctamente"));
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return gson.toJson(new Respuesta("Error al crear la Solicitud"));
-            }
-        }, gson::toJson);
+        
 
         // Ruta para eliminar usuario
         delete("/solicitudes/:id", (req, res) -> {
@@ -762,16 +731,141 @@ public class CRUDServer {
                 return e;
             }
         });
+
+
+
+// Ruta para obtener usuarios por id
+        get("/antiguedad", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                
+                String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+                List<AntiguedadUsuario> Antiguedad = new ArrayList<>();
+                while(resultSet.next()) {
+                    int dias_utilizados = 0;
+                    int id = resultSet.getInt("ID");
+                    String nombres = resultSet.getString("NOMBRES");
+                    String apellidos = resultSet.getString("APELLIDOS");
+                    String f_ingreso = resultSet.getString("F_INGRESO");
+                    int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
+                    int dias_vac_corres = devolverdias(anos_antiguedad);
+                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                    PreparedStatement statement2 = conn.prepareStatement(query2);
+                    statement2.setInt(1,id);
+                    ResultSet resultSet2 = statement2.executeQuery();
+                    while(resultSet2.next()){
+                        dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS");
+                    }
+                    Antiguedad.add(new AntiguedadUsuario(id,nombres,apellidos,f_ingreso,anos_antiguedad, dias_vac_corres,dias_utilizados));
+                }
+                return gson.toJson(Antiguedad);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener los datos de antiguedad del usuario"));
+            }
+        });
+
+        // Ruta para crear un nuevo usuario
+        post("/solicitudes", (req, res) -> {
+            //Datos digitados por el usuario
+            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class); 
+            int id_user = solicitud.getId_user();
+            int id_rh = 0;
+            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
+            String fecha_i = solicitud.getFecha_I();
+            String fecha_f = solicitud.getFecha_F();
+            String motivo = solicitud.getMotivo();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
+            Date date1 = format.parse(fecha_i);
+            Date date2 = format.parse(fecha_f);
+            int dias = (int) ((date2.getTime() - date1.getTime())/86400000) + 1;
+            String estado = "En revision";
+            String respuesta = "";
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                //Query para obtener antiguedad del usuario
+                String query2 = "SELECT F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS WHERE ID = ?";
+                PreparedStatement statement = conn.prepareStatement(query2);
+                statement.setInt(1,id_user);
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()) {
+                    int dias_utilizados = 0;
+                    int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
+                    int dias_vac_corres = devolverdias(anos_antiguedad);
+                    if(anos_antiguedad == 0){
+                        respuesta = "No tienes mas de 1 año trabajando";
+                    }
+                    else{
+                        //Query para obtener los dias utilizados de las solicitudes
+                        String query3 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                        PreparedStatement statement2 = conn.prepareStatement(query3);
+                        statement2.setInt(1,id_user);
+                        ResultSet resultSet2 = statement2.executeQuery();
+                        while(resultSet2.next()){
+                        dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS") + dias;
+                        if(dias_utilizados > dias_vac_corres){
+                            return respuesta = "Los dias utilizados sobrepasan a los dias que te corresponden, favor de verificar los dias que te corresponden";
+                        }
+                        else{
+                            //Query para enviar la solicitud al RH, despues de haber sido validada
+                            String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, ID_RH, FECHA, FECHA_I, FECHA_F, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?,?,?);";
+                            PreparedStatement statement1 = conn.prepareStatement(query);
+                            statement1.setInt(1, id_user);
+                            statement1.setInt(2, id_rh);
+                            statement1.setString(3,fecha);
+                            statement1.setString(4,fecha_i);
+                            statement1.setString(5,fecha_f);
+                            statement1.setString(6, motivo);
+                            statement1.setInt(7, dias);
+                            statement1.setString(8, estado);
+                            statement1.executeUpdate();
+                            respuesta = "Se envio correctamente la solicitud";
+                        }
+                    }
+                }
+                }
+                return gson.toJson(respuesta);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al crear la Solicitud"));
+            }
+        }, gson::toJson);
     }
 
     //Devolver la fecha
       public static String devolverFecha(Date fechaEntrada) throws ParseException{ 
-
-            
             SimpleDateFormat formato = new SimpleDateFormat("yyyy/MM/dd");// Convierte Date a String
             String miFecha = formato.format(fechaEntrada); // convierte String a Date
             return miFecha;
           }
+
+    //Devolver dias correspondientes
+    public static int devolverdias(int antiguedad){
+        int dias = 0;
+        if(antiguedad == 1){
+            dias = 12;}
+        else if(antiguedad == 2){
+            dias = 14;}
+        else if(antiguedad == 3){
+            dias= 16;}
+        else if(antiguedad == 4){
+            dias= 18;}
+        else if(antiguedad == 5){
+            dias= 20;}
+        else if(antiguedad >= 6 && antiguedad <= 10){
+            dias= 22;}
+        else if(antiguedad >= 11 && antiguedad <= 15){
+            dias= 24;}
+        else if(antiguedad >= 16 && antiguedad <= 20){
+            dias= 26;}
+        else if(antiguedad >= 21 && antiguedad <= 25){
+            dias= 28;}
+        else if(antiguedad >= 26 && antiguedad <= 30){
+            dias= 30;}
+        else if(antiguedad >= 31 && antiguedad <= 35){
+            dias= 32;}
+        return dias;
+    }
 
     // Clase para representar un rol
     static class Rol {
@@ -972,4 +1066,54 @@ public class CRUDServer {
             return estado;
         }
     }
+     // Clase para representar usuarios
+    static class AntiguedadUsuario {
+        private int id;
+        private String nombres;
+        private String apellidos;
+        private String f_ingreso;
+        private int anos_antiguedad;
+        private int dias_vac_corres;
+        private int dias_utilizados;
+
+        public AntiguedadUsuario(int id, String nombres,String apellidos,String f_ingreso,int anos_antiguedad, int dias_vac_corres, int dias_utilizados) {
+            this.id = id;
+            this.nombres = nombres;
+            this.apellidos = apellidos;
+            this.f_ingreso = f_ingreso;
+            this.anos_antiguedad = anos_antiguedad;
+            this.dias_vac_corres = dias_vac_corres;
+            this.dias_utilizados = dias_utilizados;
+        }
+
+        public int getId(){
+            return id;
+        }
+        public String getNombres() {
+            return nombres;
+        }
+
+        public String getApellidos() {
+            return apellidos;
+        }
+
+        public String getFIngreso() {
+            return f_ingreso;
+        }
+
+        public int getAntiUsuario() {
+            return anos_antiguedad;
+        }
+
+        public int getDiasVacCorr(){
+            return dias_vac_corres;
+        }
+
+        public int getDiasUtilizados(){
+            return dias_utilizados;
+        }
+    }
+
+
+
 }
