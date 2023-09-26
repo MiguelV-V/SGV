@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./home-emp.component.css']
 })
 export class HomeEmpComponent {
-
+  NombreUsuario : any = localStorage.getItem("Nombres")! + " " +localStorage.getItem("Apellidos");
 }

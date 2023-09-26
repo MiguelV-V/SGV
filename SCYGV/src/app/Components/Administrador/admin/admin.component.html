@@ -16,7 +16,7 @@
                             <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
                     </li>
                     <li>
-                        <a routerLink="./PagUsuario" data-bs-toggle="collapse"  class="nav-link px-0 align-middle text-dark">
+                        <a routerLink="./PagUsuario/Usuario" data-bs-toggle="collapse"  class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline"> Usuarios</span></a>
                     </li>
                     <li>
@@ -33,14 +33,14 @@
                 <div class="dropdown pb-4">
                     <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="./assets/usuario.png" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                        <span class="d-none d-sm-inline mx-1">Nombre Usuario</span>
+                        <span class="d-none d-sm-inline mx-1">{{NombreUsuario}}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
                         <li><a class="dropdown-item" routerLink="./Perfil">Perfil</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" routerLink="/Home">Cerrar Sesión</a></li>
+                        <li><a class="dropdown-item" (click)="CerrarSesion()">Cerrar Sesión</a></li>
                     </ul>
                 </div>
             </div>

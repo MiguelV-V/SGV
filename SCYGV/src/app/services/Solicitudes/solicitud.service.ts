@@ -10,9 +10,9 @@ import { Solicitud } from 'src/app/modelo/solicitud';
 export class SolicitudService {
   rutaG = 'http://localhost:3000/solicitudes'
   rutaE = 'http://localhost:3000/estado'
-  rutaR = 'http://localhost:3000/soliR'
-  rutaRec = 'http://localhost:3000/soliRec'
-  rutaA = 'http://localhost:3000/soliA'
+  rutaR = 'http://localhost:3000/SoliRevision'
+  rutaRec = 'http://localhost:3000/SoliRechazada'
+  rutaA = 'http://localhost:3000/SoliAceptada'
   constructor(private http: HttpClient) {}
 
   //Obtener Solicitudes
@@ -28,12 +28,12 @@ export class SolicitudService {
 
    //Obtener Solicitudes
    getDiasDispo(){
-    return this.http.get('http://localhost:3000/dias_disponibles')
+    return this.http.get('http://localhost:3000/dias_disponibles' + "/" + localStorage.getItem("Id"))
   }
 
   //Crear Solicitud
   createSolicitud(solicitud:Solicitud){
-    return this.http.post(this.rutaG, solicitud,{
+    return this.http.post(this.rutaG + "/" + localStorage.getItem("Id"), solicitud,{
       observe: 'response'
     })
   }
@@ -45,24 +45,24 @@ export class SolicitudService {
 
   //Actualizar Solicitud
   updateSolicitud(idSoli : number, solicitud:Solicitud){
-    return this.http.put(this.rutaG + "/" + idSoli, solicitud)
+    return this.http.put(this.rutaG + "/" + idSoli + "/" + localStorage.getItem("Id"), solicitud)
   }
 
   updateBand(idSoli:number,soli:Bandeja){
-    return this.http.put(this.rutaE + "/" + idSoli, soli)
+    return this.http.put(this.rutaE + "/" + idSoli + "/" + localStorage.getItem("Id"), soli)
   }
  
   
-  getIdSoliR(idSoli: number){
-    return this.http.get(this.rutaR + "/" + idSoli);
+  getIdSoliR(){
+    return this.http.get(this.rutaR + "/" + localStorage.getItem("Id"));
   }
 
-  getIdSoliRec(idSoli: number){
-    return this.http.get(this.rutaRec + "/" + idSoli);
+  getIdSoliRec(){
+    return this.http.get(this.rutaRec + "/" + localStorage.getItem("Id"));
   }
 
-  getIdSoliA(idSoli: number){
-    return this.http.get(this.rutaA + "/" + idSoli);
+  getIdSoliA(){
+    return this.http.get(this.rutaA + "/" + localStorage.getItem("Id"));
   }
 
   

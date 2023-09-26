@@ -1,68 +1,9 @@
-<div >
-    <div class="text-center mb-3">
-        <h1>Bandeja de Solicitudes</h1>
-      </div >
-      <h2>Solicitudes Aceptadas</h2>
-      <table class="table text-center table-bordered mb-4 m-2" >
-          <thead>
-              <tr>
-                <th scope="col">Id</th>
-                <th scope="col">Id_User</th>
-                <th scope="col">Id_RH</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Fecha_Inicio</th>
-                <th scope="col">Fecha_Final</th>
-                <th scope="col">Motivo</th>
-                <th scope="col">Dias</th>
-                <th scope="col">Estado</th>
-              </tr>
-          </thead>
-          <tbody >
-            <tr *ngFor="let solicitud of LSolicitud"  >
-                <th scope="row">{{solicitud.id}}</th>
-                  <td>{{solicitud.id_user}}</td>
-                  <td>{{solicitud.id_rh}}</td>
-                  <td>{{solicitud.fecha}}</td>
-                  <td>{{solicitud.fecha_i}}</td>
-                  <td>{{solicitud.fecha_f}}</td>
-                  <td>{{solicitud.motivo}}</td>
-                  <td>{{solicitud.dias}}</td>
-                  <td>{{solicitud.estado}}</td>
-              </tr>
-          </tbody>
-      </table>
-  </div>
-  
-<h2 class="m-2">Solicitudes Rechazadas</h2>
-<table class="table text-center table-bordered mb-4" >
-    <thead>
-        <tr>
-          <th scope="col">Id</th>
-          <th scope="col">Id_User</th>
-          <th scope="col">Id_RH</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Fecha_Inicio</th>
-          <th scope="col">Fecha_Final</th>
-          <th scope="col">Motivo</th>
-          <th scope="col">Dias</th>
-          <th scope="col">Estado</th>
-        </tr>
-    </thead>
-    <tbody >
-      <tr *ngFor="let solicitud of LSolicitu"  >
-          <th scope="row">{{solicitud.id}}</th>
-            <td>{{solicitud.id_user}}</td>
-            <td>{{solicitud.id_rh}}</td>
-            <td>{{solicitud.fecha}}</td>
-            <td>{{solicitud.fecha_i}}</td>
-            <td>{{solicitud.fecha_f}}</td>
-            <td>{{solicitud.motivo}}</td>
-            <td>{{solicitud.dias}}</td>
-            <td>{{solicitud.estado}}</td>
-        </tr>
-    </tbody>
-</table>
-
-  
-  
-  
+<ul class="nav nav-pills">
+  <li class="nav-item">
+    <a class="nav-link active text-primary bg-info bg-opacity-10 " routerLink="./Solicitudes_Aceptadas">Aceptadas</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link text-primary" routerLink="./Solicitudes_Rechazadas">Rechazadas</a>
+  </li>
+</ul>
+<router-outlet></router-outlet>

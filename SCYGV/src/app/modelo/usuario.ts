@@ -14,3 +14,10 @@ export class Usuario{
     telefono ?: String
     
 }
+
+export interface userRes{
+    id: number
+    rol: string
+    nombres : string
+    apellidos : string
+}

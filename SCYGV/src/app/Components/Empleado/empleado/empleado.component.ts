@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -7,6 +8,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./empleado.component.css']
 })
 export class EmpleadoComponent {
+NombreUsuario : any = localStorage.getItem("Nombres")!;
 
- 
+constructor(private router:Router){}
+
+CerrarSesion():void{
+  localStorage.clear();
+  this.router.navigateByUrl("/Home");
+}
+
 }

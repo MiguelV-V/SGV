@@ -9,17 +9,14 @@ import { usuarioService } from 'src/app/services/Usuario/usuario.service';
 })
 export class PerfilComponent {
   LUsuario !: Usuario[];
-  id :number = 0
 
-  constructor(private Uservice:usuarioService){
-    
-  }
+  constructor(private Uservice:usuarioService){}
    ngOnInit():void{
     this.getUser()
   }
   
   getUser():any{
-    this.Uservice.getIdUsuario(this.id).subscribe(res =>{
+    this.Uservice.getIdUsuario().subscribe(res =>{
       this.LUsuario = <any>res
       console.log(res)})
   }

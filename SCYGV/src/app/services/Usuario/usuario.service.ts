@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Usuario } from 'src/app/modelo/usuario';
+import { Observable, catchError, map, of } from 'rxjs';
+import { Usuario, userRes } from 'src/app/modelo/usuario';
 
 
 @Injectable({
@@ -12,8 +13,8 @@ export class usuarioService {
   rutaAnti = 'http://localhost:3000/antiguedad'
   constructor(private http: HttpClient) {}
   //Logear
-  postLog(usuario:Usuario){
-    return this.http.post(this.rutaLog,usuario)
+  postLog(correo:String, contrasena:String):Observable<userRes> {
+    return this.http.post<userRes>(this.rutaLog,{correo,contrasena});
   }
 
   //Obtener Usuarios
@@ -45,8 +46,7 @@ export class usuarioService {
   }
  
   //Obtener Usuario por ID
-  getIdUsuario(idUsuario: number){
-    return this.http.get(this.rutaG + "/" + idUsuario);
+  getIdUsuario(){
+    return this.http.get(this.rutaG + "/" + localStorage.getItem("Id"));
   }
-
 }

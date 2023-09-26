@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms'
+import { FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { AppComponent } from './app.component';
 
 import { BodyComponent } from './Components/Rol/body.component';
@@ -25,6 +25,8 @@ import { SoliRechaComponent } from './Components/BandejaAdmin/Rechazadas/soli-re
 import { SoliRevisarComponent } from './Components/BandejaAdmin/Revisar/soli-revisar/soli-revisar.component';
 import { AntiguedadUsuarioComponent } from './Components/usuarios/antiguedad-usuario/antiguedad-usuario.component';
 import { UsuariosComponent } from './Components/usuarios/Usuario/usuarios/usuarios.component';
+import { SRechazadaEmpComponent } from './Components/Empleado/bandeja-empleado/Rechazadas/srechazada-emp/srechazada-emp.component';
+import { SAceptadaEmpComponent } from './Components/Empleado/bandeja-empleado/Aceptadas/saceptada-emp/saceptada-emp.component';
 
 
 const appRoute : Routes = [ 
@@ -44,16 +46,17 @@ const appRoute : Routes = [
       { path: 'Rechazadas', component: SoliRechaComponent}
 
     ]},
-    { path: 'HomeAdmin', component: HomeAdminComponent}
-    // Otras rutas secundarias
+    { path: 'HomeAdmin', component: HomeAdminComponent},
   ]},
   {path: 'Empleado', component: EmpleadoComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
     { path: 'Catalogo-Empleado', component: CatalogoEmpleadoComponent },
-    { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent },
+    { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent, children:[
+      { path: 'Solicitudes_Aceptadas', component: SAceptadaEmpComponent},
+      { path: 'Solicitudes_Rechazadas', component: SRechazadaEmpComponent}
+    ]},
     { path: 'Perfil', component: PerfilComponent},
     { path: 'HomeEmpleado', component: HomeEmpComponent}
-    
   ]},
   {path: 'RH', component: RHComponent, children:[
     { path: 'Solicitud', component: SolicitudComponent },
@@ -87,7 +90,9 @@ const appRoute : Routes = [
     SoliRechaComponent,
     SoliRevisarComponent,
     AntiguedadUsuarioComponent,
-    UsuariosComponent
+    UsuariosComponent,
+    SRechazadaEmpComponent,
+    SAceptadaEmpComponent
   ],
   imports: [
     BrowserModule,

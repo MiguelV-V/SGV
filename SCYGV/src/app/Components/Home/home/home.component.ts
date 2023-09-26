@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Usuario } from 'src/app/modelo/usuario';
+import { Rol } from 'src/app/modelo/rol';
+import { Usuario, userRes } from 'src/app/modelo/usuario';
 import { usuarioService } from 'src/app/services/Usuario/usuario.service';
 import swal from'sweetalert2';
 @Component({
@@ -12,11 +13,13 @@ import swal from'sweetalert2';
 export class HomeComponent {
  //Alerta
  alert:Boolean = false
- Admin:number = 1
- RH:number = 2
- Empleado:number = 3
  //Form Logear
  FormLogin : FormGroup
+
+ correo : String = ""
+ contrasena : String = ""
+ respuesta!: userRes[];
+ 
 
  constructor(private UService:usuarioService, private fb:FormBuilder, private router:Router){
    this.FormLogin = fb.group({
@@ -29,21 +32,30 @@ export class HomeComponent {
   login(){
     if(this.FormLogin.valid)
     {
-      let usulogin = new Usuario()
-      usulogin.correo = this.FormLogin.get('correo')?.value
-      usulogin.contrasena = this.FormLogin.get('contrasena')?.value
-      this.UService.postLog(usulogin).subscribe(res =>{
-        if(res == this.Admin){ 
-          console.log(res);
+      this.correo = this.FormLogin.get('correo')?.value
+      this.contrasena = this.FormLogin.get('contrasena')?.value
+      this.UService.postLog(this.correo,this.contrasena).subscribe(res =>{
+        this.respuesta = <any>res;
+        console.log(res)
+        if(this.respuesta[0].rol == "1"){ 
           this.router.navigateByUrl('/Administrador/HomeAdmin');
+          localStorage.setItem("Id",this.respuesta[0].id.toString())
+          localStorage.setItem("Nombres",this.respuesta[0].nombres)
+          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           this.FormLogin.reset();
         }
-        else if(res == this.RH){
+        else if(this.respuesta[0].rol == "2"){
           this.router.navigateByUrl('/RH/HomeRH');
+          localStorage.setItem("Id",this.respuesta[0].id.toString())
+          localStorage.setItem("Nombres",this.respuesta[0].nombres)
+          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           this.FormLogin.reset();
         }
-        else if(res == this.Empleado){
+        else if(this.respuesta[0].rol == "3"){
           this.router.navigateByUrl('/Empleado/HomeEmpleado');
+          localStorage.setItem("Id",this.respuesta[0].id.toString())
+          localStorage.setItem("Nombres",this.respuesta[0].nombres)
+          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           this.FormLogin.reset();
         }
         else{
@@ -51,7 +63,6 @@ export class HomeComponent {
             icon: 'error',
             title: 'Oops...',
             text: 'El correo o la contraseña son inválidos, intentalo de nuevo...',})}
-            this.FormLogin.markAllAsTouched();
             
       });
 

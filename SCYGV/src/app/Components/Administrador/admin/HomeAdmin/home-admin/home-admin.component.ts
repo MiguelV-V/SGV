@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./home-admin.component.css']
 })
 export class HomeAdminComponent {
-
+  NombreUsuario : any = localStorage.getItem("Nombres")! + " " +localStorage.getItem("Apellidos");
 }

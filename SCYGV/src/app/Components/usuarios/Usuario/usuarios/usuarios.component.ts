@@ -164,13 +164,7 @@ getRol():any{
       this.FormUsu.get('telefono')?.setValue(usuario.telefono)
   }
   
-  //Mostrar Usuario por Id
-getUserId(idUsu: number):any{
-  this.UService.getIdUsuario(idUsu).subscribe(res =>{
-    this.LUsuarios = <any>res
-    console.log(res)
-  })
-}
+ 
   //Funcion para limpar el formulario
   limpiar():any{this.mostrarC = true;this.mostrarA = false;this.FormUsu.reset()}
 }
