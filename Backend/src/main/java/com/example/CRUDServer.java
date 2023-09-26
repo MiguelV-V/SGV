@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 
 public class CRUDServer {
 
-    public static int Id;
     public static String FechaIngreso;
     public static void main(String[] args) {
 
@@ -296,10 +295,11 @@ public class CRUDServer {
 
         // Ruta para obtener usuarios por id
         get("/usuario/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, Id);
+                statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Usuarios> usuarios = new ArrayList<>();
                 while (resultSet.next()) {
@@ -561,12 +561,12 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
-        put("/solicitudes/:id", (req, res) -> {
+        put("/solicitudes/:id/:id_user", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
+            int id_user = Integer.parseInt(req.params("id_user"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
-            int id_user = solicitud.getId_user();
-            int id_rh = solicitud.getId_rh();
-            String fecha = solicitud.getFecha();
+            int id_rh = 0;
+            String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             String fecha_i = solicitud.getFecha_I();
             String fecha_f = solicitud.getFecha_F();
             String motivo = solicitud.getMotivo();
@@ -574,7 +574,7 @@ public class CRUDServer {
             Date date1 = format.parse(fecha_i);
             Date date2 = format.parse(fecha_f);
             int dias = (int) ((date2.getTime() - date1.getTime())/86400000);
-            String estado = solicitud.getEstado();
+            String estado = "En revision";
             
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, ID_RH = ?, FECHA = ?, FECHA_I = ?, FECHA_F = ?,MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
@@ -597,10 +597,10 @@ public class CRUDServer {
             }
         }, gson::toJson);
          // Ruta para modificar usuarios
-        put("/estado/:id", (req, res) -> {
+        put("/estado/:id/:id_rh", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
+            int id_rh = Integer.parseInt(req.params("id_rh"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
-            int id_rh = Id;
             String estado = solicitud.getEstado();
             
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
@@ -611,19 +611,20 @@ public class CRUDServer {
                 statement.setInt(3, id);
                 statement.executeUpdate();
 
-                return gson.toJson(new Respuesta("Se actualizo correctamente"));
+                return gson.toJson(new Respuesta("Se envio la respuesta"));
             } catch (SQLException e) {
                 e.printStackTrace();
-                return gson.toJson(new Respuesta("Error al actualizar"));
+                return gson.toJson(new Respuesta("Error al enviar"));
             }
         }, gson::toJson);
 
         // Ruta para obtener solicitudes rechazadas
-        get("/soliRec/:id", (req, res) -> {
+        get("/SoliRechazada/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Rechazada'";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, Id);
+                statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
@@ -646,11 +647,12 @@ public class CRUDServer {
         });
 
         //Ruta para obtener solicitudes Aceptadas
-        get("/soliA/:id", (req, res) -> {
+        get("/SoliAceptada/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Aceptada'";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, Id);
+                statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
@@ -672,13 +674,13 @@ public class CRUDServer {
             }
         });
 
-        //Ruta para obtener solicitudes En revision
-
-         get("/soliR/:id", (req, res) -> {
+        //Ruta para obtener solicitudes En revision Para Cada Usuario
+         get("/SoliRevision/:id", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                int id = Integer.parseInt(req.params("id"));
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'En revision'";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, Id);
+                statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
                 List<Solicitud> solicitudes = new ArrayList<>();
                 while (resultSet.next()) {
@@ -712,33 +714,30 @@ public class CRUDServer {
                 statement.setString(1, correo);
                 statement.setString(2, contrasena);
                 ResultSet resultSet = statement.executeQuery();
-                String respuesta;
-                if(resultSet.next())
+                List<Login> login = new ArrayList<>();
+            
+                while(resultSet.next())
                 {
-                    int id = resultSet.getInt("ROL");
-                    Id = resultSet.getInt("ID");
-                    if(id > 0 && id < 4)
-                    {
-                        respuesta =  gson.toJson(id);
-                    }
-                    else{respuesta =  gson.toJson(false);}
+                    int Id = resultSet.getInt("ID");
+                    String Rol = resultSet.getString("ROL");
+                    String Nombres = resultSet.getString("NOMBRES");
+                    String Apellidos = resultSet.getString("APELLIDOS");
+                    login.add(new Login(Id,Rol,Nombres,Apellidos));
                 }
-                else {
-                  respuesta =  gson.toJson(false);
-                }
-                return respuesta;
+                return gson.toJson(login);
             } catch (SQLException e) {
                 return e;
             }
         });
 
          // Ruta para dias de vacaciones disponibles
-        get("/dias_disponibles", (req, res) -> {
+        get("/dias_disponibles/:id_user", (req, res) -> {
+            int id_user = Integer.parseInt(req.params("id_user"));
             int dias_disponibles = 0;
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
-                statement.setInt(1, Id);
+                statement.setInt(1, id_user);
                 ResultSet resultSet = statement.executeQuery();
                 while(resultSet.next()) {
                     int dias_utilizados = 0;
@@ -746,7 +745,7 @@ public class CRUDServer {
                     int dias_vac_corres = devolverdias(anos_antiguedad);
                     String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
                     PreparedStatement statement2 = conn.prepareStatement(query2);
-                    statement2.setInt(1,Id);
+                    statement2.setInt(1,id_user);
                     ResultSet resultSet2 = statement2.executeQuery();
                     while(resultSet2.next()){
                         dias_utilizados = resultSet2.getInt("DIAS_UTILIZADOS");
@@ -793,10 +792,10 @@ public class CRUDServer {
         });
 
         // Ruta para crear solicitud
-        post("/solicitudes", (req, res) -> {
+        post("/solicitudes/:id_user", (req, res) -> {
             //Datos digitados por el usuario
+            int id_user = Integer.parseInt(req.params("id_user"));
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class); 
-            int id_user = solicitud.getId_user();
             int id_rh = 0;
             String fecha = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME);
             String fecha_i = solicitud.getFecha_I();
@@ -891,6 +890,35 @@ public class CRUDServer {
         else if(antiguedad >= 31 && antiguedad <= 35){
             dias= 32;}
         return dias;
+    }
+
+    // Clase para representar login
+    static class Login {
+        private int id;
+        private String rol;
+        private String nombres;
+        private String apellidos;
+
+        public Login(int id, String rol, String nombres, String apellidos) {
+            this.id = id;
+            this.rol = rol;
+            this.nombres = nombres;
+            this.apellidos = apellidos;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public String getRol() {
+            return rol;
+        }
+         public String getNombres() {
+            return nombres;
+        }
+         public String getApellidos() {
+            return apellidos;
+        }
     }
 
     // Clase para representar un rol
