@@ -2,8 +2,8 @@
 <h2 class="text-center m-2">Solicitudes Aceptadas</h2>
 <table class="table mb-4" >
     <thead>
-        <tr>
-          <th scope="col">Id_User</th>
+        <tr >
+          <th scope="col">Nombres</th>
           <th scope="col">Fecha_Inicio</th>
           <th scope="col">Fecha_Final</th>
           <th scope="col">Motivo</th>
@@ -12,8 +12,8 @@
         </tr>
     </thead>
     <tbody >
-      <tr *ngFor="let solicitud of LSoliacep"  >
-            <td>{{solicitud.id_user}}</td>
+      <tr  *ngFor="let solicitud of LSoliacep"  >
+            <td>{{solicitud.nombres}}</td>
             <td>{{solicitud.fecha_i}}</td>
             <td>{{solicitud.fecha_f}}</td>
             <td>{{solicitud.motivo}}</td>

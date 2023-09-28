@@ -17,7 +17,6 @@ export class SolicitudComponent {
 
  DiasD:String = ""
  id:number = 0
- idR:number = 0
  mostrarC: boolean = true;
  mostrarA: boolean = false;
 
@@ -58,16 +57,7 @@ createSolicitud(){
     solicitud.fecha_f = this.FormSoli.get('fecha_f')?.value
     solicitud.motivo = this.FormSoli.get('motivo')?.value
     this.sService.createSolicitud(solicitud).subscribe(res =>{
-    if(res.body == "Falso Año"){
-        swal.fire({
-          icon: 'info',
-          title: 'Aun no cumples 1 año para poder solicitar vacaciones',
-          showConfirmButton: true
-        })
-        this.ngOnInit()
-        this.limpiar()
-    }
-    else if(res.body == "Falso Dias"){
+    if(res.body == "Falso Dias"){
       swal.fire({
         icon: 'info',
         title: 'No dispones de suficientes dias de vacaciones, favor de verificar fechas y dias disponibles',

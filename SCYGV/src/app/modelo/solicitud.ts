@@ -1,7 +1,8 @@
 export class Solicitud{
     id ?: number
     id_user ?: number
-    id_rh ?: number
+    nombres ?: String
+    reviso ?: String
     fecha ?: Date
     fecha_i ?: Date
     fecha_f ?: Date

@@ -12,16 +12,16 @@
                         </a>
                     </li>
                     <li>
-                        <a routerLink="./Solicitud" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
+                        <a routerLink="./Bandeja" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
+                    </li>
+                    <li>
+                        <a routerLink="./PagUsuario/Usuario" data-bs-toggle="collapse"  class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Usuarios</span></a>
+                    </li>
                     <li>
                         <a routerLink="./Catalogos" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
-                    </li>
-                    
-                    <li>
-                        <a routerLink="./Bandeja" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
                     </li>
                 </ul>
                 <hr>
@@ -35,7 +35,7 @@
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" routerLink="/Home">Cerrar Sesión</a></li>
+                        <li><a class="dropdown-item" (click)="CerrarSesion()">Cerrar Sesión</a></li>
                     </ul>
                 </div>
             </div>

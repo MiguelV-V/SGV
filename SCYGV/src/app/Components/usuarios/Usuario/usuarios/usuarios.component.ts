@@ -25,6 +25,8 @@ export class UsuariosComponent {
 
   mostrarC: boolean = true;
   mostrarA: boolean = false;
+  mostrarTAdd: boolean = true;
+  mostrarTAct: boolean = false;
   constructor(private UService:usuarioService, private fb:FormBuilder, private rService : RolService){
     //Formulario para trabajar con los Usuarios
     this.FormUsu = fb.group({
@@ -149,6 +151,8 @@ getRol():any{
     editar(usuario:Usuario){
       this.mostrarC = false;
       this.mostrarA = true;
+      this.mostrarTAdd = false;
+      this.mostrarTAct = true;
       this.FormUsu.get('id')?.setValue(usuario.id)
       this.FormUsu.get('nombre')?.setValue(usuario.nombres)
       this.FormUsu.get('apellidos')?.setValue(usuario.apellidos)
@@ -166,5 +170,5 @@ getRol():any{
   
  
   //Funcion para limpar el formulario
-  limpiar():any{this.mostrarC = true;this.mostrarA = false;this.FormUsu.reset()}
+  limpiar():any{this.mostrarC = true;this.mostrarA = false;this.mostrarTAdd = true; this.mostrarTAct = false; this.FormUsu.reset()}
 }

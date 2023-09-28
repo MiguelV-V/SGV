@@ -12,16 +12,16 @@
                         </a>
                     </li>
                     <li>
-                        <a routerLink="./Solicitud" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline">Solicitud</span> </a>
-                    <li>
-                        <a routerLink="./Catalogo-Empleado" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
+                        <button class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-archive fs-4"></i><span class="ms-1 d-none d-sm-inline" (click)="Permiso()">Solicitud</span> </button>
                     </li>
-                    
                     <li>
                         <a routerLink="./Bandeja-Empleado/Solicitudes_Aceptadas" class="nav-link px-0 align-middle text-dark">
                             <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
+                    </li>
+                    <li>
+                        <a routerLink="./Catalogo-Empleado" class="nav-link px-0 align-middle text-dark">
+                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
                     </li>
                 </ul>
                 <hr>

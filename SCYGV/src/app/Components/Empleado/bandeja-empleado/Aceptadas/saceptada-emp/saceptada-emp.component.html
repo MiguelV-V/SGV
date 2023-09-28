@@ -3,9 +3,9 @@
     <thead>
         <tr>
           <th scope="col">Id</th>
-          <th scope="col">Id_User</th>
-          <th scope="col">Id_RH</th>
-          <th scope="col">Fecha</th>
+          <th scope="col">Nombres</th>
+          <th scope="col">Revisó</th>
+          <th scope="col">Fecha de Solicitud</th>
           <th scope="col">Fecha_Inicio</th>
           <th scope="col">Fecha_Final</th>
           <th scope="col">Motivo</th>
@@ -16,8 +16,8 @@
     <tbody >
       <tr *ngFor="let solicitud of LSoliAcep"  >
           <th scope="row">{{solicitud.id}}</th>
-            <td>{{solicitud.id_user}}</td>
-            <td>{{solicitud.id_rh}}</td>
+            <td>{{solicitud.nombres}}</td>
+            <td>{{solicitud.reviso}}</td>
             <td>{{solicitud.fecha}}</td>
             <td>{{solicitud.fecha_i}}</td>
             <td>{{solicitud.fecha_f}}</td>

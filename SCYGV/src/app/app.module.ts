@@ -27,13 +27,13 @@ import { AntiguedadUsuarioComponent } from './Components/usuarios/antiguedad-usu
 import { UsuariosComponent } from './Components/usuarios/Usuario/usuarios/usuarios.component';
 import { SRechazadaEmpComponent } from './Components/Empleado/bandeja-empleado/Rechazadas/srechazada-emp/srechazada-emp.component';
 import { SAceptadaEmpComponent } from './Components/Empleado/bandeja-empleado/Aceptadas/saceptada-emp/saceptada-emp.component';
+import { guardAdmin, guardEmpleado, guardRH } from './Guards/guards/guardrol.guard';
 
 
 const appRoute : Routes = [ 
   {path: '', redirectTo:'/Home', pathMatch:'full'},
   {path: 'Home', component: HomeComponent},
-  { path: 'Administrador', component: AdminComponent, children: [
-    { path: 'Solicitud', component: SolicitudComponent },
+  { path: 'Administrador',canActivate:[guardAdmin], component: AdminComponent, children: [
     { path: 'PagUsuario', component: PagUsuComponent, children:[
       { path: 'Usuario', component: UsuariosComponent},
       { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
@@ -44,11 +44,10 @@ const appRoute : Routes = [
       { path: 'Revisar', component: SoliRevisarComponent},
       { path: 'Aceptadas', component: SoliAcepComponent},
       { path: 'Rechazadas', component: SoliRechaComponent}
-
     ]},
     { path: 'HomeAdmin', component: HomeAdminComponent},
   ]},
-  {path: 'Empleado', component: EmpleadoComponent, children: [
+  {path: 'Empleado', canActivate:[guardEmpleado], component: EmpleadoComponent, children: [
     { path: 'Solicitud', component: SolicitudComponent },
     { path: 'Catalogo-Empleado', component: CatalogoEmpleadoComponent },
     { path: 'Bandeja-Empleado', component: BandejaEmpleadoComponent, children:[
@@ -58,12 +57,20 @@ const appRoute : Routes = [
     { path: 'Perfil', component: PerfilComponent},
     { path: 'HomeEmpleado', component: HomeEmpComponent}
   ]},
-  {path: 'RH', component: RHComponent, children:[
-    { path: 'Solicitud', component: SolicitudComponent },
+  {path: 'RH', canActivate:[guardRH], component: RHComponent, children:[
+    { path: 'PagUsuario', component: PagUsuComponent, children:[
+      { path: 'Usuario', component: UsuariosComponent},
+      { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
+    ]},
     { path: 'Catalogos', component: ListarCatalogoComponent },
-    { path: 'Bandeja', component: BandejaAdComponent },
     { path: 'Perfil', component: PerfilComponent},
-    { path: 'HomeRH', component: HomeRHComponent}
+    { path: 'HomeRH', component: HomeRHComponent},
+    { path: 'Bandeja', component: BandejaAdComponent, children: [
+      { path: 'Revisar', component: SoliRevisarComponent},
+      { path: 'Aceptadas', component: SoliAcepComponent},
+      { path: 'Rechazadas', component: SoliRechaComponent}
+
+    ]},
   ]}
 ]
 

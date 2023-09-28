@@ -37,11 +37,18 @@ export class HomeComponent {
       this.UService.postLog(this.correo,this.contrasena).subscribe(res =>{
         this.respuesta = <any>res;
         console.log(res)
-        if(this.respuesta[0].rol == "1"){ 
+        if(this.respuesta[0] == null){
+            swal.fire({
+              icon: 'error',
+              title: 'Oops...',
+              text: 'El correo o la contraseña son inválidos, intentalo de nuevo...',})
+        }
+        else if(this.respuesta[0].rol == "1"){ 
           this.router.navigateByUrl('/Administrador/HomeAdmin');
           localStorage.setItem("Id",this.respuesta[0].id.toString())
           localStorage.setItem("Nombres",this.respuesta[0].nombres)
           localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
+          localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
         else if(this.respuesta[0].rol == "2"){
@@ -49,6 +56,7 @@ export class HomeComponent {
           localStorage.setItem("Id",this.respuesta[0].id.toString())
           localStorage.setItem("Nombres",this.respuesta[0].nombres)
           localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
+          localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
         else if(this.respuesta[0].rol == "3"){
@@ -56,16 +64,15 @@ export class HomeComponent {
           localStorage.setItem("Id",this.respuesta[0].id.toString())
           localStorage.setItem("Nombres",this.respuesta[0].nombres)
           localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
+          localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
-        else{
-          swal.fire({
-            icon: 'error',
-            title: 'Oops...',
-            text: 'El correo o la contraseña son inválidos, intentalo de nuevo...',})}
-            
       });
-
     }
+    else{
+      swal.fire({
+        icon: 'info',
+        title: 'Oops...',
+        text: 'Se necesita el correo o contraseña',})}
   }
 }

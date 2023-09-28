@@ -49,7 +49,7 @@ export class SolicitudService {
   }
 
   updateBand(idSoli:number,soli:Bandeja){
-    return this.http.put(this.rutaE + "/" + idSoli + "/" + localStorage.getItem("Id"), soli)
+    return this.http.put(this.rutaE + "/" + idSoli + "/" + localStorage.getItem("Nombres"), soli)
   }
  
   
@@ -63,6 +63,10 @@ export class SolicitudService {
 
   getIdSoliA(){
     return this.http.get(this.rutaA + "/" + localStorage.getItem("Id"));
+  }
+
+  getpermiso(){
+    return this.http.get("http://localhost:3000/permiso_solicitud" + "/" + localStorage.getItem("Id"))
   }
 
   

@@ -1,3 +1,15 @@
 main{
-background-color: aliceblue;
+    background-color: white;
+}
+
+
+.container-fluid{
+    background: linear-gradient(45deg, #e1e6a7 0, #d9e8aa 6.25%, #d0eaae 12.5%,
+    #c7ecb3 18.75%, #bfeeb9 25%, #b6efbf 31.25%, #adf0c6 37.5%, #a5f1cd 43.75%,
+    #9df2d5 50%, #96f3dd 56.25%, #8ff3e5 62.5%, #8af3ed 68.75%, #86f3f4 75%,
+    #84f2fc 81.25%, #84f1ff 87.5%, #86f0ff 93.75%, #8aefff 100%);
+}
+
+button:hover{
+    background-color:#adf0c6;
 }

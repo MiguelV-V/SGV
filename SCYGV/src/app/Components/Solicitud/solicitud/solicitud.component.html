@@ -10,7 +10,7 @@
           <thead>
               <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Id_User</th>
+                <th scope="col">nombres</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Fecha_Inicio</th>
                 <th scope="col">Fecha_Final</th>
@@ -23,7 +23,7 @@
           <tbody >
             <tr *ngFor="let solicitud of LSolicitud"  >
                 <th scope="row">{{solicitud.id}}</th>
-                  <td>{{solicitud.id_user}}</td>
+                  <td>{{solicitud.nombres}}</td>
                   <td>{{solicitud.fecha}}</td>
                   <td>{{solicitud.fecha_i}}</td>
                   <td>{{solicitud.fecha_f}}</td>

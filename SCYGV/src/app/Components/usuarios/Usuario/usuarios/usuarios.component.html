@@ -49,9 +49,9 @@
       <div class="modal fade text-center" id="VentanaAdd" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
         <div class="modal-dialog">
           <div class="modal-content">
-            <div class="modal-header justify-content-end ">
-              <h1 class="modal-title fs-5" id="staticBackdropLabel">Agregar Empleado</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header">
+              <h1 *ngIf="mostrarTAdd" class="modal-title fs-5" id="staticBackdropLabel">Agregar Empleado</h1>
+              <h1 *ngIf="mostrarTAct" class="modal-title fs-5" id="staticBackdropLabel">Actualizar Empleado</h1>
             </div>
             <div class="modal-body">
                 <form [formGroup]="FormUsu" >

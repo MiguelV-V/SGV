@@ -17,6 +17,14 @@ export class usuarioService {
     return this.http.post<userRes>(this.rutaLog,{correo,contrasena});
   }
 
+  loginrol(){
+    return this.getlocalrol() != null;
+  }
+
+  getlocalrol(){
+    return localStorage.getItem("Rol");
+  }
+
   //Obtener Usuarios
   getUsuario(){
     return this.http.get(this.rutaG);
