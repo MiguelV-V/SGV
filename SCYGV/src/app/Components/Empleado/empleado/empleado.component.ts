@@ -11,6 +11,7 @@ import swal from'sweetalert2';
 })
 export class EmpleadoComponent {
 NombreUsuario : any = localStorage.getItem("Nombres")!;
+imageUrl = "C:/Users/josef/OneDrive/Documentos/SGV/Backend/uploads/5.jpg"
 
 constructor(private router:Router, private service:SolicitudService){}
 

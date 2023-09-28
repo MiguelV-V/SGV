@@ -1,5 +1,12 @@
 package com.example;
 import static spark.Spark.*;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.util.Date;
 import java.sql.DriverManager;
@@ -11,8 +18,21 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
+import java.io.InputStream;
+
 import com.google.gson.Gson;
+
+import spark.utils.IOUtils;
 
 
 public class CRUDServer {
@@ -887,6 +907,60 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("No se pudo obtener los años de antiguedad"));
             }
         }, gson::toJson);
+
+        post("/upload", (request, response) -> {
+            // Configura la configuración multipart en la solicitud
+            request.attribute("org.eclipse.jetty.multipartConfig", new MultipartConfigElement("/temp"));
+
+            try (InputStream is = request.raw().getPart("uploaded_file").getInputStream()) {
+                // Directorio donde se guardará la imagen (ajusta según tus necesidades)
+                String uploadDir = "uploads";
+
+                // Obtiene el nombre personalizado del archivo, si se proporcionó
+                String customName = request.queryParams("custom_name");
+
+                // Si no se proporcionó un nombre personalizado, utiliza el nombre original
+                String submittedFileName = request.raw().getPart("uploaded_file").getSubmittedFileName();
+                String fileName = (customName != null && !customName.isEmpty()) ? customName : submittedFileName;
+
+                // Obtiene la extensión del archivo original (si existe)
+                String fileExtension = "";
+                Pattern pattern = Pattern.compile("\\.(\\w+)$");
+                Matcher matcher = pattern.matcher(submittedFileName);
+                if (matcher.find()) {
+                    fileExtension = matcher.group(1);
+                }
+
+                // Si se proporcionó un nombre personalizado, agrega la extensión del archivo
+                if (customName != null && !customName.isEmpty() && !customName.contains(".")) {
+                    fileName = fileName + "." + fileExtension;
+                }
+
+                // Crea el directorio si no existe
+                java.nio.file.Path uploadPath = java.nio.file.Paths.get(uploadDir);
+                if (!java.nio.file.Files.exists(uploadPath)) {
+                    java.nio.file.Files.createDirectories(uploadPath);
+                }
+
+                // Ruta completa del archivo en el servidor
+                String filePath = uploadDir + "/" + fileName;
+
+                // Guarda la imagen en el servidor
+                try (FileOutputStream fos = new FileOutputStream(filePath)) {
+                    byte[] buffer = new byte[1024];
+                    int bytesRead;
+                    while ((bytesRead = is.read(buffer)) != -1) {
+                        fos.write(buffer, 0, bytesRead);
+                    }
+                }
+
+                return gson.toJson(new Respuesta("Imagen subida exitosamente. Nombre del archivo"));
+            } catch (Exception e) {
+                e.printStackTrace();
+                response.status(500);
+                return gson.toJson(new Respuesta("Error al subir imagen"));
+            }
+        });
     }
 
     //Devolver la fecha

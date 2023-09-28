@@ -1,5 +1,11 @@
 <body class="text-center"  *ngFor="let usuario of LUsuario">
     <H1 class="mb-4">Perfil de Usuario</H1>
+    <div>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*">
+      </div>
+      <div>
+        <button (click)="uploadImage()">Subir Imagen</button>
+      </div>
     <div class="text-center">
         <H3>Identificación</H3>
         <label class="mb-3 m-2"><b>Id:</b></label>

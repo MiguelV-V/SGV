@@ -11,6 +11,7 @@ export class usuarioService {
   rutaG = 'http://localhost:3000/usuario'
   rutaLog = 'http://localhost:3000/login'
   rutaAnti = 'http://localhost:3000/antiguedad'
+  private uploadUrl = 'http://localhost:3000/upload';
   constructor(private http: HttpClient) {}
   //Logear
   postLog(correo:String, contrasena:String):Observable<userRes> {
@@ -56,5 +57,15 @@ export class usuarioService {
   //Obtener Usuario por ID
   getIdUsuario(){
     return this.http.get(this.rutaG + "/" + localStorage.getItem("Id"));
+  }
+
+  uploadImage(imageFile: File, customName: string | null) {
+    const formData: FormData = new FormData();
+    formData.append('uploaded_file', imageFile, imageFile.name);
+    if (customName) {
+      formData.append('custom_name', customName);
+    }
+
+    return this.http.post(this.uploadUrl, formData);
   }
 }

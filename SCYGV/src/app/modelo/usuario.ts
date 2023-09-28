@@ -1,5 +1,5 @@
 export class Usuario{
-    id ?: number
+    id ?: any
     nombres ?: String
     apellidos ?: String
     contrasena ?: String
