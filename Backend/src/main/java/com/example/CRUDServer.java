@@ -2,8 +2,7 @@ package com.example;
 import static spark.Spark.*;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StringWriter;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,18 +17,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.servlet.MultipartConfigElement;
-import javax.servlet.ServletException;
-import javax.servlet.http.Part;
 import java.io.InputStream;
-
 import com.google.gson.Gson;
 
 import spark.utils.IOUtils;
@@ -937,9 +929,9 @@ public class CRUDServer {
                 }
 
                 // Crea el directorio si no existe
-                java.nio.file.Path uploadPath = java.nio.file.Paths.get(uploadDir);
-                if (!java.nio.file.Files.exists(uploadPath)) {
-                    java.nio.file.Files.createDirectories(uploadPath);
+                Path uploadPath = Paths.get(uploadDir);
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
                 }
 
                 // Ruta completa del archivo en el servidor
