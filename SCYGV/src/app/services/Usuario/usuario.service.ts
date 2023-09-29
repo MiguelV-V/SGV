@@ -8,10 +8,10 @@ import { Usuario, userRes } from 'src/app/modelo/usuario';
   providedIn: 'root'
 })
 export class usuarioService {
-  rutaG = 'http://localhost:3000/usuario'
-  rutaLog = 'http://localhost:3000/login'
-  rutaAnti = 'http://localhost:3000/antiguedad'
-  private uploadUrl = 'http://localhost:3000/upload';
+  rutaG = 'http://152.70.137.115:3000/usuario'
+  rutaLog = 'http://152.70.137.115:3000/login'
+  rutaAnti = 'http://152.70.137.115:3000/antiguedad'
+  private uploadUrl = 'http://152.70.137.115:3000/upload';
   constructor(private http: HttpClient) {}
   //Logear
   postLog(correo:String, contrasena:String):Observable<userRes> {
@@ -59,13 +59,19 @@ export class usuarioService {
     return this.http.get(this.rutaG + "/" + localStorage.getItem("Id"));
   }
 
-  uploadImage(imageFile: File, customName: string | null) {
+  uploadImage(imageFile: File, userId: string, imageName: string) {
     const formData: FormData = new FormData();
-    formData.append('uploaded_file', imageFile, imageFile.name);
-    if (customName) {
-      formData.append('custom_name', customName);
-    }
-
+    formData.append('uploaded_file', imageFile, imageName);
+  
+    // Puedes agregar el ID como un parámetro en el FormData si es necesario
+    formData.append('id', userId);
+  
     return this.http.post(this.uploadUrl, formData);
+  }
+
+  rutaImagen(id: string, imageName: string, requestBody: any) {
+    const url = `${this.uploadUrl}/${id}/${imageName}`;
+
+    return this.http.put(url, requestBody);
   }
 }

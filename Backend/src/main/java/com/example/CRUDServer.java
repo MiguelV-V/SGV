@@ -192,8 +192,9 @@ public class CRUDServer {
                     String f_ingreso =  devolverFecha(resultSet.getDate("f_ingreso"));
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
+                    String foto = resultSet.getString("foto");
                     usuarios.add(new Usuarios(id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono, foto));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -328,8 +329,9 @@ public class CRUDServer {
                     String f_ingreso =  devolverFecha(resultSet.getDate("f_ingreso"));
                     String especialidad = resultSet.getString("especialidad");
                     String telefono = resultSet.getString("telefono");
+                    String foto = resultSet.getString("foto");
                     usuarios.add(new Usuarios(Id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
-                            n_c_prof, u_g_estudio,f_ingreso, especialidad, telefono));
+                            n_c_prof, u_g_estudio,f_ingreso, especialidad, telefono, foto));
                 }
                 return gson.toJson(usuarios);
             } catch (SQLException e) {
@@ -935,7 +937,7 @@ public class CRUDServer {
                 }
 
                 // Ruta completa del archivo en el servidor
-                String filePath = uploadDir + "/" + fileName;
+                String filePath = "/var/www/html/" + uploadDir + "/" + fileName;
 
                 // Guarda la imagen en el servidor
                 try (FileOutputStream fos = new FileOutputStream(filePath)) {
@@ -953,6 +955,30 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al subir imagen"));
             }
         });
+
+        put("/upload/:id/:imageName", (req, res) -> {
+            String id = req.params(":id");
+            String imageName = req.params(":imageName");
+            String ruta = "./uploads";
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE SCYGV_USUARIOS SET FOTO = ? WHERE ID = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, ruta + "/" + imageName);
+                statement.setString(2, id);
+                int affectedRows = statement.executeUpdate();
+
+                if (affectedRows > 0) {
+                    return gson.toJson(new Respuesta("Ruta de imagen actualizada"));
+                } else {
+                    return gson.toJson(
+                            new Respuesta("No se encontró un usuario con esa id"));
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al actualizar la imagen"));
+            }
+        }, gson::toJson);
     }
 
     //Devolver la fecha
@@ -1067,10 +1093,11 @@ public class CRUDServer {
         private String f_ingreso;
         private String especialidad;
         private String telefono;
+        String foto;
 
         public Usuarios(int id, String nombres, String apellidos, String contrasena, String correo,
                 int rol, String rfc, String curp, String n_c_prof, String u_g_estudio, String f_ingreso,
-                String especialidad, String telefono) {
+                String especialidad, String telefono, String foto) {
             this.id = id;
             this.nombres = nombres;
             this.apellidos = apellidos;
@@ -1084,6 +1111,7 @@ public class CRUDServer {
             this.f_ingreso = f_ingreso;
             this.especialidad = especialidad;
             this.telefono = telefono;
+            this.foto = foto;
         }
 
         public int getId() {

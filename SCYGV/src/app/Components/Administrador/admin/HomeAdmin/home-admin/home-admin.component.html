@@ -1,7 +1,8 @@
 <div class="mx-auto align-middle text-dark text-center pt-3">
-    <button class="btn text mb-3" >
-        <img src="./assets/usuario.png" width="100" height="100" class="rounded-circle">
-    </button>
+    <label (change)="onFileSelected($event)">
+        <img [src]="rutaFoto" width="100" height="100">
+        <input type="file" style="display:none">
+    </label>
     <span><b>{{NombreUsuario}}</b></span>
 </div>
 <section class="formGroup">

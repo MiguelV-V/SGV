@@ -12,7 +12,7 @@ export class Usuario{
     f_ingreso ?: Date
     especialidad ?: String
     telefono ?: String
-    
+    foto ?: String
 }
 
 export interface userRes{
