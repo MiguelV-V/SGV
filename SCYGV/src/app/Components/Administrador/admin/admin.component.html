@@ -1,39 +1,28 @@
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div id="sidebar" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 collapse collapse-horizontal show border-end">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
-                <a class="d-flex align-items-center mx-auto pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                    <span class="fs-1 d-none d-sm-inline" ><b>SCYGV</b></span>
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li>
-                        <button routerLink="./HomeAdmin" class="btn px-0 align-middle text-dark">
-                            <i class="bi bi-house-fill fs-4"></i><span class="ms-1 d-none d-sm-inline">Home</span> 
-                        </button>
-                    </li>
-                    <li>
-                        <button routerLink="./Bandeja/Revisar" class="btn px-0 align-middle text-dark">
-                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </button>
-                            
-                    </li>
-                    <li>
-                        <button routerLink="./PagUsuario/Usuario" class="btn px-0 align-middle text-dark">
-                            <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Usuarios</span></button>
-                    </li>
-                    <li>
-                        <button routerLink="./Catalogos" data-bs-toggle="sidebar"  class="btn px-0 align-middle text-dark">
-                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </button>
-                    </li>
-                    <li>
-                        <button class="btn px-0 align-middle text-dark">
-                            <i class="bi bi-box-arrow-left fs-4"></i> <span class="ms-1 d-none d-sm-inline" (click)="CerrarSesion()">Cerrar Sesión</span></button>
-                    </li>
-                </ul>
-                <hr>
-            </div>
+<mat-toolbar class="mat">
+    <button mat-button (click)="drawer.toggle()"> <mat-icon>menu</mat-icon></button>
+    <span>SCYGV</span>
+</mat-toolbar>
+<mat-drawer-container>
+    <mat-drawer class="drawer-container"  #drawer opened="false" mode="push">
+        <mat-list-item class="list-item" >
+            <button mat-button routerLink="./HomeAdmin"> <mat-icon>home</mat-icon>Home</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./Bandeja/Revisar"> <mat-icon>inbox</mat-icon>Bandeja</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./PagUsuario/Usuario" > <mat-icon>person</mat-icon>Usuarios</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./Catalogos"> <mat-icon>book</mat-icon>Catalogos</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button (click)="CerrarSesion()" > <mat-icon>logout</mat-icon>Cerrar Sesión</button>
+        </mat-list-item>
+    </mat-drawer>
+    <mat-drawer-content >
+        <div style="text-align: center; min-height: 640px;" >
+            <router-outlet></router-outlet>
         </div>
-        <main class="col ps-md-2 pt-2">
-                <router-outlet></router-outlet>
-        </main>
-    </div>
-</div>
+    </mat-drawer-content>
+</mat-drawer-container>

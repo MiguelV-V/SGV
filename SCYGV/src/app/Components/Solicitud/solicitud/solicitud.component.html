@@ -37,50 +37,51 @@
               </tr>
           </tbody>
       </table>
-      <div class="modal fade" id="VentanaAdd" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content text-center ">
-            <div class="modal-header">
-              <h1 class="modal-title fs-5 text-center" id="staticBackdropLabel">Nueva Solicitud</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body justify-content-end">
-                <form [formGroup]="FormSoli" >
-                    <div class="p-inputgroup mb-2">
-                        <span class="p-inputgroup-addon">
-                            <i class="pi pi-user"></i>
-                        </span>
-                        <input type = "hidden" formControlName="id" />
-                        <div class="form-group" >
-                            <div>
-                              <label class="mb-3 m-2" ><b>¿En qué fechas deseas tomar tus vacaciones?</b></label>
-                              <div>
-                                <label class="mb-3 m-2"><b>Fecha de Inicio:</b></label>
-                                <input type = "text" placeholder="ej. 2000/12/20" formControlName="fecha_i" />
-                                <label class="mb-3 m-2"><b>Fecha Final:</b></label>
-                                <input type = "text" placeholder="ej. 2000/12/20" formControlName="fecha_f" />
-                                <div><label class="mb-3 m-2"><b>Especifica el Motivo: </b></label></div>
-                                <div class="form-group">
-                                    <textarea cols="40" rows="5" formControlName="motivo" ></textarea>
-                                </div>
-                              </div>
+  </div>
+
+  <div class="modal fade" id="VentanaAdd" data-bs-backdrop="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content text-center ">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-center" id="staticBackdropLabel">Nueva Solicitud</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body justify-content-end">
+            <form [formGroup]="FormSoli" >
+                <div class="p-inputgroup mb-2">
+                    <span class="p-inputgroup-addon">
+                        <i class="pi pi-user"></i>
+                    </span>
+                    <input type = "hidden" formControlName="id" />
+                    <div class="form-group" >
+                        <div>
+                          <label class="mb-3 m-2" ><b>¿En qué fechas deseas tomar tus vacaciones?</b></label>
+                          <div>
+                            <label class="mb-3 m-2"><b>Fecha de Inicio:</b></label>
+                            <input type = "text" placeholder="ej. 2000/12/20" formControlName="fecha_i" />
+                            <label class="mb-3 m-2"><b>Fecha Final:</b></label>
+                            <input type = "text" placeholder="ej. 2000/12/20" formControlName="fecha_f" />
+                            <div><label class="mb-3 m-2"><b>Especifica el Motivo: </b></label></div>
+                            <div class="form-group">
+                                <textarea cols="40" rows="5" formControlName="motivo" ></textarea>
                             </div>
+                          </div>
                         </div>
                     </div>
-                    <div *ngIf="mostrarC">
-                        <button type="button" class="btn btn-primary mb-2" (click)="createSolicitud()">Enviar</button>
-                    </div>
-                    <div *ngIf="mostrarA">
-                        <button type="button" class="pencil-square" class="btn btn-success" (click)="updateSolicitud({id})">Actualizar</button>
-                    </div>
-                  </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
-            </div>
-          </div>
+                </div>
+                <div *ngIf="mostrarC">
+                    <button type="button" class="btn btn-primary mb-2" (click)="createSolicitud()">Enviar</button>
+                </div>
+                <div *ngIf="mostrarA">
+                    <button type="button" class="pencil-square" class="btn btn-success" (click)="updateSolicitud({id})">Actualizar</button>
+                </div>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cerrar</button>
         </div>
       </div>
+    </div>
   </div>
   
   

@@ -13,7 +13,7 @@ export class AdminComponent {
   
   CerrarSesion():any{
     swal.fire({
-      text: "¿Está seguro que desea eliminar?",
+      text: "¿Está seguro que desea cerrar sesión?",
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: "Sí",

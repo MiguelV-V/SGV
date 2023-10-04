@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable} from 'rxjs';
 import { Usuario, userRes } from 'src/app/modelo/usuario';
 
 
@@ -8,16 +8,25 @@ import { Usuario, userRes } from 'src/app/modelo/usuario';
   providedIn: 'root'
 })
 export class usuarioService {
-  rutaG = 'http://152.70.137.115:3000/usuario'
-  rutaLog = 'http://152.70.137.115:3000/login'
-  rutaAnti = 'http://152.70.137.115:3000/antiguedad'
-  private uploadUrl = 'http://152.70.137.115:3000/upload';
+  userId : string = "";
+  rutaG = 'http://localhost:3000/usuario'
+  rutaLog = 'http://localhost:3000/login'
+  rutaAnti = 'http://localhost:3000/antiguedad'
+  private uploadUrl = 'http://localhost:3000/upload';
+  rutapostEmpleados = 'http://localhost:3000/empleados';
+  rutagetEmpleados = 'http://localhost:3000/ListaEmpleados';
   constructor(private http: HttpClient) {}
   //Logear
   postLog(correo:String, contrasena:String):Observable<userRes> {
     return this.http.post<userRes>(this.rutaLog,{correo,contrasena});
   }
 
+  postEmpleadosCreate(usuario:Usuario){
+    return this.http.post<Usuario>(this.rutapostEmpleados,usuario);
+  }
+  getEmpleados(){
+    return this.http.get(this.rutagetEmpleados);
+  }
   loginrol(){
     return this.getlocalrol() != null;
   }
@@ -59,18 +68,19 @@ export class usuarioService {
     return this.http.get(this.rutaG + "/" + localStorage.getItem("Id"));
   }
 
-  uploadImage(imageFile: File, userId: string, imageName: string) {
+ 
+  uploadImage(imageFile: File, imageName: string) {
     const formData: FormData = new FormData();
     formData.append('uploaded_file', imageFile, imageName);
-  
+    this.userId = localStorage.getItem("Id")!;
     // Puedes agregar el ID como un parámetro en el FormData si es necesario
-    formData.append('id', userId);
+    formData.append('id', this.userId);
   
     return this.http.post(this.uploadUrl, formData);
   }
 
-  rutaImagen(id: string, imageName: string, requestBody: any) {
-    const url = `${this.uploadUrl}/${id}/${imageName}`;
+  rutaImagen(imageName: string, requestBody: any) {
+    const url = `${this.uploadUrl}/${localStorage.getItem("Id")}/${imageName}`;
 
     return this.http.put(url, requestBody);
   }

@@ -1,10 +1,61 @@
-<div class="mx-auto align-middle text-dark text-center pt-3">
-    <label (change)="onFileSelected($event)">
-        <img [src]="rutaFoto" width="100" height="100">
-        <input type="file" style="display:none">
-    </label>
-    <span><b>{{NombreUsuario}}</b></span>
-</div>
-<section class="formGroup">
+<main class="container mb-4" *ngFor="let usuario of LUsuario" >
+    <div class="container__infofoto mb-3">
+        <h2><b>Foto de Perfil</b></h2>
+        <div>
+            <label (change)="onFileSelected($event)">
+                <abbr title="Click para cambiar foto de perfil"><img  class="Foto" src="{{usuario.foto}}" width="100" height="100"></abbr>
+                <input type="file" style="display:none">
+            </label>
+        </div>
+    </div>
+    <div class="perfil" >
+        <div class="nombre_perfil" >
+           <b><label class="pt-3 px-1 mb-2" >Bienvenido</label>
+            <span class="px-1" >{{usuario.nombres}}</span>
+            <span>{{usuario.apellidos}}</span>!</b> 
+        </div>
+        <div class="container__infoperfil pt-2 ">
+            <p class="infotittle">Información de Perfil</p>
+            <div class="info1 mb-3" >
+                <label class="px-1" ><b>Especialidad:</b></label>
+                <span class="px-2">{{usuario.especialidad}}</span>
+                <label class="px-1" ><b>Fecha de Ingreso:</b></label>
+                <span class="px-2">{{usuario.f_ingreso}}</span>
+                <label class="px-1" ><b>Telefono:</b></label>
+                <span class="px-1">{{usuario.telefono}}</span>   
+            </div>  
+            <div class="info2 mb-3" >
+                <label class="px-1" ><b>RFC:</b></label>
+                <span class="px-2">{{usuario.rfc}}</span>
+                <label class="px-1" ><b>CURP:</b></label>
+                <span class="px-2">{{usuario.curp}}</span>
+            </div>
+            <div>
+                <label class="px-1" ><b>Número de Cedula Profesional:</b></label>
+                <span class="px-2">{{usuario.n_c_prof}}</span>
+                <label class="px-1" ><b>Último grado de estudio:</b></label>
+                <span class="px-2">{{usuario.u_g_estudio}}</span>
+            </div>
+        </div>
+    </div>
+</main>
+<section class="content" >
+    <div class="inbox">
+        <h2><b>Solicitudes</b></h2>
+        <img class="imgsoli" src="./assets/solicitud.png">
+        <p class="pSoli" >Tienes <b>{{TSoli}}</b> solicitudes por revisar</p>
+    </div>
+    <div class="antiguedad">
+        <h2><b>Antigüedad de Usuarios</b></h2>
+        <img class="imganti" src="./assets/personas.png">
+        <p class="pAnti" >Puedes ver la antigüedad de los usuarios haciendo <a href="Administrador/PagUsuario/Antiguedad">click aquí</a>
+        o ir a las opciones de usuarios en el menu desplegable.</p>
+    </div>
+    <div class="catalogo_info" >
+        <h2><b>Información sobre catalogos</b></h2>
 
+    </div>
 </section>
+
+
+

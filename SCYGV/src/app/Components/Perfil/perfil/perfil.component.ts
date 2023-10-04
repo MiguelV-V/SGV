@@ -59,7 +59,7 @@ export class PerfilComponent {
     const imageName = this.nombreImagen;
     const requestBody = { /* Tus datos de solicitud */ };
 
-    this.Uservice.rutaImagen(id, imageName, requestBody).subscribe(
+    this.Uservice.rutaImagen(imageName, requestBody).subscribe(
       (response) => {
         // Maneja la respuesta exitosa aquí
         console.log('Imagen actualizada:', response);
@@ -77,7 +77,7 @@ export class PerfilComponent {
       return;
     }
   
-    this.Uservice.uploadImage(this.selectedImage, this.userId, this.nombreImagen).subscribe(
+    this.Uservice.uploadImage(this.selectedImage, this.nombreImagen).subscribe(
       (response) => {
         alert('Imagen subida exitosamente.');
         this.rutaImagen();

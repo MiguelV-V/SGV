@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { Usuario} from 'src/app/modelo/usuario';
+import { SolicitudService } from 'src/app/services/Solicitudes/solicitud.service';
 import { usuarioService } from 'src/app/services/Usuario/usuario.service';
 
 @Component({
@@ -8,11 +9,11 @@ import { usuarioService } from 'src/app/services/Usuario/usuario.service';
   styleUrls: ['./home-admin.component.css']
 })
 export class HomeAdminComponent {
-  NombreUsuario : any = localStorage.getItem("Nombres")! + " " +localStorage.getItem("Apellidos");
 
-  constructor(private Uservice:usuarioService){}
+  constructor(private Uservice:usuarioService, private SoliSer:SolicitudService){}
    ngOnInit():void{
     this.getUser()
+    this.getrevcount()
   }
   LUsuario !: Usuario[];
   userId !: string; // Inicializa la variable userId
@@ -22,6 +23,13 @@ export class HomeAdminComponent {
   nombreImagen !: string;
   customName: string | null = null;
   rutaFoto !: any;
+  TSoli:number = 0;
+
+  getrevcount():any{
+    this.SoliSer.getSolirevcount().subscribe((res) => {
+      this.TSoli = <any> res;
+    })
+  }
 
   getUser():any{
     this.Uservice.getIdUsuario().subscribe((res: any) => { // Cambia any al tipo correcto si es diferente de JSON
@@ -52,27 +60,33 @@ export class HomeAdminComponent {
     if (this.selectedImage) {
       this.selectedFileName = this.selectedImage.name; // Guarda el nombre del archivo en la variable
       const fileExtension = this.getFileExtension(this.selectedImage.name); // Obtiene la extensión del archivo
+      if(fileExtension != "jpg"){
+        console.log("La extension no", fileExtension)
+      }
+      else{
       this.nombreImagen = this.userId + "." + fileExtension;
       console.log(this.nombreImagen);
       this.uploadImage();
+      }
     }
   }
 
   rutaImagen() {
-    const id = this.userId;
     const imageName = this.nombreImagen;
     const requestBody = { /* Tus datos de solicitud */ };
-
-    this.Uservice.rutaImagen(id, imageName, requestBody).subscribe(
-      (response) => {
-        // Maneja la respuesta exitosa aquí
-        console.log('Imagen actualizada:', response);
-      },
-      (error) => {
-        // Maneja el error aquí
-        console.error('Error al actualizar la imagen:', error);
-      }
-    );
+    if(this.rutaFoto == null){
+      this.Uservice.rutaImagen(imageName, requestBody).subscribe(
+        (response) => {
+          // Maneja la respuesta exitosa aquí
+          console.log('Imagen actualizada:', response);
+          this.getUser()
+        },
+        (error) => {
+          // Maneja el error aquí
+          console.error('Error al actualizar la imagen:', error);
+        }
+      );
+    }
   }
 
   uploadImage() {
@@ -81,10 +95,11 @@ export class HomeAdminComponent {
       return;
     }
   
-    this.Uservice.uploadImage(this.selectedImage, this.userId, this.nombreImagen).subscribe(
+    this.Uservice.uploadImage(this.selectedImage,this.nombreImagen).subscribe(
       (response) => {
-        alert('Imagen subida exitosamente.');
+        console.log(response)
         this.rutaImagen();
+        location.reload()
       },
       (error) => {
         alert('Error al subir la imagen.');

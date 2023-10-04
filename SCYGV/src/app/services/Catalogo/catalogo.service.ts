@@ -7,7 +7,7 @@ import { Catalogo } from 'src/app/modelo/catalogo';
 })
 export class CatalogoService {
 
-  API:string = "http://152.70.137.115:3000/catalogos";
+  API:string = "http://localhost:3000/catalogos";
   constructor(private Http:HttpClient) { }
 
 

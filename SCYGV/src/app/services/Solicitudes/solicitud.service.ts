@@ -8,27 +8,31 @@ import { Solicitud } from 'src/app/modelo/solicitud';
   providedIn: 'root'
 })
 export class SolicitudService {
-  rutaG = 'http://152.70.137.115:3000/solicitudes'
-  rutaE = 'http://152.70.137.115:3000/estado'
-  rutaR = 'http://152.70.137.115:3000/SoliRevision'
-  rutaRec = 'http://152.70.137.115:3000/SoliRechazada'
-  rutaA = 'http://152.70.137.115:3000/SoliAceptada'
+  rutaG = 'http://localhost:3000/solicitudes'
+  rutaE = 'http://localhost:3000/estado'
+  rutaR = 'http://localhost:3000/SoliRevision'
+  rutaRec = 'http://localhost:3000/SoliRechazada'
+  rutaA = 'http://localhost:3000/SoliAceptada'
   constructor(private http: HttpClient) {}
 
   //Obtener Solicitudes
   getSolienrev(){
-    return this.http.get('http://152.70.137.115:3000/soli_enrev')
+    return this.http.get('http://localhost:3000/soli_enrev')
   }
   getSoliacept(){
-    return this.http.get('http://152.70.137.115:3000/soli_acep')
+    return this.http.get('http://localhost:3000/soli_acep')
   }
   getSolirech(){
-    return this.http.get('http://152.70.137.115:3000/soli_recha')
+    return this.http.get('http://localhost:3000/soli_recha')
+  }
+ //Obtener total de solicitudes por revisar
+  getSolirevcount(){
+    return this.http.get('http://localhost:3000/solirev_count')
   }
 
    //Obtener Solicitudes
    getDiasDispo(){
-    return this.http.get('http://152.70.137.115:3000/dias_disponibles' + "/" + localStorage.getItem("Id"))
+    return this.http.get('http://localhost:3000/dias_disponibles' + "/" + localStorage.getItem("Id"))
   }
 
   //Crear Solicitud
@@ -66,7 +70,7 @@ export class SolicitudService {
   }
 
   getpermiso(){
-    return this.http.get("http://152.70.137.115:3000/permiso_solicitud" + "/" + localStorage.getItem("Id"))
+    return this.http.get("http://localhost:3000/permiso_solicitud" + "/" + localStorage.getItem("Id"))
   }
 
   

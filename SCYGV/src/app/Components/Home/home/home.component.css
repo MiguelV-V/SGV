@@ -3,11 +3,13 @@
     max-width: 50%;
 }
 
-button{
-    color: white;
-    font-size: large;
+button:hover{
+background-color: lightblue;
 }
 
+button{
+    font-size: large;
+}
 header{
     background-image: url(Home.jpg);
     width: 100%;

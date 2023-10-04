@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms'
 import { AppComponent } from './app.component';
-
 import { BodyComponent } from './Components/Rol/body.component';
 import { PagUsuComponent } from './Components/usuarios/pag-usu/pag-usu.component';
 import { Routes, RouterModule } from '@angular/router';
@@ -28,6 +27,16 @@ import { UsuariosComponent } from './Components/usuarios/Usuario/usuarios/usuari
 import { SRechazadaEmpComponent } from './Components/Empleado/bandeja-empleado/Rechazadas/srechazada-emp/srechazada-emp.component';
 import { SAceptadaEmpComponent } from './Components/Empleado/bandeja-empleado/Aceptadas/saceptada-emp/saceptada-emp.component';
 import { guardAdmin, guardEmpleado, guardRH } from './Guards/guards/guardrol.guard';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatIconModule } from '@angular/material/icon'
+import { MatButtonModule } from '@angular/material/button'
+import { MatBadgeModule } from '@angular/material/badge'
+import { MatSidenavModule } from '@angular/material/sidenav'
+import { MatListModule } from '@angular/material/list'
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { GestionEmpleadosComponent } from './Components/RH/rh/GEmpleados/gestion-empleados/gestion-empleados.component'
+
+
 
 
 const appRoute : Routes = [ 
@@ -58,10 +67,7 @@ const appRoute : Routes = [
     { path: 'HomeEmpleado', component: HomeEmpComponent}
   ]},
   {path: 'RH', canActivate:[guardRH], component: RHComponent, children:[
-    { path: 'PagUsuario', component: PagUsuComponent, children:[
-      { path: 'Usuario', component: UsuariosComponent},
-      { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
-    ]},
+    { path: 'GestionEmpleados', component: GestionEmpleadosComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent },
     { path: 'Perfil', component: PerfilComponent},
     { path: 'HomeRH', component: HomeRHComponent},
@@ -99,14 +105,22 @@ const appRoute : Routes = [
     AntiguedadUsuarioComponent,
     UsuariosComponent,
     SRechazadaEmpComponent,
-    SAceptadaEmpComponent
+    SAceptadaEmpComponent,
+    GestionEmpleadosComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     FormsModule,
     RouterModule.forRoot(appRoute),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatIconModule,
+    MatButtonModule,
+    MatListModule,
+    MatBadgeModule,
+    MatSidenavModule,
+    MatToolbarModule
   ],
   providers: [],
   bootstrap: [AppComponent]

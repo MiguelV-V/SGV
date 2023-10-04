@@ -10,14 +10,24 @@ import swal from'sweetalert2';
   styleUrls: ['./empleado.component.css']
 })
 export class EmpleadoComponent {
-NombreUsuario : any = localStorage.getItem("Nombres")!;
-imageUrl = "C:/Users/josef/OneDrive/Documentos/SGV/Backend/uploads/5.jpg"
+  NombreUsuario : any = localStorage.getItem("Nombres")! + " " + localStorage.getItem("Apellidos");
+
 
 constructor(private router:Router, private service:SolicitudService){}
 
-CerrarSesion():void{
-  localStorage.clear();
-  this.router.navigateByUrl("/Home");
+CerrarSesion():any{
+  swal.fire({
+    text: "¿Está seguro que desea cerrar sesión?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: "Sí",
+    cancelButtonText: "Cancelar",
+})
+.then(resultado => {
+  if (resultado.value) {
+    localStorage.clear();
+    this.router.navigateByUrl("/Home");
+  }})
 }
 
 Permiso(){

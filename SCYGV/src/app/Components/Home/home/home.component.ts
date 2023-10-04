@@ -46,24 +46,18 @@ export class HomeComponent {
         else if(this.respuesta[0].rol == "1"){ 
           this.router.navigateByUrl('/Administrador/HomeAdmin');
           localStorage.setItem("Id",this.respuesta[0].id.toString())
-          localStorage.setItem("Nombres",this.respuesta[0].nombres)
-          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
         else if(this.respuesta[0].rol == "2"){
           this.router.navigateByUrl('/RH/HomeRH');
           localStorage.setItem("Id",this.respuesta[0].id.toString())
-          localStorage.setItem("Nombres",this.respuesta[0].nombres)
-          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
         else if(this.respuesta[0].rol == "3"){
           this.router.navigateByUrl('/Empleado/HomeEmpleado');
           localStorage.setItem("Id",this.respuesta[0].id.toString())
-          localStorage.setItem("Nombres",this.respuesta[0].nombres)
-          localStorage.setItem("Apellidos",this.respuesta[0].apellidos)
           localStorage.setItem("Rol",this.respuesta[0].rol)
           this.FormLogin.reset();
         }

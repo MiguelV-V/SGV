@@ -1,0 +1,84 @@
+.container {
+    display: grid;
+    grid-template-columns: 20% 90%;
+    max-width: 90%;
+    background: radial-gradient(circle, rgba(212,250,249,0.7287289915966386) 0%, rgba(195,226,210,0.7063200280112045) 100%);
+    
+}
+img.Foto {
+    width: 150px;
+    height: 150px;
+    border-radius:100px;
+}
+.container__infofoto{
+    font-size: large;
+    margin: auto;
+}
+.info{
+    color: black;
+}
+.content{
+    display: grid;
+    grid-template-columns: 0.3fr 0.3fr 0.3fr;
+    max-width: 100%;
+    max-height: auto;
+    padding-left: 3%;
+}
+.inbox{
+    text-align: center;
+    padding-left: 5%;
+    border-style: ridge;
+}
+.container__infoperfil{
+    display: grid;
+    grid-template-columns:90%;
+    grid-template-rows: 1fr 1fr 1fr;
+    max-width: 90%;
+    max-height: auto;
+    text-align: start;
+    font-size: large;
+    background:radial-gradient(circle, rgba(212,250,249,0.7287289915966386) 0%, rgba(209,213,211,0.7063200280112045) 100%);
+    margin:15px;
+    
+}
+span{color:brown;}
+.nombre_perfil{
+    font-size: x-large;
+    text-align: start;
+}
+p{
+    font-size: larger;
+    font-weight: bold;
+    text-align: center;
+}
+.antiguedad{
+    text-align: center;
+    border-style: ridge;
+    padding-left: 2%;
+    padding-right: 2%;
+}
+
+.catalogo_info{
+    text-align: center;
+    border-style: ridge;
+}
+.pAnti{
+    text-align: justify;
+    font-size:x-large;
+    line-height:normal;
+}
+
+.imgsoli{
+    width: 55%;
+    height: 52%;
+    padding-bottom: 6%;
+}
+
+.imganti{
+    width: 55%;
+    height: 52%;
+}
+
+.pSoli{
+    font-size: x-large;
+}

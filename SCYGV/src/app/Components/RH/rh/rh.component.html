@@ -1,50 +1,28 @@
-<div class="container-fluid">
-    <div class="row flex-nowrap">
-        <div id="sidebar" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-info collapse collapse-horizontal show border-end">
-            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100" >
-                <a class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-dark text-decoration-none">
-                    <span class="fs-1 d-none d-sm-inline "><b>SCYGV</b></span>
-                </a>
-                <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
-                    <li>
-                        <a routerLink="./HomeRH" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-house-fill fs-4"></i><span class="ms-1 d-none d-sm-inline">Home</span> 
-                        </a>
-                    </li>
-                    <li>
-                        <a routerLink="./Bandeja" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-inbox fs-4"></i> <span class="ms-1 d-none d-sm-inline">Bandeja</span> </a>
-                    </li>
-                    <li>
-                        <a routerLink="./PagUsuario/Usuario" data-bs-toggle="collapse"  class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-person-circle fs-4"></i> <span class="ms-1 d-none d-sm-inline">Usuarios</span></a>
-                    </li>
-                    <li>
-                        <a routerLink="./Catalogos" class="nav-link px-0 align-middle text-dark">
-                            <i class="bi bi-book fs-4"></i> <span class="ms-1 d-none d-sm-inline">Catalogos</span> </a>
-                    </li>
-                </ul>
-                <hr>
-                <div class="dropdown pb-4">
-                    <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="./uploads/16.jpg" alt="hugenerd" width="30" height="30" class="rounded-circle">
-                        <span class="d-none d-sm-inline mx-1">Nombre Usuario</span>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" routerLink="./Perfil">Perfil</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" (click)="CerrarSesion()">Cerrar Sesión</a></li>
-                    </ul>
-                </div>
-            </div>
+<mat-toolbar class="mat">
+    <button mat-button (click)="drawer.toggle()"> <mat-icon>menu</mat-icon></button>
+    <span>SCYGV</span>
+</mat-toolbar>
+<mat-drawer-container >
+    <mat-drawer class="drawer-container"  #drawer opened="false" mode="push">
+        <mat-list-item>
+            <button mat-button routerLink="./HomeRH"> <mat-icon>home</mat-icon>Home</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./Bandeja/Revisar"> <mat-icon>inbox</mat-icon>Bandeja</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./GestionEmpleados" > <mat-icon>person</mat-icon>Usuarios</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button routerLink="./Catalogos"> <mat-icon>book</mat-icon>Catalogos</button>
+        </mat-list-item>
+        <mat-list-item>
+            <button mat-button (click)="CerrarSesion()" > <mat-icon>logout</mat-icon>Cerrar Sesión</button>
+        </mat-list-item>
+    </mat-drawer>
+    <mat-drawer-content style="background-color: white;" >
+        <div style="text-align: center; min-height: 640px;" >
+            <router-outlet></router-outlet>
         </div>
-        <main class="col ps-md-2 pt-2">
-          <a href="#" data-bs-target="#sidebar" data-bs-toggle="collapse" class="border border-white text-decoration-none"><i class="bi bi-list bi-lg py-2 p-8"></i>Menu</a>
-            <div class="page-header pt-3">
-                <router-outlet></router-outlet>
-            </div>
-        </main>
-    </div>
-</div>
+    </mat-drawer-content>
+</mat-drawer-container>

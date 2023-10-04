@@ -6,7 +6,7 @@ import { Rol } from '../../modelo/rol';
   providedIn: 'root'
 })
 export class RolService {
-  rutaG = 'http://152.70.137.115:3000/roles'
+  rutaG = 'http://localhost:3000/roles'
   constructor(private http: HttpClient) {}
   //Obtener rol
   getRol(){

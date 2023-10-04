@@ -1,6 +1,6 @@
 <div>
     <div class="text-center mb-3">
-        <h1 >Usuarios</h1>
+        <h1 >Empleados</h1>
       </div>
       <div class="mb-3 card-body d-flex justify-content-between">
         <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#VentanaAdd" (click)="limpiar()">Nuevo</button>
@@ -13,7 +13,6 @@
                 <th scope="col">Apellidos</th>
                 <th scope="col">Contraseña</th>
                 <th scope="col">Correo</th>
-                <th scope="col">Rol</th>
                 <th scope="col">RFC</th>
                 <th scope="col">Curp</th>
                 <th scope="col">N_C_Prof</th>
@@ -25,13 +24,12 @@
               </tr>
           </thead>
           <tbody >
-              <tr *ngFor="let usuario of LUsuarios" >
+              <tr *ngFor="let usuario of LEmpleados" >
               <th scope="row">{{usuario.id}}</th>
                 <td>{{usuario.nombres}}</td>
                 <td>{{usuario.apellidos}}</td>
                 <td>{{usuario.contrasena}}</td>
                 <td>{{usuario.correo}}</td>
-                <td>{{usuario.rol}}</td>
                 <td>{{usuario.rfc}}</td>
                 <td>{{usuario.curp}}</td>
                 <td>{{usuario.n_c_prof}}</td>
@@ -69,8 +67,6 @@
                           <input type = "text" formControlName="contrasena" />
                           <label class="mb-3 m-2"><b>Correo:</b></label>
                           <input type = "text" formControlName="correo" />
-                          <label class="mb-3 text-dark"><b>Indica su Rol con Id:</b><label class="mb-2 m-2 text-secondary" *ngFor="let rol of LRoles"><b>{{rol.id}}:</b> {{rol.rol}}</label></label>
-                          <input type = "text" formControlName="rol"/>
                           <label class="mb-3 m-2"><b>RFC:</b></label>
                           <input type = "text" formControlName="rfc"/>
                           <label class="mb-3 m-2"><b>Curp:</b></label>
@@ -104,4 +100,3 @@
           </div>
         </div>
       </div>
-  </div>
