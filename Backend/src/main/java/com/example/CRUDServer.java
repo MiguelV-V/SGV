@@ -24,9 +24,6 @@ import javax.servlet.MultipartConfigElement;
 import java.io.InputStream;
 import com.google.gson.Gson;
 
-import spark.utils.IOUtils;
-
-
 public class CRUDServer {
 
     public static String FechaIngreso;
@@ -203,7 +200,40 @@ public class CRUDServer {
             }
         });
 
-        // Ruta para crear un nuevo usuario
+        // OBTENER EMPLEADOS PARA RH
+        get("/ListaEmpleados", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_USUARIOS WHERE ROL = 3 ";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+
+                List<Usuarios> usuarios = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    String nombres = resultSet.getString("nombres");
+                    String apellidos = resultSet.getString("apellidos");
+                    String contrasena = resultSet.getString("contraseña");
+                    String correo = resultSet.getString("correo");
+                    int rol = resultSet.getInt("rol");
+                    String rfc = resultSet.getString("rfc");
+                    String curp = resultSet.getString("curp");
+                    String n_c_prof = resultSet.getString("n_c_prof");
+                    String u_g_estudio = resultSet.getString("u_g_estudio");
+                    String f_ingreso =  devolverFecha(resultSet.getDate("f_ingreso"));
+                    String especialidad = resultSet.getString("especialidad");
+                    String telefono = resultSet.getString("telefono");
+                    String foto = resultSet.getString("foto");
+                    usuarios.add(new Usuarios(id, nombres, apellidos, contrasena, correo, rol, rfc, curp,
+                            n_c_prof, u_g_estudio, f_ingreso, especialidad, telefono, foto));
+                }
+                return gson.toJson(usuarios);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener los usuarios"));
+            }
+        });
+
+        // Ruta para crear Usuarios solo Administrador
         post("/usuario", (req, res) -> {
             Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
             String nombres = usuario.getNombres();
@@ -211,6 +241,47 @@ public class CRUDServer {
             String contrasena = usuario.getContrasena();
             String correo = usuario.getCorreo();
             int rol = usuario.getRol();
+            String rfc = usuario.getRFC();
+            String curp = usuario.getCurp();
+            String n_c_prof = usuario.getNCProf();
+            String u_g_estudio = usuario.getUGEstudio();
+            String f_ingreso = usuario.getFIngreso();
+            FechaIngreso = f_ingreso;
+            String especialidad = usuario.getEspecialidad();
+            String telefono = usuario.getTelefono();
+
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "INSERT INTO SCYGV_USUARIOS (NOMBRES, APELLIDOS, CONTRASEÑA, CORREO, ROL, RFC, CURP, N_C_PROF, U_G_ESTUDIO, F_INGRESO, ESPECIALIDAD, TELEFONO) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, nombres);
+                statement.setString(2, apellidos);
+                statement.setString(3, contrasena);
+                statement.setString(4, correo);
+                statement.setInt(5, rol);
+                statement.setString(6, rfc);
+                statement.setString(7, curp);
+                statement.setString(8, n_c_prof);
+                statement.setString(9, u_g_estudio);
+                statement.setString(10,f_ingreso);
+                statement.setString(11, especialidad);
+                statement.setString(12, telefono);
+                statement.executeUpdate();
+
+                return gson.toJson(new Respuesta("Usuario creado correctamente"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al crear el Usuario"));
+            }
+        }, gson::toJson);
+
+        // Ruta para crear nuevos Empleados
+        post("/empleados", (req, res) -> {
+            Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
+            String nombres = usuario.getNombres();
+            String apellidos = usuario.getApellidos();
+            String contrasena = usuario.getContrasena();
+            String correo = usuario.getCorreo();
+            int rol = 3;
             String rfc = usuario.getRFC();
             String curp = usuario.getCurp();
             String n_c_prof = usuario.getNCProf();
@@ -470,7 +541,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, nombres,reviso, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -478,6 +551,26 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
             }
         });
+
+        // OBTENER SOLICITUDES
+        get("/solirev_count", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT COUNT(ID) as SOLICITUDES FROM SCYGV_SOLICITUDES WHERE ESTADO = 'En revision'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                int id = 0;
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    id = resultSet.getInt("SOLICITUDES");
+                    return id;
+                }
+                return id;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+
+
          get("/soli_acep", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ESTADO = 'Aceptada'";
@@ -495,7 +588,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -520,7 +615,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                     String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -546,7 +643,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha, fecha_i, fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -554,10 +653,6 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
             }
         });
-
-
-
-        
 
         // Ruta para eliminar usuario
         delete("/solicitudes/:id", (req, res) -> {
@@ -595,9 +690,11 @@ public class CRUDServer {
             Date date2 = format.parse(fecha_f);
             int dias = (int) ((date2.getTime() - date1.getTime())/86400000);
             String estado = "En revision";
+            String comentario = "";
+            String observaciones = "";
             
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, NOMBRES = ?, REVISO = ?, FECHA = ?, FECHA_I = ?, FECHA_F = ?,MOTIVO = ?, DIAS = ?, ESTADO = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET ID_USER = ?, NOMBRES = ?, REVISO = ?, FECHA = ?, FECHA_I = ?, FECHA_F = ?,MOTIVO = ?, DIAS = ?, ESTADO = ?, COMENTARIO = ?, OBSERVACIONES = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id_user);
                 statement.setString(2, nombres);
@@ -608,7 +705,9 @@ public class CRUDServer {
                 statement.setString(7, motivo);
                 statement.setInt(8, dias);
                 statement.setString(9, estado);
-                statement.setInt(10, id);
+                statement.setString(10, comentario);
+                statement.setString(11, observaciones);
+                statement.setInt(12, id);
                 statement.executeUpdate();
 
                 return gson.toJson(new Respuesta("Se actualizo correctamente"));
@@ -623,15 +722,16 @@ public class CRUDServer {
             String reviso = req.params("reviso");
             Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
             String estado = solicitud.getEstado();
+            String observaciones = "En proceso de Autorización";
             
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "UPDATE SCYGV_SOLICITUDES SET REVISO = ? ,ESTADO = ? WHERE ID = ?";
+                String query = "UPDATE SCYGV_SOLICITUDES SET REVISO = ? ,ESTADO = ?, OBSERVACIONES = ? WHERE ID = ?";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setString(1, reviso);
                 statement.setString(2, estado);
-                statement.setInt(3, id);
+                statement.setString(3, observaciones);
+                statement.setInt(4, id);
                 statement.executeUpdate();
-
                 return gson.toJson(new Respuesta("Se envio la respuesta"));
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -643,7 +743,7 @@ public class CRUDServer {
         get("/SoliRechazada/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Rechazada'";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND OBSERVACIONES = 'NO APROBADO'";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -659,7 +759,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -672,7 +774,7 @@ public class CRUDServer {
         get("/SoliAceptada/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'Aceptada'";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'APROBADA'";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -688,7 +790,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -701,7 +805,7 @@ public class CRUDServer {
          get("/SoliRevision/:id_user", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 int Id_user = Integer.parseInt(req.params("id_user"));
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'En revision'";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'En revision' OR OBSERVACIONES = 'En proceso de Autorización'";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, Id_user);
                 ResultSet resultSet = statement.executeQuery();
@@ -717,7 +821,9 @@ public class CRUDServer {
                     String motivo = resultSet.getString("motivo");
                     int dias = resultSet.getInt("dias");
                     String estado = resultSet.getString("estado");
-                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado));
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(Id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
                 }
                 return gson.toJson(solicitudes);
             } catch (SQLException e) {
@@ -725,7 +831,6 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener la solicitud"));
             }
         });
-
         //Login User
         post("/login", (req, res) -> {
             Usuarios usuario = gson.fromJson(req.body(), Usuarios.class);
@@ -785,7 +890,7 @@ public class CRUDServer {
         // Ruta para obtener datos de antiguedad usuario
         get("/antiguedad", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS";
+                String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS WHERE ROL != 3 ";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
                 List<AntiguedadUsuario> Antiguedad = new ArrayList<>();
@@ -830,6 +935,8 @@ public class CRUDServer {
             Date date2 = format.parse(fecha_f);
             int dias = (int) ((date2.getTime() - date1.getTime())/86400000) + 1;
             String estado = "En revision";
+            String comentario = "";
+            String observaciones = "";
             String respuesta = "";
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 //Query para obtener antiguedad del usuario
@@ -854,7 +961,7 @@ public class CRUDServer {
                         }
                         else{
                             //Query para enviar la solicitud al RH, despues de haber sido validada
-                            String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, NOMBRES, REVISO, FECHA, FECHA_I, FECHA_F, MOTIVO, DIAS, ESTADO) VALUES (?,?,?,?,?,?,?,?,?);";
+                            String query = "INSERT INTO SCYGV_SOLICITUDES (ID_USER, NOMBRES, REVISO, FECHA, FECHA_I, FECHA_F, MOTIVO, DIAS, ESTADO, COMENTARIO, OBSERVACIONES) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
                             PreparedStatement statement1 = conn.prepareStatement(query);
                             statement1.setInt(1, id_user);
                             statement1.setString(2, nombres);
@@ -865,6 +972,8 @@ public class CRUDServer {
                             statement1.setString(7, motivo);
                             statement1.setInt(8, dias);
                             statement1.setString(9, estado);
+                            statement1.setString(10, comentario);
+                            statement1.setString(11, observaciones);
                             statement1.executeUpdate();
                             return respuesta = "Correcto";
                         }
@@ -908,7 +1017,7 @@ public class CRUDServer {
 
             try (InputStream is = request.raw().getPart("uploaded_file").getInputStream()) {
                 // Directorio donde se guardará la imagen (ajusta según tus necesidades)
-                String uploadDir = "uploads";
+                String uploadDir = "assets";
 
                 // Obtiene el nombre personalizado del archivo, si se proporcionó
                 String customName = request.queryParams("custom_name");
@@ -937,7 +1046,7 @@ public class CRUDServer {
                 }
 
                 // Ruta completa del archivo en el servidor
-                String filePath = "/var/www/html/" + uploadDir + "/" + fileName;
+                String filePath = "C:\\Users\\Migue\\Desktop\\SCYGV\\SGV\\SCYGV\\src\\" + uploadDir + "\\" + fileName;
 
                 // Guarda la imagen en el servidor
                 try (FileOutputStream fos = new FileOutputStream(filePath)) {
@@ -959,7 +1068,7 @@ public class CRUDServer {
         put("/upload/:id/:imageName", (req, res) -> {
             String id = req.params(":id");
             String imageName = req.params(":imageName");
-            String ruta = "./uploads";
+            String ruta = "./assets";
 
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "UPDATE SCYGV_USUARIOS SET FOTO = ? WHERE ID = ?";
@@ -979,7 +1088,12 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al actualizar la imagen"));
             }
         }, gson::toJson);
+
+        
     }
+    
+
+    
 
     //Devolver la fecha
       public static String devolverFecha(Date fechaEntrada) throws ParseException{ 
@@ -1198,8 +1312,10 @@ public class CRUDServer {
         private String motivo;
         private int dias;
         private String estado;
+        private String comentario;
+        private String observaciones;
 
-        public Solicitud(int id, int id_user, String nombres, String reviso, String fecha,String fecha_i,String fecha_f, String motivo, int dias, String estado) {
+        public Solicitud(int id, int id_user, String nombres, String reviso, String fecha,String fecha_i,String fecha_f, String motivo, int dias, String estado, String comentario, String observaciones) {
             this.id = id;
             this.id_user = id_user;
             this.nombres = nombres;
@@ -1210,6 +1326,8 @@ public class CRUDServer {
             this.motivo = motivo;
             this.dias = dias;
             this.estado = estado;
+            this.comentario = comentario;
+            this.observaciones = observaciones;
         }
 
         public int getId() {
@@ -1248,7 +1366,15 @@ public class CRUDServer {
             return dias;
         }
 
-        public String getEstado() {
+        public String getComentario() {
+            return comentario;
+        }
+
+         public String getObservaciones() {
+            return observaciones;
+        }
+
+         public String getEstado() {
             return estado;
         }
     }
