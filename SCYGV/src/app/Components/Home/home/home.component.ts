@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Rol } from 'src/app/modelo/rol';
-import { Usuario, userRes } from 'src/app/modelo/usuario';
+import { userRes } from 'src/app/modelo/usuario';
 import { usuarioService } from 'src/app/services/Usuario/usuario.service';
 import swal from'sweetalert2';
 @Component({
@@ -53,6 +52,7 @@ export class HomeComponent {
           this.router.navigateByUrl('/RH/HomeRH');
           localStorage.setItem("Id",this.respuesta[0].id.toString())
           localStorage.setItem("Rol",this.respuesta[0].rol)
+          localStorage.setItem("Nombres",this.respuesta[0].rol)
           this.FormLogin.reset();
         }
         else if(this.respuesta[0].rol == "3"){

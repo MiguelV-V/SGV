@@ -13,6 +13,7 @@ export class HomeEmpComponent {
   ngOnInit():void{
    this.getUser()
    this.getrevcount()
+   this.Permiso()
  }
  LUsuario !: Usuario[];
  userId !: string; // Inicializa la variable userId
@@ -23,6 +24,9 @@ export class HomeEmpComponent {
  customName: string | null = null;
  rutaFoto !: any;
  TSoli:number = 0;
+ permisoS:string = "";
+ Fpermiso : boolean = false;
+ Tpermiso : boolean = true;
 
  getrevcount():any{
    this.SoliSer.getSolirevcount().subscribe((res) => {
@@ -105,6 +109,28 @@ export class HomeEmpComponent {
        console.error(error);
      }
    );
-   
  }
+
+ Permiso(){
+  this.SoliSer.getpermiso().subscribe(res =>{
+    if(res != true){
+      this.fpermiso()
+    }
+    else{
+      this.tpermiso()
+    }
+  })
+  }
+  fpermiso()
+  {
+    this.Fpermiso = true;
+    this.Tpermiso = false;
+  }
+  tpermiso()
+  {
+    this.Tpermiso = true;
+    this.Fpermiso = false;
+  }
 }
+
+

@@ -64,7 +64,6 @@ createSolicitud(){
         showConfirmButton: true
       })
       this.ngOnInit()
-      this.limpiar()
     }
     else if(res.body == "Correcto"){
       swal.fire({
@@ -73,6 +72,7 @@ createSolicitud(){
         showConfirmButton: true
       })
       this.ngOnInit()
+      this.limpiar()
     }})}
 }
 

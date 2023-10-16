@@ -9,4 +9,6 @@ export class Solicitud{
     motivo ?: String
     dias ?: number
     estado ?: string
+    comentario ?: string
+    observaciones ?: string
 }

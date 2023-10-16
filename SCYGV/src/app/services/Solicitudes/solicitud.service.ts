@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Bandeja } from 'src/app/modelo/bandeja';
+import { Bandeja, BandejaAdmin } from 'src/app/modelo/bandeja';
 import { Solicitud } from 'src/app/modelo/solicitud';
 
 
@@ -15,20 +15,29 @@ export class SolicitudService {
   rutaA = 'http://localhost:3000/SoliAceptada'
   constructor(private http: HttpClient) {}
 
-  //Obtener Solicitudes
-  getSolienrev(){
+  //Obtener Solicitudes en revision para RH
+  getSolienrevRH(){
     return this.http.get('http://localhost:3000/soli_enrev')
   }
+  //Obtener Solicitudes en revision para RH
+  getSolienrevADMIN(){
+    return this.http.get('http://localhost:3000/soli_estado')
+  }
+
   getSoliacept(){
     return this.http.get('http://localhost:3000/soli_acep')
   }
   getSolirech(){
     return this.http.get('http://localhost:3000/soli_recha')
   }
- //Obtener total de solicitudes por revisar
+ //Obtener total de solicitudes por revisar para RH
   getSolirevcount(){
     return this.http.get('http://localhost:3000/solirev_count')
   }
+ //Obtener total de solicitudes por revisar
+ getSoliprocount(){
+   return this.http.get('http://localhost:3000/soliproc_count')
+ }
 
    //Obtener Solicitudes
    getDiasDispo(){
@@ -52,8 +61,12 @@ export class SolicitudService {
     return this.http.put(this.rutaG + "/" + idSoli + "/" + localStorage.getItem("Id"), solicitud)
   }
 
-  updateBand(idSoli:number,soli:Bandeja){
+  updateEstado(idSoli:number,soli:Bandeja){
     return this.http.put(this.rutaE + "/" + idSoli + "/" + localStorage.getItem("Nombres"), soli)
+  }
+
+  updateObservacion(idSoli:number,soli:BandejaAdmin){
+    return this.http.put('http://localhost:3000/observacion' + "/" + idSoli, soli)
   }
  
   

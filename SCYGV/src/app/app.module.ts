@@ -7,21 +7,20 @@ import { BodyComponent } from './Components/Rol/body.component';
 import { PagUsuComponent } from './Components/usuarios/pag-usu/pag-usu.component';
 import { Routes, RouterModule } from '@angular/router';
 import { ListarCatalogoComponent } from './Components/Catalogo/listar-catalogo/listar-catalogo.component';
-import { SolicitudComponent } from './Components/Solicitud/solicitud/solicitud.component';
+import { SolicitudComponent } from './Components/Empleado/Solicitud/solicitud.component';
 import { HomeComponent } from './Components/Home/home/home.component';
 import { AdminComponent } from './Components/Administrador/admin/admin.component';
 import { EmpleadoComponent } from './Components/Empleado/empleado/empleado.component';
 import { RHComponent } from './Components/RH/rh/rh.component';
-import { PerfilComponent } from './Components/Perfil/perfil/perfil.component';
-import { BandejaAdComponent } from './Components/BandejaAdmin/bandeja-ad/bandeja-ad.component';
+import { BandejaAdComponent } from './Components/Administrador/admin/BandejaAdmin/bandeja-ad/bandeja-ad.component';
 import { CatalogoEmpleadoComponent } from './Components/Empleado/catalogo-empleado/catalogo-empleado.component';
 import { BandejaEmpleadoComponent } from './Components/Empleado/bandeja-empleado/bandeja-empleado.component';
 import { HomeRHComponent } from './Components/RH/rh/HomeRH/home-rh/home-rh.component';
 import { HomeAdminComponent } from './Components/Administrador/admin/HomeAdmin/home-admin/home-admin.component';
 import { HomeEmpComponent } from './Components/Empleado/HomeEmp/home-emp/home-emp.component';
-import { SoliAcepComponent } from './Components/BandejaAdmin/Aceptadas/soli-acep/soli-acep.component';
-import { SoliRechaComponent } from './Components/BandejaAdmin/Rechazadas/soli-recha/soli-recha.component';
-import { SoliRevisarComponent } from './Components/BandejaAdmin/Revisar/soli-revisar/soli-revisar.component';
+import { SoliAcepComponent } from './Components/BandejaSoli/Aceptadas/soli-acep/soli-acep.component';
+import { SoliRechaComponent } from './Components/BandejaSoli/Rechazadas/soli-recha/soli-recha.component';
+import { SoliRevisarComponent } from './Components/Administrador/admin/BandejaAdmin/Revisar/soli-revisar/soli-revisar.component';
 import { AntiguedadUsuarioComponent } from './Components/usuarios/antiguedad-usuario/antiguedad-usuario.component';
 import { UsuariosComponent } from './Components/usuarios/Usuario/usuarios/usuarios.component';
 import { SRechazadaEmpComponent } from './Components/Empleado/bandeja-empleado/Rechazadas/srechazada-emp/srechazada-emp.component';
@@ -34,7 +33,8 @@ import { MatBadgeModule } from '@angular/material/badge'
 import { MatSidenavModule } from '@angular/material/sidenav'
 import { MatListModule } from '@angular/material/list'
 import {MatToolbarModule} from '@angular/material/toolbar';
-import { GestionEmpleadosComponent } from './Components/RH/rh/GEmpleados/gestion-empleados/gestion-empleados.component'
+import { GestionEmpleadosComponent } from './Components/RH/rh/GEmpleados/gestion-empleados/gestion-empleados.component';
+import { SolicitudesRevRHComponent } from './Components/RH/rh/Bandeja-RH/Revisar/solicitudes-rev-rh/solicitudes-rev-rh.component'
 
 
 
@@ -48,7 +48,6 @@ const appRoute : Routes = [
       { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
     ]},
     { path: 'Catalogos', component: ListarCatalogoComponent},
-    { path: 'Perfil', component: PerfilComponent},
     { path: 'Bandeja', component: BandejaAdComponent, children: [
       { path: 'Revisar', component: SoliRevisarComponent},
       { path: 'Aceptadas', component: SoliAcepComponent},
@@ -63,16 +62,14 @@ const appRoute : Routes = [
       { path: 'Solicitudes_Aceptadas', component: SAceptadaEmpComponent},
       { path: 'Solicitudes_Rechazadas', component: SRechazadaEmpComponent}
     ]},
-    { path: 'Perfil', component: PerfilComponent},
     { path: 'HomeEmpleado', component: HomeEmpComponent}
   ]},
   {path: 'RH', canActivate:[guardRH], component: RHComponent, children:[
     { path: 'GestionEmpleados', component: GestionEmpleadosComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent },
-    { path: 'Perfil', component: PerfilComponent},
     { path: 'HomeRH', component: HomeRHComponent},
     { path: 'Bandeja', component: BandejaAdComponent, children: [
-      { path: 'Revisar', component: SoliRevisarComponent},
+      { path: 'Revisar', component: SolicitudesRevRHComponent},
       { path: 'Aceptadas', component: SoliAcepComponent},
       { path: 'Rechazadas', component: SoliRechaComponent}
 
@@ -92,7 +89,6 @@ const appRoute : Routes = [
     AdminComponent,
     EmpleadoComponent,
     RHComponent,
-    PerfilComponent,
     BandejaAdComponent,
     CatalogoEmpleadoComponent,
     BandejaEmpleadoComponent,
@@ -106,7 +102,8 @@ const appRoute : Routes = [
     UsuariosComponent,
     SRechazadaEmpComponent,
     SAceptadaEmpComponent,
-    GestionEmpleadosComponent
+    GestionEmpleadosComponent,
+    SolicitudesRevRHComponent
   ],
   imports: [
     BrowserModule,

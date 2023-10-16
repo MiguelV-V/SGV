@@ -1,0 +1,44 @@
+<div class="text-center mb-3">
+    <h1>Solicitud Por Revisar</h1>
+</div>
+
+<form [formGroup]="FormSoli">
+<table class="table mb-4" >
+    <thead>
+        <tr>
+          <th scope="col">Nombres</th>
+          <th scope="col">Fecha_Inicio</th>
+          <th scope="col">Fecha_Final</th>
+          <th scope="col">Motivo</th>
+          <th scope="col">Dias</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Reviso</th>
+          <th scope="col">Acciones</th>
+        </tr>
+    </thead>
+    <tbody >
+      <tr *ngFor="let solicitud of LSolienrev"  >
+            <td>{{solicitud.nombres}}</td>
+            <td>{{solicitud.fecha_i}}</td>
+            <td>{{solicitud.fecha_f}}</td>
+            <td>{{solicitud.motivo}}</td>
+            <td>{{solicitud.dias}}</td>
+            <td>{{solicitud.estado}}</td>
+            <td>{{solicitud.reviso}}</td>
+            <td>
+                <select id="observaciones" formControlName="observaciones" class="mb-2" > 
+                    <option>Autorizar</option>
+                    <option>No Autorizar</option>
+                </select>
+                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#ModalComentario"  (click)="updateSolicitud({id},solicitud)">Enviar</button>
+            </td>
+        </tr>
+        <input type="hidden" formControlName="id" />
+        <div class="justify-content-center pt-4" >
+            <input type="text" formControlName="comentarios">
+        </div>
+    </tbody>
+</table>
+</form>
+
+

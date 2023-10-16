@@ -26,7 +26,7 @@ export class HomeAdminComponent {
   TSoli:number = 0;
 
   getrevcount():any{
-    this.SoliSer.getSolirevcount().subscribe((res) => {
+    this.SoliSer.getSoliprocount().subscribe((res) => {
       this.TSoli = <any> res;
     })
   }

@@ -44,5 +44,4 @@ this.service.getpermiso().subscribe(res =>{
   }
 })
 }
-
 }

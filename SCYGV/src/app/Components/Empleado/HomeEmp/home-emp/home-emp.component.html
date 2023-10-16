@@ -43,17 +43,14 @@
     <div class="inbox">
         <h2><b>Solicitudes</b></h2>
         <img class="imgsoli" src="./assets/solicitud.png">
-        <p class="pSoli" >Tienes <b>{{TSoli}}</b> solicitudes por revisar</p>
+        <p *ngIf="Fpermiso" class="pSoli" >Usted aun no cumple el año trabajando, y no puede solicitar vacaciones</p>
+        <p *ngIf="Tpermiso" class="pSoli" >Ya cuenta con la opcion para poder solicitar vacaciones, despliegue el menu y dirijase al apartado de solicitudes</p>
     </div>
     <div class="antiguedad">
         <h2><b>Antigüedad de Usuarios</b></h2>
         <img class="imganti" src="./assets/personas.png">
         <p class="pAnti" >Puedes ver la antigüedad de los usuarios haciendo <a href="Administrador/PagUsuario/Antiguedad">click aquí</a>
         o ir a las opciones de usuarios en el menu desplegable.</p>
-    </div>
-    <div class="catalogo_info" >
-        <h2><b>Información sobre catalogos</b></h2>
-
     </div>
 </section>
 

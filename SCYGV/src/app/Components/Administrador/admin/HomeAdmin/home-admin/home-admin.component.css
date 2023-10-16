@@ -19,10 +19,10 @@ img.Foto {
 }
 .content{
     display: grid;
-    grid-template-columns: 0.3fr 0.3fr 0.3fr;
+    grid-template-columns: 0.3fr 0.3fr;
     max-width: 100%;
     max-height: auto;
-    padding-left: 3%;
+    justify-content: center;
 }
 .inbox{
     text-align: center;
@@ -58,10 +58,7 @@ p{
     padding-right: 2%;
 }
 
-.catalogo_info{
-    text-align: center;
-    border-style: ridge;
-}
+
 .pAnti{
     text-align: justify;
     font-size:x-large;
