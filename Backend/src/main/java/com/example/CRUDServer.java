@@ -523,7 +523,7 @@ public class CRUDServer {
         }, gson::toJson);
 
         // CRUD SOLICITUDES
-        // OBTENER SOLICITUDES
+        // OBTENER SOLICITUDES EN REVISION PARA RH
         get("/soli_enrev", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ESTADO = 'En revision'";
@@ -551,11 +551,56 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
             }
         });
+         // OBTENER SOLICITUDES EN REVISION PARA ADMIN
+        get("/soli_estado", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE OBSERVACIONES = 'En proceso de Autorización'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                ResultSet resultSet = statement.executeQuery();
+                List<Solicitud> solicitudes = new ArrayList<>();
+                while (resultSet.next()) {
+                    int id = resultSet.getInt("id");
+                    int id_user = resultSet.getInt("id_user");
+                    String nombres = resultSet.getString("nombres");
+                    String reviso = resultSet.getString("reviso");
+                    String fecha = devolverFecha(resultSet.getDate("fecha"));
+                    String fecha_i = devolverFecha(resultSet.getDate("fecha_i"));
+                    String fecha_f = devolverFecha(resultSet.getDate("fecha_f"));
+                    String motivo = resultSet.getString("motivo");
+                    int dias = resultSet.getInt("dias");
+                    String estado = resultSet.getString("estado");
+                    String comentario = resultSet.getString("comentario");
+                    String observaciones = resultSet.getString("observaciones");
+                    solicitudes.add(new Solicitud(id, id_user, nombres, reviso, fecha,fecha_i,fecha_f, motivo, dias, estado, comentario, observaciones));
+                }
+                return gson.toJson(solicitudes);
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
 
-        // OBTENER SOLICITUDES
+        // OBTENER TOTAL SOLICITUDES EN REVISAR RH
         get("/solirev_count", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
                 String query = "SELECT COUNT(ID) as SOLICITUDES FROM SCYGV_SOLICITUDES WHERE ESTADO = 'En revision'";
+                PreparedStatement statement = conn.prepareStatement(query);
+                int id = 0;
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    id = resultSet.getInt("SOLICITUDES");
+                    return id;
+                }
+                return id;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al obtener las solicitudes"));
+            }
+        });
+
+         get("/soliproc_count", (req, res) -> {
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "SELECT COUNT(ID) as SOLICITUDES FROM SCYGV_SOLICITUDES WHERE OBSERVACIONES = 'En proceso de Autorización'";
                 PreparedStatement statement = conn.prepareStatement(query);
                 int id = 0;
                 ResultSet resultSet = statement.executeQuery();
@@ -716,7 +761,7 @@ public class CRUDServer {
                 return gson.toJson(new Respuesta("Error al actualizar"));
             }
         }, gson::toJson);
-         // Ruta para modificar usuarios
+         // Ruta para actualizar el estado de una solicitud
         put("/estado/:id/:reviso", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             String reviso = req.params("reviso");
@@ -739,11 +784,34 @@ public class CRUDServer {
             }
         }, gson::toJson);
 
+        // Ruta para actualizar la observacion de una solicitud
+        put("/observacion/:id", (req, res) -> {
+            int id = Integer.parseInt(req.params("id"));
+            Solicitud solicitud = gson.fromJson(req.body(), Solicitud.class);
+            String observaciones = solicitud.getObservaciones();
+            String comentario = solicitud.getComentario();
+            if(comentario == null){
+                comentario = "No hay comentarios...";
+            }
+            try (Connection conn = DriverManager.getConnection(url, username, password)) {
+                String query = "UPDATE SCYGV_SOLICITUDES SET OBSERVACIONES = ?, COMENTARIO = ? WHERE ID = ?";
+                PreparedStatement statement = conn.prepareStatement(query);
+                statement.setString(1, observaciones);
+                statement.setString(2, comentario);
+                statement.setInt(3, id);
+                statement.executeUpdate();
+                return gson.toJson(new Respuesta("Se envio la respuesta"));
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return gson.toJson(new Respuesta("Error al enviar"));
+            }
+        }, gson::toJson);
+
         // Ruta para obtener solicitudes rechazadas
         get("/SoliRechazada/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND OBSERVACIONES = 'NO APROBADO'";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND (ESTADO = 'RECHAZADA' AND OBSERVACIONES = 'AUTORIZADA')";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -770,11 +838,11 @@ public class CRUDServer {
             }
         });
 
-        //Ruta para obtener solicitudes Aceptadas
+        //Ruta para obtener solicitudes de usuario con estado aprobada
         get("/SoliAceptada/:id", (req, res) -> {
             int id = Integer.parseInt(req.params("id"));
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND ESTADO = 'APROBADA'";
+                String query = "SELECT * FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND (ESTADO = 'ACEPTADA' AND OBSERVACIONES = 'AUTORIZADA')";
                 PreparedStatement statement = conn.prepareStatement(query);
                 statement.setInt(1, id);
                 ResultSet resultSet = statement.executeQuery();
@@ -871,7 +939,7 @@ public class CRUDServer {
                     int dias_utilizados = 0;
                     int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
                     int dias_vac_corres = devolverdias(anos_antiguedad);
-                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND (ESTADO = 'En revision' OR OBSERVACIONES = 'En proceso de Autorización' OR (ESTADO = 'Aceptada' AND OBSERVACIONES = 'Autorizada') OR (ESTADO = 'RECHAZADA' AND OBSERVACIONES = 'No Autorizada'))";
                     PreparedStatement statement2 = conn.prepareStatement(query2);
                     statement2.setInt(1,id_user);
                     ResultSet resultSet2 = statement2.executeQuery();
@@ -890,7 +958,7 @@ public class CRUDServer {
         // Ruta para obtener datos de antiguedad usuario
         get("/antiguedad", (req, res) -> {
             try (Connection conn = DriverManager.getConnection(url, username, password)) {
-                String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS WHERE ROL != 3 ";
+                String query = "SELECT ID, NOMBRES, APELLIDOS, F_INGRESO, TIMESTAMPDIFF(YEAR, F_INGRESO, NOW()) AS AÑOS_ANTIGUEDAD FROM SCYGV_USUARIOS";
                 PreparedStatement statement = conn.prepareStatement(query);
                 ResultSet resultSet = statement.executeQuery();
                 List<AntiguedadUsuario> Antiguedad = new ArrayList<>();
@@ -902,7 +970,7 @@ public class CRUDServer {
                     String f_ingreso = resultSet.getString("F_INGRESO");
                     int anos_antiguedad = resultSet.getInt("AÑOS_ANTIGUEDAD");
                     int dias_vac_corres = devolverdias(anos_antiguedad);
-                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                    String query2 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND (ESTADO = 'En revision' OR OBSERVACIONES = 'En proceso de Autorización' OR (ESTADO = 'Aceptada' AND OBSERVACIONES = 'Autorizada') OR (ESTADO = 'RECHAZADA' AND OBSERVACIONES = 'No Autorizada'))";
                     PreparedStatement statement2 = conn.prepareStatement(query2);
                     statement2.setInt(1,id);
                     ResultSet resultSet2 = statement2.executeQuery();
@@ -950,7 +1018,7 @@ public class CRUDServer {
                     String nombres = resultSet.getString("NOMBRES");
                     int dias_vac_corres = devolverdias(anos_antiguedad);
                     //Query para obtener los dias utilizados de las solicitudes
-                    String query3 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ?";
+                    String query3 = "SELECT SUM(DIAS) AS DIAS_UTILIZADOS FROM SCYGV_SOLICITUDES WHERE ID_USER = ? AND (ESTADO = 'En revision' OR OBSERVACIONES = 'En proceso de Autorización' OR (ESTADO = 'Aceptada' AND OBSERVACIONES = 'Autorizada') OR (ESTADO = 'RECHAZADA' AND OBSERVACIONES = 'No Autorizada'))";
                     PreparedStatement statement2 = conn.prepareStatement(query3);
                     statement2.setInt(1,id_user);
                     ResultSet resultSet2 = statement2.executeQuery();
