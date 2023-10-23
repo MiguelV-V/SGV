@@ -11,19 +11,23 @@
           <th scope="col">Motivo</th>
           <th scope="col">Dias</th>
           <th scope="col">Estado</th>
+          <th scope="col">Comentario</th>
+          <th scope="col">Observaciones</th>
         </tr>
     </thead>
     <tbody >
       <tr *ngFor="let solicitud of LSoliAcep"  >
-          <th scope="row">{{solicitud.id}}</th>
-            <td>{{solicitud.nombres}}</td>
-            <td>{{solicitud.reviso}}</td>
-            <td>{{solicitud.fecha}}</td>
-            <td>{{solicitud.fecha_i}}</td>
-            <td>{{solicitud.fecha_f}}</td>
-            <td>{{solicitud.motivo}}</td>
-            <td>{{solicitud.dias}}</td>
-            <td>{{solicitud.estado}}</td>
+        <th scope="row">{{solicitud.id}}</th>
+        <td>{{solicitud.nombres}}</td>
+        <td>{{solicitud.reviso}}</td>
+        <td>{{solicitud.fecha}}</td>
+        <td>{{solicitud.fecha_i}}</td>
+        <td>{{solicitud.fecha_f}}</td>
+        <td>{{solicitud.motivo}}</td>
+        <td>{{solicitud.dias}}</td>
+        <td>{{solicitud.estado}}</td>
+        <td>{{solicitud.comentario}}</td>
+        <td>{{solicitud.observaciones}}</td>
         </tr>
     </tbody>
 </table>

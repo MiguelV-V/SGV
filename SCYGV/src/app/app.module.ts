@@ -66,6 +66,7 @@ const appRoute : Routes = [
   ]},
   {path: 'RH', canActivate:[guardRH], component: RHComponent, children:[
     { path: 'GestionEmpleados', component: GestionEmpleadosComponent},
+    { path: 'Antiguedad', component: AntiguedadUsuarioComponent},
     { path: 'Catalogos', component: ListarCatalogoComponent },
     { path: 'HomeRH', component: HomeRHComponent},
     { path: 'Bandeja', component: BandejaAdComponent, children: [

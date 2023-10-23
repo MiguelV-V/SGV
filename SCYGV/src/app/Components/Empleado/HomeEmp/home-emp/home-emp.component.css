@@ -19,7 +19,7 @@ img.Foto {
 }
 .content{
     display: grid;
-    grid-template-columns: 0.3fr 0.3fr;
+    grid-template-columns: 0.3fr;
     max-width: 100%;
     max-height: auto;
     justify-content: center;

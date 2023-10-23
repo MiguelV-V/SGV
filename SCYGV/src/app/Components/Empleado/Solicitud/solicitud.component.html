@@ -9,7 +9,6 @@
       <table class="table mb-4" >
           <thead>
               <tr>
-                <th scope="col">Id</th>
                 <th scope="col">nombres</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Fecha_Inicio</th>
@@ -17,12 +16,12 @@
                 <th scope="col">Motivo</th>
                 <th scope="col">Dias</th>
                 <th scope="col">Estado</th>
+                <th scope="col">Observaciones</th>
                 <th scope="col">Acciones</th>
               </tr>
           </thead>
           <tbody >
             <tr *ngFor="let solicitud of LSolicitud"  >
-                <th scope="row">{{solicitud.id}}</th>
                   <td>{{solicitud.nombres}}</td>
                   <td>{{solicitud.fecha}}</td>
                   <td>{{solicitud.fecha_i}}</td>
@@ -30,6 +29,7 @@
                   <td>{{solicitud.motivo}}</td>
                   <td>{{solicitud.dias}}</td>
                   <td>{{solicitud.estado}}</td>
+                  <td>{{solicitud.observaciones}}</td>
                   <td>
                      <button type="button"  class="btn btn-success" data-bs-toggle="modal" data-bs-target="#VentanaAdd" (click)="editar(solicitud)">Editar</button>
                      <button type="button" class="pencil-square" class="btn btn-danger" (click)="deleteSolicitud(solicitud.id)">Eliminar</button>
